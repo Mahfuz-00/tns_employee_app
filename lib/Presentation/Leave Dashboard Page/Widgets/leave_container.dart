@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../../Core/Config/Theme/app_colors.dart';
 
-class TaskStatusTemplate extends StatelessWidget {
-  final String imageAsset;
+class LeaveStatusTemplate extends StatelessWidget {
+  final Color color;
   final String label;
   final String number;
 
-  const TaskStatusTemplate({
-    required this.imageAsset,
+  const LeaveStatusTemplate({
+    required this.color,
     required this.label,
     required this.number,
     Key? key,
@@ -19,7 +19,7 @@ class TaskStatusTemplate extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Container(
-      width: screenWidth * 0.255,
+      width: screenWidth * 0.4,
       //margin: EdgeInsets.symmetric(horizontal: 10),
       padding: EdgeInsets.all(7),
       decoration: BoxDecoration(
@@ -43,24 +43,24 @@ class TaskStatusTemplate extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             //mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset(
-                imageAsset,
-                width: 20,
-                height: 20,
-                fit: BoxFit.cover,
+              Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  color: color, // Apply the color here
+                  shape: BoxShape.circle, // Make it round like an icon
+                ),
               ),
               SizedBox(width: 3), // Spacing between image and label
-              Expanded(
-                child: Text(
-                  label,
-                  style: TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.textBlack,
-                      fontFamily: 'Roboto'),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
+              Text(
+                label,
+                style: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.textBlack,
+                    fontFamily: 'Roboto'),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             ],
           ),

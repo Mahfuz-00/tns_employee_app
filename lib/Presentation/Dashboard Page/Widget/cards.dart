@@ -37,7 +37,7 @@ class CardsWidget extends StatelessWidget {
       padding: EdgeInsets.zero,
       margin: EdgeInsets.zero,
       child: Card(
-        color: AppColors.backgroundWhite,
+        color: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),

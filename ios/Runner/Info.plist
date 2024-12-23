@@ -29,6 +29,12 @@
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Your message to explain why access to the photo library is needed.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Your message to explain why access to the camera is needed.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Your message to explain why access to the microphone is needed.</string>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>

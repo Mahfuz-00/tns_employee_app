@@ -66,7 +66,7 @@ class _InteractiveProgressBarState extends State<InteractiveProgressBar> {
               ],
             ),
           ),
-          const SizedBox(height: 10),
+          /*const SizedBox(height: 10),
 
           // Display the percentage (Optional)
           Text(
@@ -77,7 +77,7 @@ class _InteractiveProgressBarState extends State<InteractiveProgressBar> {
               color: AppColors.primary,
               fontFamily: 'Roboto'
             ),
-          ),
+          ),*/
         ],
       ),
     );

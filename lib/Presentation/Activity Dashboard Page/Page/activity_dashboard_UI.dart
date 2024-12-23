@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/bottom_naviagtion_bar.dart';
 import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart';
+import 'package:touch_and_solve_inventory_app/Presentation/Activity%20Creation%20Page/Page/activity_creation_UI.dart';
 import 'package:touch_and_solve_inventory_app/Presentation/Dashboard%20Page/Widget/task_card.dart';
 
 import '../../../Core/Config/Assets/app_images.dart';
@@ -97,6 +98,7 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                               children: [
                                 // "All" section
                                 Expanded(
+                                  flex:1,
                                   child: GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -120,6 +122,8 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                                               fontFamily: 'Roboto',
                                               color: selectedSection == 'All' ? Colors.white : AppColors.textBlack,
                                             ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                           ),
                                           SizedBox(width: 5.0),
                                           CircleAvatar(
@@ -143,6 +147,7 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
 
                                 // "In Progress" section
                                 Expanded(
+                                  flex:1,
                                   child: GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -158,13 +163,17 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Text(
-                                            'In Progress',
-                                            style: TextStyle(
-                                              fontFamily: 'Roboto',
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.w400,
-                                              color: selectedSection == 'In Progress' ? Colors.white : AppColors.textBlack,
+                                          Expanded(
+                                            child: Text(
+                                              'In Progress',
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.w400,
+                                                color: selectedSection == 'In Progress' ? Colors.white : AppColors.textBlack,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                             ),
                                           ),
                                           SizedBox(width: 5.0),
@@ -189,6 +198,7 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
 
                                 // "Finish" section
                                 Expanded(
+                                  flex:1,
                                   child: GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -212,6 +222,8 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                                               fontWeight: FontWeight.w400,
                                               color: selectedSection == 'Finish' ? Colors.white : AppColors.textBlack,
                                             ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                           ),
                                           SizedBox(width: 5.0),
                                           CircleAvatar(
@@ -266,7 +278,7 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                                 AppImages.MeetingPerson1
                               ],
                               priority: 'Low',
-                              progress: 'In Progress',
+                              progress: 'Pending',
                               date: '4 Dec',
                               commentCount: '1'),
                         ),
@@ -320,7 +332,7 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                           style: TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.w400,
-                              color: AppColors.textBlack,
+                              color: AppColors.labelGrey,
                               fontFamily: 'Roboto'),
                         ),
                         SizedBox(
@@ -368,7 +380,10 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
               child: Center(
                 child: ElevatedButton(
                   onPressed: () {
-
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ActivityCreation()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,

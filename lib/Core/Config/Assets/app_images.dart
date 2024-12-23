@@ -16,6 +16,12 @@ class AppImages {
   static const String ActivityFilledIcon = '${BasePath}Activity Icon Filled.png';
   static const String LeaveIcon = '${BasePath}Leave Icon.png';
   static const String LeaveIcon2 = '${BasePath}Leave Icon 2.png';
+  static const String LeaveImage = '${BasePath}Leave Image.png';
+  static const String LeavePageImage = '${BasePath}Leave Page Icon.png';
+  static const String HRImage = '${BasePath}HR Image.png';
+  static const String ExpenseImage = '${BasePath}Expense Image.png';
+  static const String VoucherTotalIcon = '${BasePath}Voucher Total Icon.png';
+  static const String VoucherFileUploadIcon = '${BasePath}Voucher File Upload Icon.png';
   static const String LeaveFilledIcon = '${BasePath}Leave Icon Filled.png';
   static const String VoucherIcon = '${BasePath}Voucher Icon.png';
   static const String VoucherFilledIcon = '${BasePath}Voucher Icon Filled.png';

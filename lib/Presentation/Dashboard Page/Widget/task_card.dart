@@ -66,13 +66,17 @@ class _TaskCardState extends State<TaskCard> {
                     child: Image.asset(AppImages.TaskIcon),
                   ),
                   SizedBox(width: 8),
-                  Text(
-                    widget.taskHeader, // Second Header
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.textDarkBlack,
-                        fontFamily: 'Roboto'),
+                  Expanded(
+                    child: Text(
+                      widget.taskHeader, // Second Header
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textDarkBlack,
+                          fontFamily: 'Roboto'),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
                   ),
                 ],
               ),
@@ -81,13 +85,14 @@ class _TaskCardState extends State<TaskCard> {
                 children: [
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 5),
-                    width: screenWidth * 0.30,
+                    //width: screenWidth * 0.30,
                     height: screenHeight * 0.035,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
                       color: AppColors.containerBackgroundGrey300,
                     ),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
                           Icons.timer, // Timer icon
@@ -98,12 +103,14 @@ class _TaskCardState extends State<TaskCard> {
                           width: 5,
                         ),
                         Text(
-                          'In Progress',
+                          widget.progress,
                           style: TextStyle(
                               color: AppColors.textBlack,
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
                               fontFamily: 'Roboto'),
+                          /*overflow: TextOverflow.ellipsis,
+                          maxLines: 1,*/
                         )
                       ],
                     ),
@@ -113,7 +120,7 @@ class _TaskCardState extends State<TaskCard> {
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 5),
-                    width: screenWidth * 0.18,
+                    //width: screenWidth * 0.18,
                     height: screenHeight * 0.035,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
@@ -121,6 +128,7 @@ class _TaskCardState extends State<TaskCard> {
                           widget.priority), // Dynamically set the color
                     ),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
                           Icons.flag_rounded,
@@ -143,6 +151,7 @@ class _TaskCardState extends State<TaskCard> {
                       ],
                     ),
                   ),
+                  SizedBox(width: screenWidth*0.2,)
                 ],
               ),
               SizedBox(height: 8),
@@ -156,118 +165,129 @@ class _TaskCardState extends State<TaskCard> {
               ),
               SizedBox(height: 8),
               // Row with circular images (people) and button
-              Row(
-                children: [
-                  // Stacked Circular Images
-                  Container(
-                    width: screenWidth * 0.4,
-                    height: 40,
-                    padding: EdgeInsets.symmetric(vertical: 5),
-                    child: Stack(
-                      children: [
-                        // Show up to 3 images, and the rest will show a "+" sign
-                        ...List.generate(
-                          widget.images.length > 3 ? 3 : widget.images.length,
-                          (index) {
-                            return Positioned(
-                              left: index * 20.0,
-                              // Adjust the overlap by modifying the multiplier
-                              child: CircleAvatar(
-                                radius: 15, // Adjust size as needed
-                                backgroundImage: AssetImage(
-                                  widget.images[
-                                      index], // Replace with your image paths
+              Container(
+                child: Row(
+                  children: [
+                    // Stacked Circular Images
+                    Expanded(
+                      flex: 5,
+                      child: Container(
+                        /*width: screenWidth * 0.4,*/
+                        height: 40,
+                        padding: EdgeInsets.symmetric(vertical: 5),
+                        child: Stack(
+                          children: [
+                            // Show up to 3 images, and the rest will show a "+" sign
+                            ...List.generate(
+                              widget.images.length > 3 ? 3 : widget.images.length,
+                              (index) {
+                                return Positioned(
+                                  left: index * 20.0,
+                                  // Adjust the overlap by modifying the multiplier
+                                  child: CircleAvatar(
+                                    radius: 15, // Adjust size as needed
+                                    backgroundImage: AssetImage(
+                                      widget.images[
+                                          index], // Replace with your image paths
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            if (widget.images.length > 3)
+                              Positioned(
+                                left: 5 * 14.0,
+                                // Position the text after the 3rd image
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  // Add some padding around the text
+                                  child: Text(
+                                    '+${widget.images.length - 3}',
+                                    // Display + number of images after 3
+                                    style: TextStyle(
+                                        color: AppColors.textBlack,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                        fontFamily: 'Roboto'),
+                                  ),
                                 ),
                               ),
-                            );
-                          },
+                          ],
                         ),
-                        if (widget.images.length > 3)
-                          Positioned(
-                            left: 5 * 14.0,
-                            // Position the text after the 3rd image
-                            child: Container(
-                              padding: EdgeInsets.all(5),
-                              // Add some padding around the text
-                              child: Text(
-                                '+${widget.images.length - 3}',
-                                // Display + number of images after 3
-                                style: TextStyle(
-                                    color: AppColors.textBlack,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    fontFamily: 'Roboto'),
-                              ),
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    // Spacing between images and button
+
+                    // First container with calendar icon and date
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: AppColors.textWhite,
+                          borderRadius: BorderRadius.circular(4),
+                          /*border: Border.all(color: AppColors.textWhite), */ // Adjust border color as needed
+                        ),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              AppImages.CalenderIcon,
+                              color: Colors.grey,
+                              width: 16,
+                              height: 16,
                             ),
-                          ),
-                      ],
+                            SizedBox(width: 5), // Spacing between icon and text
+                            Text(
+                              widget.date, // Replace with your date
+                              style: TextStyle(
+                                  color: AppColors.textBlack,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                  fontFamily: 'Roboto'),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 5),
-                  // Spacing between images and button
+                    SizedBox(width: 10),
+                    // Spacing between first and second container
 
-                  // First container with calendar icon and date
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: AppColors.textWhite,
-                      borderRadius: BorderRadius.circular(4),
-                      /*border: Border.all(color: AppColors.textWhite), */ // Adjust border color as needed
-                    ),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          AppImages.CalenderIcon,
-                          color: Colors.grey,
-                          width: 16,
-                          height: 16,
+                    // Second container with comment icon and comment count
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: AppColors.textWhite,
+                          borderRadius: BorderRadius.circular(2),
+                          /*border: Border.all(
+                              color: Colors.grey),*/ // Adjust border color as needed
                         ),
-                        SizedBox(width: 5), // Spacing between icon and text
-                        Text(
-                          widget.date, // Replace with your date
-                          style: TextStyle(
-                              color: AppColors.textBlack,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              fontFamily: 'Roboto'),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              AppImages.CommentIcon2,
+                              color: Colors.grey,
+                              width: 16,
+                              height: 16,
+                            ),
+                            SizedBox(width: 5), // Spacing between icon and text
+                            Text(
+                              widget.commentCount,
+                              // Replace with your comment count
+                              style: TextStyle(
+                                  color: AppColors.textBlack,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                  fontFamily: 'Roboto'),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 10),
-                  // Spacing between first and second container
-
-                  // Second container with comment icon and comment count
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: AppColors.textWhite,
-                      borderRadius: BorderRadius.circular(2),
-                      /*border: Border.all(
-                          color: Colors.grey),*/ // Adjust border color as needed
-                    ),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          AppImages.CommentIcon2,
-                          color: Colors.grey,
-                          width: 16,
-                          height: 16,
-                        ),
-                        SizedBox(width: 5), // Spacing between icon and text
-                        Text(
-                          widget.commentCount,
-                          // Replace with your comment count
-                          style: TextStyle(
-                              color: AppColors.textBlack,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              fontFamily: 'Roboto'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),

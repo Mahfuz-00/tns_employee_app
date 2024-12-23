@@ -26,6 +26,7 @@ class _DashboardState extends State<Dashboard> {
           child: Column(
             children: [
               Container(
+                color: AppColors.backgroundWhite,
                 padding: EdgeInsets.all(5),
                 height: screenHeight * 0.1,
                 child: Row(
@@ -46,8 +47,9 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     // Name, verified mark, and designation in the second container
                     SizedBox(
-                      width: screenWidth * 0.55,
+                      width: screenWidth * 0.55,  // Set width relative to screen width
                       child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0), // Added padding for better spacing
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -55,29 +57,39 @@ class _DashboardState extends State<Dashboard> {
                             // Row for name and verified badge
                             Row(
                               children: [
-                                Text(
-                                  'Humayun Kabir Piash',
-                                  // Replace with dynamic data
-                                  style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
+                                Expanded(
+                                  flex: 6,
+                                  child: Text(
+                                    'Humayun Kabir Piash',
+                                    style: TextStyle(
+                                      fontSize: 20, // Adjust font size based on screen width
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Roboto',
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
                                   ),
                                 ),
                                 SizedBox(width: 8.0),
-                                Icon(
-                                  Icons.verified,
-                                  color: AppColors.primary,
-                                  size: 20.0,
+                                Expanded(
+                                  flex: 1,
+                                  child: Icon(
+                                    Icons.verified,
+                                    color: AppColors.primary,
+                                    size: screenWidth * 0.05, // Adjust icon size based on screen width
+                                  ),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 4.0),
+                            SizedBox(height: 5),  // Adjust height relative to screen height
                             // Designation text
                             Text(
-                              'UI/UX Designer', // Replace with dynamic data
+                              'UI/UX Designer',
                               style: TextStyle(
-                                fontSize: 14.0,
+                                fontSize: screenWidth * 0.04, // Adjust font size based on screen width
                                 color: AppColors.primary,
+                                fontFamily: 'Roboto',
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                           ],
@@ -108,40 +120,50 @@ class _DashboardState extends State<Dashboard> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 15.0, bottom: 15, left: 15, right: 5),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'My Work Summary',
-                                    style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.textWhite,
-                                        fontFamily: 'Roboto'),
-                                  ),
-                                  Text(
-                                    'Today Task & Presence Activity',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.textWhite,
-                                        fontFamily: 'Roboto'),
-                                  )
-                                ],
+                            Expanded(
+                              flex: 11,
+                              child: Container(
+                                padding: const EdgeInsets.only(
+                                    top: 15.0, bottom: 15, left: 15, right: 5),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'My Work Summary',
+                                      style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.textWhite,
+                                          fontFamily: 'Roboto'),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                    Text(
+                                      'Today Task & Presence Activity',
+                                      style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.textWhite,
+                                          fontFamily: 'Roboto'),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                             Spacer(),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              padding: const EdgeInsets.only(top: 10.0),
-                              child: Image.asset(
-                                AppImages.CameraIcon,
-                                height: 100,
-                                width: 100,
+                            Expanded(
+                              flex: 4,
+                              child: Container(
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(top: 10.0),
+                                child: Image.asset(
+                                  AppImages.CameraIcon,
+                                  height: 100,
+                                  width: 100,
+                                ),
                               ),
                             )
                           ],

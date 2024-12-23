@@ -215,71 +215,77 @@ class MeetingCard extends StatelessWidget {
               Row(
                 children: [
                   // Stacked Circular Images
-                  Container(
-                    width: screenWidth * 0.4,
-                    height: 40,
-                    padding: EdgeInsets.symmetric(vertical: 5),
-                    child: Stack(
-                      children: [
-                        // Show up to 3 images, and the rest will show a "+" sign
-                        ...List.generate(
-                          images.length > 3 ? 3 : images.length,
-                          (index) {
-                            return Positioned(
-                              left: index * 20.0,
-                              // Adjust the overlap by modifying the multiplier
-                              child: CircleAvatar(
-                                radius: 15, // Adjust size as needed
-                                backgroundImage: AssetImage(
-                                  images[
-                                      index], // Replace with your image paths
+                  Expanded(
+                    flex: 4,
+                    child: Container(
+                      //width: screenWidth * 0.4,
+                      height: 40,
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      child: Stack(
+                        children: [
+                          // Show up to 3 images, and the rest will show a "+" sign
+                          ...List.generate(
+                            images.length > 3 ? 3 : images.length,
+                            (index) {
+                              return Positioned(
+                                left: index * 20.0,
+                                // Adjust the overlap by modifying the multiplier
+                                child: CircleAvatar(
+                                  radius: 15, // Adjust size as needed
+                                  backgroundImage: AssetImage(
+                                    images[
+                                        index], // Replace with your image paths
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          if (images.length > 3)
+                            Positioned(
+                              left: 5 * 14.0,
+                              // Position the text after the 3rd image
+                              child: Container(
+                                padding: EdgeInsets.all(5),
+                                // Add some padding around the text
+                                child: Text(
+                                  '+${images.length - 3}',
+                                  // Display + number of images after 3
+                                  style: TextStyle(
+                                      color: AppColors.textBlack,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16,
+                                      fontFamily: 'Roboto'),
                                 ),
                               ),
-                            );
-                          },
-                        ),
-                        if (images.length > 3)
-                          Positioned(
-                            left: 5 * 14.0,
-                            // Position the text after the 3rd image
-                            child: Container(
-                              padding: EdgeInsets.all(5),
-                              // Add some padding around the text
-                              child: Text(
-                                '+${images.length - 3}',
-                                // Display + number of images after 3
-                                style: TextStyle(
-                                    color: AppColors.textBlack,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    fontFamily: 'Roboto'),
-                              ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(width: 5),
                   // Spacing between images and button
                   // Set Reminder Button
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    // Align the button to the right
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                  Expanded(
+                    flex: 6,
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      // Align the button to the right
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        'Set Reminder',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.textWhite,
-                            fontFamily: 'Roboto'),
+                        child: Text(
+                          'Set Reminder',
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.textWhite,
+                              fontFamily: 'Roboto'),
+                        ),
                       ),
                     ),
                   )

@@ -44,7 +44,8 @@ class _LeaveCardState extends State<LeaveCard> {
         color: AppColors.backgroundWhite,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
-            side: BorderSide(width: 1,color: AppColors.containerBackgroundGrey300)),
+            side: BorderSide(
+                width: 1, color: AppColors.containerBackgroundGrey300)),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -59,15 +60,17 @@ class _LeaveCardState extends State<LeaveCard> {
                     child: Image.asset(AppImages.LeaveIcon2),
                   ),
                   SizedBox(width: 8),
-                  Text(
-                    widget.leaveHeader, // Second Header
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.textDarkBlack,
-                        fontFamily: 'Roboto'),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                  Expanded(
+                    child: Text(
+                      widget.leaveHeader, // Second Header
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textDarkBlack,
+                          fontFamily: 'Roboto'),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
                   ),
                   SizedBox(width: 8), // Spacing between elements
                   Container(
@@ -115,6 +118,7 @@ class _LeaveCardState extends State<LeaveCard> {
                     color: AppColors.containerBackgroundGrey300,
                   ),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
                         Icons.timer, // Timer icon
@@ -144,92 +148,111 @@ class _LeaveCardState extends State<LeaveCard> {
                 child: Row(
                   children: [
                     // First container with circular widget, number, and "Leave Used"
-                    Container(
-                      //width: 100, // Fixed width for consistent size
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: AppColors.textWhite,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        // Center-align content
-                        children: [
-                          Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors
-                                  .grey[300], // Background color of the circle
-                            ),
-                            child: Center(
-                              child: Text(
-                                widget.UsedLeave, // Replace with dynamic value
-                                style: TextStyle(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    fontFamily: 'Roboto'),
+                    Expanded(
+                      flex: 5,
+                      child: Container(
+                        //width: 100, // Fixed width for consistent size
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: AppColors.textWhite,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          // Center-align content
+                          children: [
+                            Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey[
+                                    300], // Background color of the circle
+                              ),
+                              child: Center(
+                                child: Text(
+                                  widget.UsedLeave,
+                                  // Replace with dynamic value
+                                  style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      fontFamily: 'Roboto'),
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(width: 5), // Spacing between circle and text
-                          Text(
-                            'Leave Used', // Replace with dynamic text
-                            style: TextStyle(
-                                color: AppColors.textBlack,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                fontFamily: 'Roboto'),
-                          ),
-                        ],
+                            SizedBox(width: 5),
+                            // Spacing between circle and text
+                            Expanded(
+                              child: Text(
+                                'Leave Used', // Replace with dynamic text
+                                style: TextStyle(
+                                    color: AppColors.textBlack,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    fontFamily: 'Roboto'),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(width: 10),
                     // Spacing between the two containers
                     // Second container with circular widget, number, and "Available Leave"
-                    Container(
-                      //width: 100, // Fixed width for consistent size
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: AppColors.textWhite,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        // Center-align content
-                        children: [
-                          Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors
-                                  .grey[300], // Background color of the circle
-                            ),
-                            child: Center(
-                              child: Text(
-                                widget.AvailableLeave,
-                                // Replace with dynamic value
-                                style: TextStyle(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    fontFamily: 'Roboto'),
+                    Expanded(
+                      flex: 6,
+                      child: Container(
+                        //width: 100, // Fixed width for consistent size
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: AppColors.textWhite,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          // Center-align content
+                          children: [
+                            Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey[
+                                    300], // Background color of the circle
+                              ),
+                              child: Center(
+                                child: Text(
+                                  widget.AvailableLeave,
+                                  // Replace with dynamic value
+                                  style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      fontFamily: 'Roboto'),
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(width: 5), // Spacing between circle and text
-                          Text(
-                            'Available Leave', // Replace with dynamic text
-                            style: TextStyle(
-                                color: AppColors.textBlack,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                fontFamily: 'Roboto'),
-                          ),
-                        ],
+                            SizedBox(width: 5),
+                            // Spacing between circle and text
+                            Expanded(
+                              child: Text(
+                                'Available Leave', // Replace with dynamic text
+                                style: TextStyle(
+                                    color: AppColors.textBlack,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    fontFamily: 'Roboto'),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

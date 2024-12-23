@@ -10,6 +10,9 @@ class AppColors {
   static const textNavyBlue = Color(0xFF133452);
   static const textlightGreen = Color(0xFFD6FFCB);
   static const NavBarNavyBlue = Color(0xFF133452);
+  static const NavyBlue = Color(0xFF133452);
+  static const labelGrey = Color(0xFF475467);
+  static const darkGreen = Color(0xFF19B36E);
   static const backgroundGrey = Color(0xFFF4F5FF);
   static const backgroundWhite = Color(0xFFFEFEFE);
   static const backgroundDarkGrey = Color(0xFFEBE9FE);
@@ -19,5 +22,6 @@ class AppColors {
   static const containerBackgroundGrey300 = Color(0xFFEAECF0);
   static const containerBackgroundRed = Color(0xFFF95555);
   static const containerBackgroundGreen = Color(0xFF3FEF09);
-  static const containerBackgroundYellow = Color(0xFFFAD403);
+  static const containerBackgroundYellow = Color(0xFFF79009);
+  static const containerBackgroundPurple = Color(0xFFF4F3FF);
 }
