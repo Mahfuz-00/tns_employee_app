@@ -40,6 +40,9 @@ dependencies:
   fluttertoast:
   intl:
   file_picker:
+  flutter_bloc:
+  bloc:
+  equatable:
 
 dev_dependencies:
   flutter_test:

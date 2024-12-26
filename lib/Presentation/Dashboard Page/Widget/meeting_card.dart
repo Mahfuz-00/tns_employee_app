@@ -157,7 +157,7 @@ class MeetingCard extends StatelessWidget {
       child: Card(
         color: AppColors.backgroundWhite,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(4),
             side: BorderSide(
                 width: 1,
                 color: AppColors.containerBackgroundGrey300)),
@@ -181,7 +181,7 @@ class MeetingCard extends StatelessWidget {
                       Text(
                         meetingHeader, // Second Header
                         style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 16,
                             fontWeight: FontWeight.w500,
                             color: AppColors.textDarkBlack,
                             fontFamily: 'Roboto'),
@@ -191,7 +191,7 @@ class MeetingCard extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.timer, // Timer icon
-                            size: 16,
+                            size: 14,
                             color: Colors.grey[600],
                           ),
                           SizedBox(width: 5),
@@ -199,7 +199,7 @@ class MeetingCard extends StatelessWidget {
                             subtitle2,
                             // Second Subtitle (Time spreader)
                             style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.textGrey,
                                 fontFamily: 'Roboto'),
@@ -252,8 +252,8 @@ class MeetingCard extends StatelessWidget {
                                   // Display + number of images after 3
                                   style: TextStyle(
                                       color: AppColors.textBlack,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18,
                                       fontFamily: 'Roboto'),
                                 ),
                               ),

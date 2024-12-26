@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../Core/Config/Theme/app_colors.dart';
 
-class SingleDatePicker extends StatefulWidget {
+class RangeDatePicker extends StatefulWidget {
   final TextEditingController controller;
   final String label;
-  final Function(DateTime) onDateSelected;
+  final Function(DateTime, DateTime) onDateSelected;
 
-  const SingleDatePicker({
+  const RangeDatePicker({
     required this.controller,
     required this.label,
     required this.onDateSelected,
@@ -15,34 +15,39 @@ class SingleDatePicker extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SingleDatePicker> createState() => _SingleDatePickerState();
+  State<RangeDatePicker> createState() => _RangeDatePickerState();
 }
 
-class _SingleDatePickerState extends State<SingleDatePicker> {
-  bool isDateSelected = false;
+class _RangeDatePickerState extends State<RangeDatePicker> {
+  DateTime? startDate;
+  DateTime? endDate;
 
-  // Function to show the date picker
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+  // Function to show the date range picker
+  Future<void> _selectDateRange(BuildContext context) async {
+    final DateTimeRange? picked = await showDateRangePicker(
       context: context,
-      initialDate: DateTime.now(), // Default to the current date
-      firstDate: DateTime(2024), // Allow dates from 1900
-      lastDate: DateTime(2100), // Allow dates up to 2100
+      firstDate: DateTime(2024),
+      lastDate: DateTime(2100),
+      initialDateRange: (startDate != null && endDate != null)
+          ? DateTimeRange(start: startDate!, end: endDate!)
+          : null,
     );
 
-    if (picked != null) {
+    if (picked != null && picked.start != null && picked.end != null) {
       setState(() {
-        widget.controller.text = DateFormat('dd-MM-yyyy').format(picked); // Format date
-        isDateSelected = true;
+        startDate = picked.start;
+        endDate = picked.end;
+        widget.controller.text =
+        '${DateFormat('dd MMM').format(startDate!)} - ${DateFormat('dd MMM').format(endDate!)}'; // Format range as "20 Nov - 22 Nov"
       });
-      widget.onDateSelected(picked); // Notify the parent widget with the selected date
+      widget.onDateSelected(startDate!, endDate!); // Notify the parent widget with the selected date range
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _selectDate(context), // Trigger date picker on tap
+      onTap: () => _selectDateRange(context), // Trigger date picker on tap
       child: AbsorbPointer(
         child: TextFormField(
           controller: widget.controller,
@@ -54,7 +59,7 @@ class _SingleDatePickerState extends State<SingleDatePicker> {
               color: AppColors.labelGrey,
               fontFamily: 'Roboto',
             ),
-            suffixIcon: isDateSelected
+            suffixIcon: (startDate != null && endDate != null)
                 ? null
                 : Icon(
               Icons.keyboard_arrow_down,

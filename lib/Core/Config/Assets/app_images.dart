@@ -26,6 +26,13 @@ class AppImages {
   static const String VoucherIcon = '${BasePath}Voucher Icon.png';
   static const String VoucherFilledIcon = '${BasePath}Voucher Icon Filled.png';
   static const String ProfileIcon = '${BasePath}Profile Pic.png';
+  static const String ProfileImage = '${BasePath}Profile Image.png';
+  static const String ProfileIcon2 = '${BasePath}Profile Icon.png';
+  static const String ChangePasswordIcon = '${BasePath}Change Password Icon.png';
+  static const String EmailFilledIcon = '${BasePath}Email Filled Icon.png';
+  static const String FAQIcon = '${BasePath}FAQ Icon.png';
+  static const String LocationIcon = '${BasePath}Location Icon.png';
+  static const String LogoutIcon = '${BasePath}Logout Icon.png';
   static const String CommentIcon = '${BasePath}Comment Icon.png';
   static const String NotificationIcon = '${BasePath}Notification Icon.png';
   static const String CameraIcon = '${BasePath}Camera Icon.png';

@@ -39,7 +39,7 @@ class CardsWidget extends StatelessWidget {
       child: Card(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(4),
         ),
         child: Padding(
           padding: const EdgeInsets.all(14.0),
@@ -52,7 +52,7 @@ class CardsWidget extends StatelessWidget {
                   Text(
                     header, // First Header
                     style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.w600,
                         color: AppColors.textBlack,
                         fontFamily: 'Roboto'),
@@ -61,8 +61,8 @@ class CardsWidget extends StatelessWidget {
                     width: 8,
                   ),
                   Container(
-                    height: 30,
-                    width: 30,
+                    height: 26,
+                    width: 26,
                     decoration: BoxDecoration(
                       color: AppColors.backgroundDarkGrey,
                       borderRadius: BorderRadius.circular(8),
@@ -72,7 +72,7 @@ class CardsWidget extends StatelessWidget {
                         totalCount.toString(),
                         // Replace with dynamic meeting count
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: AppColors.primary,
                         ),
@@ -85,7 +85,7 @@ class CardsWidget extends StatelessWidget {
               Text(
                 subtitle, // First Subtitle
                 style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.w400,
                     color: AppColors.textGrey,
                     fontFamily: 'Roboto'),

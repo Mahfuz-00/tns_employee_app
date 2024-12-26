@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:touch_and_solve_inventory_app/Presentation/Voucher%20Creation%20Page/Page/voucher_creation_UI.dart';
 
-import '../../../Common/Widgets/bottom_naviagtion_bar.dart';
+import '../../../Common/Helper/navigation_transition.dart';
+import '../../../Common/Widgets/bottom_navigation_bar.dart';
+import '../../../Common/Widgets/bottom_navigation_bar_with_swipe.dart';
 import '../../../Core/Config/Assets/app_images.dart';
 import '../../../Core/Config/Theme/app_colors.dart';
 import '../../Activity Dashboard Page/Widget/status_container_template.dart';
@@ -100,7 +102,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                               children: [
                                 // "All" section
                                 Expanded(
-                                  flex:1,
+                                  flex: 1,
                                   child: GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -120,19 +122,23 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text(
-                                            'Review',
-                                            style: TextStyle(
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Roboto',
-                                              color: selectedSection == 'Review'
-                                                  ? Colors.white
-                                                  : AppColors.textBlack,
+                                          Expanded(
+                                            child: Text(
+                                              'Review',
+                                              style: TextStyle(
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'Roboto',
+                                                color:
+                                                    selectedSection == 'Review'
+                                                        ? Colors.white
+                                                        : AppColors.textBlack,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                             ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
                                           ),
                                           SizedBox(width: 5.0),
                                           CircleAvatar(
@@ -161,7 +167,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
 
                                 // "In Progress" section
                                 Expanded(
-                                  flex:1,
+                                  flex: 1,
                                   child: GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -181,20 +187,23 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text(
-                                            'Approved',
-                                            style: TextStyle(
-                                              fontFamily: 'Roboto',
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.w400,
-                                              color:
-                                                  selectedSection == 'Approved'
-                                                      ? Colors.white
-                                                      : AppColors.textBlack,
+                                          Expanded(
+                                            child: Text(
+                                              'Approved',
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.w400,
+                                                color: selectedSection ==
+                                                        'Approved'
+                                                    ? Colors.white
+                                                    : AppColors.textBlack,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                             ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
                                           ),
                                           SizedBox(width: 5.0),
                                           CircleAvatar(
@@ -223,7 +232,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
 
                                 // "Finish" section
                                 Expanded(
-                                  flex:1,
+                                  flex: 1,
                                   child: GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -243,20 +252,23 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text(
-                                            'Rejected',
-                                            style: TextStyle(
-                                              fontFamily: 'Roboto',
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.w400,
-                                              color:
-                                                  selectedSection == 'Rejected'
-                                                      ? Colors.white
-                                                      : AppColors.textBlack,
+                                          Expanded(
+                                            child: Text(
+                                              'Rejected',
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.w400,
+                                                color: selectedSection ==
+                                                        'Rejected'
+                                                    ? Colors.white
+                                                    : AppColors.textBlack,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                             ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
                                           ),
                                           SizedBox(width: 5.0),
                                           CircleAvatar(
@@ -394,8 +406,9 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
         ),
       ),
       bottomNavigationBar: SizedBox(
-        height: screenHeight * 0.167,
+        height: screenHeight * 0.18,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               height: screenHeight * 0.1,
@@ -408,7 +421,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => VoucherCreation()),
+                      customPageRoute(VoucherCreation()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -432,9 +445,11 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                 ),
               ),
             ),
-            BottomNavBar(
-              containerHeight: screenHeight * 0.08,
-              currentPage: 'Voucher',
+            Expanded(
+              child: BottomNavBar(
+                containerHeight: screenHeight * 0.08,
+                currentPage: 'Voucher',
+              ),
             ),
           ],
         ),

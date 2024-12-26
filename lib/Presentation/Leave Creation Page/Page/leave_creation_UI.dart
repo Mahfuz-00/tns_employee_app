@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:touch_and_solve_inventory_app/Common/Widgets/Label_Text_Without_Asterisk.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/label_above_datafield.dart';
 import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart';
 import 'package:touch_and_solve_inventory_app/Presentation/Activity%20Dashboard%20Page/Page/activity_dashboard_UI.dart';
 
 import '../../../Common/Widgets/appbar_model.dart';
-import '../../../Common/Widgets/bottom_naviagtion_bar.dart';
+import '../../../Common/Widgets/bottom_navigation_bar.dart';
+import '../../../Common/Widgets/bottom_navigation_bar_with_swipe.dart';
 import '../../../Common/Widgets/drop_down.dart';
-import '../../Activity Creation Page/Widget/date_picker.dart';
+import '../../Voucher Creation Page/Widget/single_date_picker.dart';
+import '../Widget/phone_textformfield.dart';
+import '../Widget/rangedatepicker.dart';
 
 class LeaveCreation extends StatefulWidget {
   const LeaveCreation({super.key});
@@ -18,40 +20,43 @@ class LeaveCreation extends StatefulWidget {
 
 class _LeaveCreationState extends State<LeaveCreation> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _tasktitlecontroller = new TextEditingController();
-  final TextEditingController _taskdescriptioncontroller = new TextEditingController();
-  final TextEditingController _startDateController = TextEditingController();
-  final TextEditingController _endDateController = TextEditingController();
+  final TextEditingController _leavecategorycontroller =
+      new TextEditingController();
+  final TextEditingController _taskdelegationcontroller =
+      new TextEditingController();
+  final TextEditingController _leavedescriptioncontroller =
+      new TextEditingController();
+  final TextEditingController _leavedurationController = TextEditingController();
   final TextEditingController _assigntoController = TextEditingController();
-  final TextEditingController _priorityController = TextEditingController();
-  final TextEditingController _statusController = TextEditingController();
+  final TextEditingController _relationController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  String _selectedLeaveCategory = '';
+  String _selectedTaskDelegation = '';
   String _selectedAssignTo = '';
-  String _selectedPriority = '';
-  String _selectedStatus = '';
   bool isButtonEnabled = false;
 
-  DateTime? startDate;
-  DateTime? endDate;
+  DateTime? leaveDurationStart;
+  DateTime? leaveDurationEnd;
 
   // Form validation function to enable/disable button
   void _validateForm() {
-    print('Task Title: ${_tasktitlecontroller.text}');
-    print('Task Description: ${_taskdescriptioncontroller.text}');
-    print('Start Date: ${_startDateController.text}');
-    print('End Date: ${_endDateController.text}');
+    print('Leave Category: ${_leavecategorycontroller.text}');
+    print('Task Delegation: ${_taskdelegationcontroller.text}');
+    print('Task Description: ${_leavedescriptioncontroller.text}');
+    print('Leave Duration: ${_leavedurationController.text}');
     print('Assigned To: ${_assigntoController.text}');
-    print('Priority: ${_priorityController.text}');
-    print('Status: ${_statusController.text}');
+    print('Relation: ${_relationController.text}');
+    print('Phone: ${_phoneController.text}');
     print('Button enabled: $isButtonEnabled');
 
     // Check if any of the fields are empty
-    bool areFieldsFilled = _tasktitlecontroller.text.isNotEmpty &&
-        _taskdescriptioncontroller.text.isNotEmpty &&
-        _startDateController.text.isNotEmpty &&
-        _endDateController.text.isNotEmpty &&
-        _assigntoController.text.isNotEmpty &&
-        _priorityController.text.isNotEmpty &&
-        _statusController.text.isNotEmpty;
+    bool areFieldsFilled = _leavecategorycontroller.text.isNotEmpty &&
+        _taskdelegationcontroller.text.isNotEmpty &&
+        _leavedescriptioncontroller.text.isNotEmpty &&
+        _leavedurationController.text.isNotEmpty &&
+        _relationController.text.isNotEmpty &&
+        _phoneController.text.isNotEmpty &&
+        _assigntoController.text.isNotEmpty;
 
     setState(() {
       isButtonEnabled = areFieldsFilled;
@@ -59,42 +64,37 @@ class _LeaveCreationState extends State<LeaveCreation> {
   }
 
   // Handle date selection for start and end dates
-  void _onStartDateSelected(DateTime selectedDate) {
+  void _onLeaveDurationSelected(DateTime startDate, DateTime endDate) {
     setState(() {
-      startDate = selectedDate;
+      leaveDurationStart = startDate;
+      leaveDurationEnd = endDate;
     });
   }
 
-  void _onEndDateSelected(DateTime selectedDate) {
-    setState(() {
-      endDate = selectedDate;
-    });
-  }
 
   @override
   void initState() {
     super.initState();
 
     // Adding listeners to the controllers to detect changes
-    _tasktitlecontroller.addListener(_validateForm);
-    _taskdescriptioncontroller.addListener(_validateForm);
-    _startDateController.addListener(_validateForm);
-    _endDateController.addListener(_validateForm);
+    _leavecategorycontroller.addListener(_validateForm);
+    _taskdelegationcontroller.addListener(_validateForm);
+    _leavedescriptioncontroller.addListener(_validateForm);
+    _leavedurationController.addListener(_validateForm);
     _assigntoController.addListener(_validateForm);
-    _priorityController.addListener(_validateForm);
-    _statusController.addListener(_validateForm);
+    _relationController.addListener(_validateForm);
+    _phoneController.addListener(_validateForm);
   }
 
   @override
   void dispose() {
     // Dispose of controllers to avoid memory leaks
-    _tasktitlecontroller.dispose();
-    _taskdescriptioncontroller.dispose();
-    _startDateController.dispose();
-    _endDateController.dispose();
+    _taskdelegationcontroller.dispose();
+    _leavedescriptioncontroller.dispose();
+    _leavedurationController.dispose();
     _assigntoController.dispose();
-    _priorityController.dispose();
-    _statusController.dispose();
+    _relationController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -103,7 +103,9 @@ class _LeaveCreationState extends State<LeaveCreation> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBarModel(title: 'Submit Leave',),
+      appBar: AppBarModel(
+        title: 'Submit Leave',
+      ),
       body: Form(
         key: _formKey,
         child: SafeArea(
@@ -120,103 +122,103 @@ class _LeaveCreationState extends State<LeaveCreation> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      LabelWidget(labelText: 'Task Title'),
-                      SizedBox(height: 8,),
-                      TextFormField(
-                        controller: _tasktitlecontroller, // Use the controller
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          hintText: 'Enter task title',
-                          labelText: 'Task Title',
-                          labelStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.labelGrey,
-                            fontFamily: 'Roboto',),
-                          hintStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.labelGrey,
-                            fontFamily: 'Roboto',),
-                        ),
+                      Text(
+                        'Fill Leave Infromation',
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.labelGrey,
-                          fontFamily: 'Roboto',),
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textBlack,
+                            fontFamily: 'Roboto'),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        'Information about leave details',
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.labelGrey,
+                            fontFamily: 'Roboto'),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      LabelWidget(labelText: 'Leave Category'),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Dropdown(
+                        controller: _leavecategorycontroller,
+                        label: 'Leave Category',
+                        options: ['Personal', 'Sick', 'Official'],
+                        // List of options
+                        selectedValue: _selectedLeaveCategory,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedLeaveCategory = value!;
+                            _leavecategorycontroller.text = value ?? '';
+                          });
+                        },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a task title';
+                            return 'Please select a category';
                           }
                           return null;
                         },
+                        hinttext: 'Select Category',
                       ),
-                      SizedBox(height: 16,),
-                      LabelWidget(labelText: 'Task Description'),
-                      SizedBox(height: 8,),
-                      TextFormField(
-                        controller: _taskdescriptioncontroller, // Use the controller
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          hintText: 'Enter Task Description',
-                          labelText: 'Task Description',
-                          alignLabelWithHint: true, // Ensure label stays at the top
-                          labelStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.labelGrey,
-                            fontFamily: 'Roboto',),
-                          hintStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.labelGrey,
-                            fontFamily: 'Roboto',),
-                        ),
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.labelGrey,
-                          fontFamily: 'Roboto',),
-                        maxLines: 3, // Make the field larger by increasing maxLines
-                        minLines: 3, // Set the minimum number of lines to display
-                        // floatingLabelBehavior: FloatingLabelBehavior.always, // Ensure the label stays at the top
+                      SizedBox(
+                        height: 16,
+                      ),
+                      LabelWidget(labelText: 'Leave Duration'),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      RangeDatePicker(
+                        controller: _leavedurationController,
+                        label: 'Leave Duration',
+                        onDateSelected: _onLeaveDurationSelected,
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      LabelWidget(labelText: 'Task Delegation'),
+                      Dropdown(
+                        controller: _taskdelegationcontroller,
+                        label: 'Task Delegation',
+                        options: ['Personal', 'Sick', 'Official'],
+                        // List of options
+                        selectedValue: _selectedTaskDelegation,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedTaskDelegation = value!;
+                            _taskdelegationcontroller.text = value ?? '';
+                          });
+                        },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a task description';
+                            return 'Please select a category';
                           }
                           return null;
                         },
+                        hinttext: 'Select Category',
                       ),
-                      SizedBox(height: 16,),
-                      LabelWidget(labelText: 'Select Time'),
-                      SizedBox(height: 8,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          DatePickerFormField(
-                            controller: _startDateController,
-                            label: 'Start Date',
-                            onDateSelected: _onStartDateSelected,
-                          ),
-                          SizedBox(width: 16),
-                          DatePickerFormField(
-                            controller: _endDateController,
-                            label: 'End Date',
-                            onDateSelected: _onEndDateSelected,
-                          ),
-                        ],
+                      SizedBox(
+                        height: 8,
                       ),
-                      SizedBox(height: 16,),
-                      LabelWidget(labelText: 'Assign To'),
-                      SizedBox(height: 8,),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      LabelWidget(labelText: 'In Absence task assigned to'),
+                      SizedBox(
+                        height: 8,
+                      ),
                       Dropdown(
                         controller: _assigntoController,
                         label: 'Select Assign Person',
-                        options: ['Sajjad', 'Shihab', 'Munna'], // List of options
+                        options: ['Sajjad', 'Shihab', 'Munna'],
+                        // List of options
                         selectedValue: _selectedAssignTo,
                         onChanged: (value) {
                           setState(() {
@@ -229,53 +231,80 @@ class _LeaveCreationState extends State<LeaveCreation> {
                             return 'Please select a person';
                           }
                           return null;
-                        }, hinttext: 'Select Assign Person',
+                        },
+                        hinttext: 'Select Assign Person',
                       ),
-                      SizedBox(height: 16,),
-                      LabelWidget(labelText: 'Priority'),
-                      SizedBox(height: 8,),
-                      Dropdown(
-                        controller: _priorityController,
-                        label: 'Select Priority',
-                        options: ['Low', 'Medium', 'High'], // List of options
-                        selectedValue: _selectedPriority,
-                        onChanged: (value) {
+                      SizedBox(
+                        height: 16,
+                      ),
+                      LabelWidget(
+                          labelText: 'Emergency Contact During Leave Period'),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      PhoneNumberInputField(
+                        onPhoneChanged: (phone) {
                           setState(() {
-                            _selectedPriority = value!;
-                            _priorityController.text = value ?? '';
+                            print('Phone Number: $phone');
+                            _phoneController.text = phone;
                           });
                         },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please select a priority';
-                          }
-                          return null;
-                        }, hinttext: 'Select Priority',
-                      ),
-                      SizedBox(height: 16,),
-                      LabelWidget(labelText: 'Status'),
-                      SizedBox(height: 8,),
-                      Dropdown(
-                        controller: _statusController,
-                        label: 'Select Status',
-                        options: ['Pending', 'In Progress', 'Done'], // List of options
-                        selectedValue: _selectedStatus,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedStatus = value!;
-                            _statusController.text = value ?? '';
-                          });
+                        onRelationChanged: (relation) {
+                          print('Relation: $relation');
+                          _relationController.text = relation;
                         },
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      LabelWidget(labelText: 'Leave Description'),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      TextFormField(
+                        controller: _leavedescriptioncontroller,
+                        // Use the controller
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          hintText: 'Enter Leave Description',
+                          labelText: 'Leave Description',
+                          alignLabelWithHint: true,
+                          // Ensure label stays at the top
+                          labelStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.labelGrey,
+                            fontFamily: 'Roboto',
+                          ),
+                          hintStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.labelGrey,
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.labelGrey,
+                          fontFamily: 'Roboto',
+                        ),
+                        maxLines: 3,
+                        // Make the field larger by increasing maxLines
+                        minLines: 3,
+                        // Set the minimum number of lines to display
+                        // floatingLabelBehavior: FloatingLabelBehavior.always, // Ensure the label stays at the top
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please select a status';
+                            return 'Please enter leave description';
                           }
                           return null;
-                        }, hinttext: 'Select Status',
+                        },
                       ),
                     ],
                   ),
-
                 ),
               ],
             ),
@@ -283,8 +312,9 @@ class _LeaveCreationState extends State<LeaveCreation> {
         ),
       ),
       bottomNavigationBar: SizedBox(
-        height: screenHeight * 0.167,
+        height: screenHeight * 0.18,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               height: screenHeight * 0.1,
@@ -294,33 +324,43 @@ class _LeaveCreationState extends State<LeaveCreation> {
               ),
               child: Center(
                 child: ElevatedButton(
-                  onPressed: isButtonEnabled ? () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ActivityDashboard()),
-                    );
-                  }: null,
+                  onPressed: isButtonEnabled
+                      ? () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ActivityDashboard()),
+                          );
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isButtonEnabled ? AppColors.primary: AppColors.labelGrey,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    fixedSize: Size(screenWidth*0.9, 50),
+                    backgroundColor: isButtonEnabled
+                        ? AppColors.primary
+                        : AppColors.labelGrey,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    fixedSize: Size(screenWidth * 0.9, 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text('Create Task',
+                  child: const Text(
+                    'Create Task',
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 16.0,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textWhite,
-                    ),),
+                    ),
+                  ),
                 ),
               ),
             ),
-            BottomNavBar(
-              containerHeight: screenHeight * 0.08,
-              currentPage: 'Activity',
+            Expanded(
+              child: BottomNavBar(
+                containerHeight: screenHeight * 0.08,
+                currentPage: 'Leave',
+              ),
             ),
           ],
         ),
@@ -328,5 +368,3 @@ class _LeaveCreationState extends State<LeaveCreation> {
     );
   }
 }
-
-

@@ -6,11 +6,13 @@ import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart'
 import 'package:touch_and_solve_inventory_app/Presentation/Activity%20Dashboard%20Page/Page/activity_dashboard_UI.dart';
 
 import '../../../Common/Widgets/appbar_model.dart';
-import '../../../Common/Widgets/bottom_naviagtion_bar.dart';
+import '../../../Common/Widgets/bottom_navigation_bar.dart';
+import '../../../Common/Widgets/bottom_navigation_bar_with_swipe.dart';
 import '../../../Common/Widgets/drop_down.dart';
 import '../../../Core/Config/Assets/app_images.dart';
 import '../../Activity Creation Page/Widget/date_picker.dart';
 import '../Widget/custom_border_painter.dart';
+import '../Widget/single_date_picker.dart';
 
 class VoucherCreation extends StatefulWidget {
   const VoucherCreation({super.key});
@@ -21,40 +23,32 @@ class VoucherCreation extends StatefulWidget {
 
 class _VoucherCreationState extends State<VoucherCreation> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _expenseamountcontroller = new TextEditingController();
-  final TextEditingController _expensedescriptioncontroller = new TextEditingController();
-  final TextEditingController _transactionDateController = TextEditingController();
-  final TextEditingController _endDateController = TextEditingController();
-  final TextEditingController _expensivecategoryController = TextEditingController();
-  final TextEditingController _priorityController = TextEditingController();
-  final TextEditingController _statusController = TextEditingController();
+  final TextEditingController _expenseamountcontroller =
+      new TextEditingController();
+  final TextEditingController _expensedescriptioncontroller =
+      new TextEditingController();
+  final TextEditingController _transactionDateController =
+      TextEditingController();
+  final TextEditingController _expensivecategoryController =
+      TextEditingController();
   String _selectedExpenseCategory = '';
-  String _selectedPriority = '';
-  String _selectedStatus = '';
   bool isButtonEnabled = false;
 
   DateTime? tansactionDate;
-  DateTime? endDate;
 
   // Form validation function to enable/disable button
   void _validateForm() {
     print('Task Title: ${_expenseamountcontroller.text}');
     print('Task Description: ${_expensedescriptioncontroller.text}');
     print('Start Date: ${_transactionDateController.text}');
-    print('End Date: ${_endDateController.text}');
     print('Assigned To: ${_expensivecategoryController.text}');
-    print('Priority: ${_priorityController.text}');
-    print('Status: ${_statusController.text}');
     print('Button enabled: $isButtonEnabled');
 
     // Check if any of the fields are empty
     bool areFieldsFilled = _expenseamountcontroller.text.isNotEmpty &&
         _expensedescriptioncontroller.text.isNotEmpty &&
         _transactionDateController.text.isNotEmpty &&
-        _endDateController.text.isNotEmpty &&
-        _expensivecategoryController.text.isNotEmpty &&
-        _priorityController.text.isNotEmpty &&
-        _statusController.text.isNotEmpty;
+        _expensivecategoryController.text.isNotEmpty;
 
     setState(() {
       isButtonEnabled = areFieldsFilled;
@@ -106,10 +100,7 @@ class _VoucherCreationState extends State<VoucherCreation> {
     _expenseamountcontroller.addListener(_validateForm);
     _expensedescriptioncontroller.addListener(_validateForm);
     _transactionDateController.addListener(_validateForm);
-    _endDateController.addListener(_validateForm);
     _expensivecategoryController.addListener(_validateForm);
-    _priorityController.addListener(_validateForm);
-    _statusController.addListener(_validateForm);
   }
 
   @override
@@ -118,10 +109,7 @@ class _VoucherCreationState extends State<VoucherCreation> {
     _expenseamountcontroller.dispose();
     _expensedescriptioncontroller.dispose();
     _transactionDateController.dispose();
-    _endDateController.dispose();
     _expensivecategoryController.dispose();
-    _priorityController.dispose();
-    _statusController.dispose();
     super.dispose();
   }
 
@@ -130,23 +118,25 @@ class _VoucherCreationState extends State<VoucherCreation> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBarModel(title: 'Submit Expense',),
-      body: Form(
-        key: _formKey,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.all(16),
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.backgroundWhite,
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                  ),
+      appBar: AppBarModel(
+        title: 'Submit Expense',
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.all(16),
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.backgroundWhite,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: Form(
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+                    //mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         'Fill Claim Infromation',
@@ -171,11 +161,14 @@ class _VoucherCreationState extends State<VoucherCreation> {
                         height: 20,
                       ),
                       LabelWidget(labelText: 'Expense Category'),
-                      SizedBox(height: 8,),
+                      SizedBox(
+                        height: 8,
+                      ),
                       Dropdown(
                         controller: _expensivecategoryController,
                         label: 'Select Expense Category',
-                        options: ['Sajjad', 'Shihab', 'Munna'], // List of options
+                        options: ['Sajjad', 'Shihab', 'Munna'],
+                        // List of options
                         selectedValue: _selectedExpenseCategory,
                         onChanged: (value) {
                           setState(() {
@@ -188,44 +181,60 @@ class _VoucherCreationState extends State<VoucherCreation> {
                             return 'Please select a expense category';
                           }
                           return null;
-                        }, hinttext: 'Select Expense Category',
+                        },
+                        hinttext: 'Select Expense Category',
                       ),
-                      SizedBox(height: 16,),
+                      SizedBox(
+                        height: 16,
+                      ),
                       LabelWidget(labelText: 'Transaction Date'),
-                      SizedBox(height: 8,),
-                    /*  DatePickerFormField(
+                      SizedBox(
+                        height: 8,
+                      ),
+                      SingleDatePicker(
                         controller: _transactionDateController,
                         label: 'Transaction Date',
                         onDateSelected: _onTransactionDateSelected,
-                      ),*/
-                      SizedBox(height: 16,),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
                       LabelWidget(labelText: 'Expense Amount'),
-                      SizedBox(height: 8,),
+                      SizedBox(
+                        height: 8,
+                      ),
                       TextFormField(
-                        controller: _expenseamountcontroller, // Use the controller
+                        controller: _expenseamountcontroller,
+                        // Use the controller
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          hintText: 'Enter expense amount',
-                          labelText: 'Expense Amount',
-                          labelStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.labelGrey,
-                            fontFamily: 'Roboto',),
-                          hintStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.labelGrey,
-                            fontFamily: 'Roboto',),
-                          suffixIcon: Icon(Icons.add, color: AppColors.primary, size: 24,)
-                        ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            hintText: 'Enter expense amount',
+                            labelText: 'Expense Amount',
+                            labelStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.labelGrey,
+                              fontFamily: 'Roboto',
+                            ),
+                            hintStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.labelGrey,
+                              fontFamily: 'Roboto',
+                            ),
+                            suffixIcon: Icon(
+                              Icons.add,
+                              color: AppColors.primary,
+                              size: 24,
+                            )),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                           color: AppColors.labelGrey,
-                          fontFamily: 'Roboto',),
+                          fontFamily: 'Roboto',
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your expense amount';
@@ -233,36 +242,47 @@ class _VoucherCreationState extends State<VoucherCreation> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16,),
+                      SizedBox(
+                        height: 16,
+                      ),
                       LabelWidget(labelText: 'Expense Description'),
-                      SizedBox(height: 8,),
+                      SizedBox(
+                        height: 8,
+                      ),
                       TextFormField(
-                        controller: _expensedescriptioncontroller, // Use the controller
+                        controller: _expensedescriptioncontroller,
+                        // Use the controller
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           hintText: 'Enter Expense Description',
                           labelText: 'Expense Description',
-                          alignLabelWithHint: true, // Ensure label stays at the top
+                          alignLabelWithHint: true,
+                          // Ensure label stays at the top
                           labelStyle: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             color: AppColors.labelGrey,
-                            fontFamily: 'Roboto',),
+                            fontFamily: 'Roboto',
+                          ),
                           hintStyle: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             color: AppColors.labelGrey,
-                            fontFamily: 'Roboto',),
+                            fontFamily: 'Roboto',
+                          ),
                         ),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                           color: AppColors.labelGrey,
-                          fontFamily: 'Roboto',),
-                        maxLines: 3, // Make the field larger by increasing maxLines
-                        minLines: 3, // Set the minimum number of lines to display
+                          fontFamily: 'Roboto',
+                        ),
+                        maxLines: 3,
+                        // Make the field larger by increasing maxLines
+                        minLines: 3,
+                        // Set the minimum number of lines to display
                         // floatingLabelBehavior: FloatingLabelBehavior.always, // Ensure the label stays at the top
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -271,7 +291,9 @@ class _VoucherCreationState extends State<VoucherCreation> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16,),
+                      SizedBox(
+                        height: 16,
+                      ),
                       Center(
                         child: GestureDetector(
                           onTap: _pickFile,
@@ -290,7 +312,7 @@ class _VoucherCreationState extends State<VoucherCreation> {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                   Image.asset(
+                                    Image.asset(
                                       AppImages.VoucherFileUploadIcon,
                                       height: 30,
                                       width: 30,
@@ -302,7 +324,8 @@ class _VoucherCreationState extends State<VoucherCreation> {
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
                                         color: AppColors.primary,
-                                        fontFamily: 'Roboto',),
+                                        fontFamily: 'Roboto',
+                                      ),
                                     ),
                                     SizedBox(height: 4),
                                     Text(
@@ -311,7 +334,8 @@ class _VoucherCreationState extends State<VoucherCreation> {
                                         fontSize: 12,
                                         fontWeight: FontWeight.w400,
                                         color: AppColors.labelGrey,
-                                        fontFamily: 'Roboto',),
+                                        fontFamily: 'Roboto',
+                                      ),
                                       textAlign: TextAlign.center,
                                     ),
                                   ],
@@ -323,16 +347,16 @@ class _VoucherCreationState extends State<VoucherCreation> {
                       ),
                     ],
                   ),
-
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
       bottomNavigationBar: SizedBox(
-        height: screenHeight * 0.167,
+        height: screenHeight * 0.18,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               height: screenHeight * 0.1,
@@ -342,33 +366,43 @@ class _VoucherCreationState extends State<VoucherCreation> {
               ),
               child: Center(
                 child: ElevatedButton(
-                  onPressed: isButtonEnabled ? () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ActivityDashboard()),
-                    );
-                  }: null,
+                  onPressed: isButtonEnabled
+                      ? () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ActivityDashboard()),
+                          );
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isButtonEnabled ? AppColors.primary: AppColors.labelGrey,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    fixedSize: Size(screenWidth*0.9, 50),
+                    backgroundColor: isButtonEnabled
+                        ? AppColors.primary
+                        : AppColors.labelGrey,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    fixedSize: Size(screenWidth * 0.9, 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text('Submit Expense',
+                  child: const Text(
+                    'Submit Expense',
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 16.0,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textWhite,
-                    ),),
+                    ),
+                  ),
                 ),
               ),
             ),
-            BottomNavBar(
-              containerHeight: screenHeight * 0.08,
-              currentPage: 'Activity',
+            Expanded(
+              child: BottomNavBar(
+                containerHeight: screenHeight * 0.08,
+                currentPage: 'Activity',
+              ),
             ),
           ],
         ),
@@ -376,5 +410,3 @@ class _VoucherCreationState extends State<VoucherCreation> {
     );
   }
 }
-
-

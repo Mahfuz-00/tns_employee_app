@@ -6,51 +6,72 @@ import 'package:touch_and_solve_inventory_app/Presentation/Voucher%20Dashboard%2
 
 import '../../Core/Config/Theme/app_colors.dart';
 import '../../Presentation/Dashboard Page/Page/dashboard_UI.dart';
+import '../Helper/navigation_transition.dart';
 
 class BottomNavBar extends StatelessWidget {
   final double containerHeight;
   final String currentPage;
 
-  const BottomNavBar({Key? key, required this.containerHeight, required this.currentPage})
+  const BottomNavBar(
+      {Key? key, required this.containerHeight, required this.currentPage})
       : super(key: key);
 
   // Function to handle the onPressed for each button
   void _onButtonPressed(BuildContext context, String pageName) {
     if (pageName == currentPage) return;
 
+    // Define the custom page route animation
+    /*PageRouteBuilder _customPageRoute(Widget page) {
+      return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          // Define the slide animation from the left
+          const begin = Offset(1.0, 0.0); // Start off-screen on the left
+          const end = Offset.zero; // End at the screen center
+          const curve = Curves.easeInOut; // Smooth curve
+
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(position: offsetAnimation, child: child);
+        },
+        transitionDuration: Duration(milliseconds: 50), // Duration of the transition
+      );
+    }*/
+
     switch (pageName) {
       case 'Home':
-      // Replace current screen with the dashboard page
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => Dashboard()),
+          customPageRoute(Dashboard()),
+          // _customPageRoute(Dashboard()),
         );
+        break;
       case 'Activity':
-      // Navigate to Activity page
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => ActivityDashboard()),
+          customPageRoute(ActivityDashboard()),
+          //_customPageRoute(ActivityDashboard()),
         );
         break;
       case 'Leave':
-      // Navigate to Leave page
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => LeaveDashboard()),
+          customPageRoute(LeaveDashboard()),
+          //_customPageRoute(LeaveDashboard()),
         );
         break;
       case 'Voucher':
-      // Navigate to Voucher page
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => VoucherDashboard()),
+          customPageRoute(VoucherDashboard()),
+         // _customPageRoute(VoucherDashboard()),
         );
         break;
       default:
         print('Unknown page: $pageName');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -101,18 +122,18 @@ class BottomNavBar extends StatelessWidget {
         children: [
           Image.asset(
             imagePath, // Pass the image path here
-            width: 30.0,  // Adjust image size as needed
+            width: 30.0, // Adjust image size as needed
             height: 30.0, // Adjust image size as needed
           ),
           const SizedBox(height: 8.0),
           Text(
             label,
             style: TextStyle(
-              color: AppColors.textlightGreen, // You can customize the label color here
-              fontSize: 12.0,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Roboto'
-            ),
+                color: AppColors.textlightGreen,
+                // You can customize the label color here
+                fontSize: 12.0,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Roboto'),
           ),
         ],
       ),

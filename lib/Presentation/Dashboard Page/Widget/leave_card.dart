@@ -43,7 +43,7 @@ class _LeaveCardState extends State<LeaveCard> {
       child: Card(
         color: AppColors.backgroundWhite,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(4),
             side: BorderSide(
                 width: 1, color: AppColors.containerBackgroundGrey300)),
         child: Padding(
@@ -64,7 +64,7 @@ class _LeaveCardState extends State<LeaveCard> {
                     child: Text(
                       widget.leaveHeader, // Second Header
                       style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.w500,
                           color: AppColors.textDarkBlack,
                           fontFamily: 'Roboto'),
@@ -81,6 +81,7 @@ class _LeaveCardState extends State<LeaveCard> {
                       /*border: Border.all(color: AppColors.textWhite), */ // Adjust border color as needed
                     ),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Image.asset(
                           AppImages.CalenderIcon,
@@ -95,7 +96,7 @@ class _LeaveCardState extends State<LeaveCard> {
                           style: TextStyle(
                               color: AppColors.textBlack,
                               fontWeight: FontWeight.w500,
-                              fontSize: 16,
+                              fontSize: 14,
                               fontFamily: 'Roboto'),
                         ),
                       ],
@@ -105,159 +106,145 @@ class _LeaveCardState extends State<LeaveCard> {
               ),
               SizedBox(height: 8),
 
-              Container(
-                width: screenWidth * 0.25,
-                height: 40,
-                padding: EdgeInsets.symmetric(vertical: 5),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5),
-                  width: screenWidth * 0.20,
-                  height: screenHeight * 0.035,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color: AppColors.containerBackgroundGrey300,
+              Row( // First row with Section 1 and Section 2
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Section 1 (Timer Status)
+                  Container(
+                    height: 40,
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      width: screenWidth * 0.20,
+                      height: screenHeight * 0.035,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: AppColors.containerBackgroundGrey300,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.timer, // Timer icon
+                            size: 18,
+                            color: Colors.grey[600],
+                          ),
+                          SizedBox(width: 5),
+                          Text(
+                            widget.Status,
+                            style: TextStyle(
+                              color: AppColors.textBlack,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              fontFamily: 'Roboto',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.timer, // Timer icon
-                        size: 18,
-                        color: Colors.grey[600],
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        widget.Status,
-                        style: TextStyle(
+                  SizedBox(width: 15),
+
+                  // Section 2 (Leave Used)
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: AppColors.textWhite,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Row(
+                      //mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey[300], // Background color of the circle
+                          ),
+                          child: Center(
+                            child: Text(
+                              widget.UsedLeave, // Replace with dynamic value
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                fontFamily: 'Roboto',
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          'Leave Used', // Replace with dynamic text
+                          style: TextStyle(
                             color: AppColors.textBlack,
                             fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                            fontFamily: 'Roboto'),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 5),
-
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  children: [
-                    // First container with circular widget, number, and "Leave Used"
-                    Expanded(
-                      flex: 5,
-                      child: Container(
-                        //width: 100, // Fixed width for consistent size
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: AppColors.textWhite,
-                          borderRadius: BorderRadius.circular(4),
+                            fontSize: 14,
+                            fontFamily: 'Roboto',
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          // Center-align content
-                          children: [
-                            Container(
-                              width: 20,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey[
-                                    300], // Background color of the circle
-                              ),
-                              child: Center(
-                                child: Text(
-                                  widget.UsedLeave,
-                                  // Replace with dynamic value
-                                  style: TextStyle(
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      fontFamily: 'Roboto'),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 5),
-                            // Spacing between circle and text
-                            Expanded(
-                              child: Text(
-                                'Leave Used', // Replace with dynamic text
-                                style: TextStyle(
-                                    color: AppColors.textBlack,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    fontFamily: 'Roboto'),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                            ),
-                          ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 5), // Spacer between rows
+
+              // Section 3 (Always in next line - Available Leave)
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                decoration: BoxDecoration(
+                  color: AppColors.textWhite,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey[300], // Background color of the circle
+                      ),
+                      child: Center(
+                        child: Text(
+                          widget.AvailableLeave, // Replace with dynamic value
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            fontFamily: 'Roboto',
+                          ),
                         ),
                       ),
                     ),
-                    SizedBox(width: 10),
-                    // Spacing between the two containers
-                    // Second container with circular widget, number, and "Available Leave"
-                    Expanded(
-                      flex: 6,
-                      child: Container(
-                        //width: 100, // Fixed width for consistent size
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: AppColors.textWhite,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          // Center-align content
-                          children: [
-                            Container(
-                              width: 20,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey[
-                                    300], // Background color of the circle
-                              ),
-                              child: Center(
-                                child: Text(
-                                  widget.AvailableLeave,
-                                  // Replace with dynamic value
-                                  style: TextStyle(
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                      fontFamily: 'Roboto'),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 5),
-                            // Spacing between circle and text
-                            Expanded(
-                              child: Text(
-                                'Available Leave', // Replace with dynamic text
-                                style: TextStyle(
-                                    color: AppColors.textBlack,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    fontFamily: 'Roboto'),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                            ),
-                          ],
-                        ),
+                    SizedBox(width: 5),
+                    Text(
+                      'Available Leave', // Replace with dynamic text
+                      style: TextStyle(
+                        color: AppColors.textBlack,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: 'Roboto',
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ],
                 ),
-              ),
+              )
+
+
+
+
             ],
           ),
         ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:touch_and_solve_inventory_app/Common/Widgets/bottom_naviagtion_bar.dart';
+import 'package:touch_and_solve_inventory_app/Common/Widgets/bottom_navigation_bar.dart';
+import 'package:touch_and_solve_inventory_app/Common/Widgets/bottom_navigation_bar_with_swipe.dart';
 import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart';
 import 'package:touch_and_solve_inventory_app/Presentation/Activity%20Creation%20Page/Page/activity_creation_UI.dart';
 import 'package:touch_and_solve_inventory_app/Presentation/Dashboard%20Page/Widget/task_card.dart';
 
+import '../../../Common/Helper/navigation_transition.dart';
 import '../../../Core/Config/Assets/app_images.dart';
 import '../Widget/status_container_template.dart';
 
@@ -113,17 +115,20 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                                       padding: EdgeInsets.all(8.0),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text(
-                                            'All',
-                                            style: TextStyle(
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Roboto',
-                                              color: selectedSection == 'All' ? Colors.white : AppColors.textBlack,
+                                          Expanded(
+                                            child: Text(
+                                              'All',
+                                              style: TextStyle(
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'Roboto',
+                                                color: selectedSection == 'All' ? Colors.white : AppColors.textBlack,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                             ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
                                           ),
                                           SizedBox(width: 5.0),
                                           CircleAvatar(
@@ -162,6 +167,7 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                                      padding: EdgeInsets.all(8.0),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Expanded(
                                             child: Text(
@@ -213,17 +219,20 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                                       padding: EdgeInsets.all(8.0),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text(
-                                            'Finish',
-                                            style: TextStyle(
-                                              fontFamily: 'Roboto',
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.w400,
-                                              color: selectedSection == 'Finish' ? Colors.white : AppColors.textBlack,
+                                          Expanded(
+                                            child: Text(
+                                              'Finish',
+                                              style: TextStyle(
+                                                fontFamily: 'Roboto',
+                                                fontSize: 14.0,
+                                                fontWeight: FontWeight.w400,
+                                                color: selectedSection == 'Finish' ? Colors.white : AppColors.textBlack,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
                                             ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
                                           ),
                                           SizedBox(width: 5.0),
                                           CircleAvatar(
@@ -368,8 +377,9 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
         ),
       ),
       bottomNavigationBar: SizedBox(
-        height: screenHeight * 0.167,
+        height: screenHeight * 0.18,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               height: screenHeight * 0.1,
@@ -382,7 +392,7 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ActivityCreation()),
+                      customPageRoute(ActivityCreation()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -403,9 +413,11 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                 ),
               ),
             ),
-            BottomNavBar(
-              containerHeight: screenHeight * 0.08,
-              currentPage: 'Activity',
+            Expanded(
+              child: BottomNavBar(
+                containerHeight: screenHeight * 0.08,
+                currentPage: 'Activity',
+              ),
             ),
           ],
         ),

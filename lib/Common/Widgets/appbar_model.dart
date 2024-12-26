@@ -4,8 +4,9 @@ import '../../Core/Config/Theme/app_colors.dart';
 
 class AppBarModel extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final Color? color;
   const AppBarModel({
-    super.key, required this.title,
+    super.key, required this.title, this.color
   });
 
   @override
@@ -14,10 +15,10 @@ class AppBarModel extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: AppColors.backgroundWhite,
+      backgroundColor: color??AppColors.backgroundWhite,
       titleSpacing: 0,
       leading: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         child: GestureDetector(
           onTap: () {
             Navigator.pop(context); // To go back to the previous page
@@ -49,7 +50,7 @@ class AppBarModel extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.w600,
-            color: AppColors.textBlack,
+            color: color != null ? AppColors.textWhite: AppColors.textBlack,
             fontFamily: 'Roboto'),
       ),
       centerTitle: true,

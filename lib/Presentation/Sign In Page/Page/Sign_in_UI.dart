@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/Label_Text_Without_Asterisk.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/internet_connection_check.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/text_editor.dart';
@@ -6,6 +7,7 @@ import 'package:touch_and_solve_inventory_app/Core/Config/Assets/app_images.dart
 import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart';
 import 'package:touch_and_solve_inventory_app/Presentation/Dashboard%20Page/Page/dashboard_UI.dart';
 
+import '../../../Common/Bloc/bottom_navigation_with_swipe_cubit.dart';
 import '../Widgets/finger_scan_overlay.dart';
 
 class SignInPage extends StatefulWidget {
@@ -47,16 +49,17 @@ class _SignInPageState extends State<SignInPage> {
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.only(
-              top: screenWidth * 0.2,
-              left: screenWidth * 0.1,
-              right: screenWidth * 0.1,),
+            top: screenWidth * 0.2,
+            left: screenWidth * 0.1,
+            right: screenWidth * 0.1,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildSignInText(),
               SizedBox(
-                height: screenHeight*0.1,
+                height: screenHeight * 0.1,
               ),
               LabeledTextWithoutAsterisk(text: 'Email'),
               SizedBox(
@@ -80,7 +83,7 @@ class _SignInPageState extends State<SignInPage> {
               ),
               SignInandFingerScanButtons(context),
               SizedBox(
-                height: screenHeight*0.1,
+                height: screenHeight * 0.1,
               ),
               ORDivider(),
               SizedBox(
@@ -222,11 +225,12 @@ class _SignInPageState extends State<SignInPage> {
               ),
             ),
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Dashboard(),
-                  ));
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Dashboard(),
+                ),
+              );
             },
             child: Text(
               'Sign In',

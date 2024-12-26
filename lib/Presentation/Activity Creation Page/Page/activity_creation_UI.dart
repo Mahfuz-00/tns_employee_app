@@ -5,7 +5,7 @@ import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart'
 import 'package:touch_and_solve_inventory_app/Presentation/Activity%20Dashboard%20Page/Page/activity_dashboard_UI.dart';
 
 import '../../../Common/Widgets/appbar_model.dart';
-import '../../../Common/Widgets/bottom_naviagtion_bar.dart';
+import '../../../Common/Widgets/bottom_navigation_bar.dart';
 import '../../../Common/Widgets/drop_down.dart';
 import '../Widget/date_picker.dart';
 
@@ -283,8 +283,9 @@ class _ActivityCreationState extends State<ActivityCreation> {
         ),
       ),
       bottomNavigationBar: SizedBox(
-        height: screenHeight * 0.167,
+        height: screenHeight * 0.18,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               height: screenHeight * 0.1,
@@ -297,7 +298,7 @@ class _ActivityCreationState extends State<ActivityCreation> {
                   onPressed: isButtonEnabled ? () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ActivityDashboard()),
+                      _customPageRoute(ActivityCreation()),
                     );
                   }: null,
                   style: ElevatedButton.styleFrom(
@@ -318,13 +319,34 @@ class _ActivityCreationState extends State<ActivityCreation> {
                 ),
               ),
             ),
-            BottomNavBar(
-              containerHeight: screenHeight * 0.08,
-              currentPage: 'Activity',
+            Expanded(
+              child: BottomNavBar(
+                containerHeight: screenHeight * 0.08,
+                currentPage: 'Activity',
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  // Define your custom page route with slide transition
+  PageRouteBuilder _customPageRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        // Define the slide animation from the left
+        const begin = Offset(1.0, 0.0); // Start off-screen on the left
+        const end = Offset.zero; // End at the screen center
+        const curve = Curves.easeInOut; // Smooth curve
+
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+      transitionDuration: Duration(milliseconds: 500), // Duration of the transition
     );
   }
 }

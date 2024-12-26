@@ -49,7 +49,7 @@ class _TaskCardState extends State<TaskCard> {
       child: Card(
         color: AppColors.backgroundWhite,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(4),
             side: BorderSide(
                 width: 1, color: AppColors.containerBackgroundGrey300)),
         child: Padding(
@@ -70,7 +70,7 @@ class _TaskCardState extends State<TaskCard> {
                     child: Text(
                       widget.taskHeader, // Second Header
                       style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.w500,
                           color: AppColors.textDarkBlack,
                           fontFamily: 'Roboto'),
@@ -96,7 +96,7 @@ class _TaskCardState extends State<TaskCard> {
                       children: [
                         Icon(
                           Icons.timer, // Timer icon
-                          size: 18,
+                          size: 16,
                           color: Colors.grey[600],
                         ),
                         SizedBox(
@@ -107,7 +107,7 @@ class _TaskCardState extends State<TaskCard> {
                           style: TextStyle(
                               color: AppColors.textBlack,
                               fontWeight: FontWeight.w500,
-                              fontSize: 16,
+                              fontSize: 14,
                               fontFamily: 'Roboto'),
                           /*overflow: TextOverflow.ellipsis,
                           maxLines: 1,*/
@@ -132,7 +132,7 @@ class _TaskCardState extends State<TaskCard> {
                       children: [
                         Icon(
                           Icons.flag_rounded,
-                          size: 18,
+                          size: 16,
                           color: AppColors.textWhite,
                         ),
                         SizedBox(
@@ -144,7 +144,7 @@ class _TaskCardState extends State<TaskCard> {
                           style: TextStyle(
                             color: AppColors.textWhite,
                             fontWeight: FontWeight.w500,
-                            fontSize: 16,
+                            fontSize: 14,
                             fontFamily: 'Roboto',
                           ),
                         )
@@ -206,8 +206,8 @@ class _TaskCardState extends State<TaskCard> {
                                     // Display + number of images after 3
                                     style: TextStyle(
                                         color: AppColors.textBlack,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 18,
                                         fontFamily: 'Roboto'),
                                   ),
                                 ),
@@ -230,6 +230,8 @@ class _TaskCardState extends State<TaskCard> {
                           /*border: Border.all(color: AppColors.textWhite), */ // Adjust border color as needed
                         ),
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(
                               AppImages.CalenderIcon,
@@ -243,7 +245,7 @@ class _TaskCardState extends State<TaskCard> {
                               style: TextStyle(
                                   color: AppColors.textBlack,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontFamily: 'Roboto'),
                             ),
                           ],
@@ -265,6 +267,8 @@ class _TaskCardState extends State<TaskCard> {
                               color: Colors.grey),*/ // Adjust border color as needed
                         ),
                         child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(
                               AppImages.CommentIcon2,
@@ -279,7 +283,7 @@ class _TaskCardState extends State<TaskCard> {
                               style: TextStyle(
                                   color: AppColors.textBlack,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontFamily: 'Roboto'),
                             ),
                           ],
