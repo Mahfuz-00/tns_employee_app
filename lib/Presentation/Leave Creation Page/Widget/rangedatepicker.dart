@@ -54,7 +54,7 @@ class _RangeDatePickerState extends State<RangeDatePicker> {
           decoration: InputDecoration(
             labelText: widget.label,
             labelStyle: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.w400,
               color: AppColors.labelGrey,
               fontFamily: 'Roboto',
@@ -67,7 +67,7 @@ class _RangeDatePickerState extends State<RangeDatePicker> {
               size: 24,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(4),
             ),
           ),
           readOnly: true, // Make the field non-editable, date is picked via the date picker

@@ -117,7 +117,7 @@ class _LeaveCreationState extends State<LeaveCreation> {
                   padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: AppColors.backgroundWhite,
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +125,7 @@ class _LeaveCreationState extends State<LeaveCreation> {
                       Text(
                         'Fill Leave Infromation',
                         style: TextStyle(
-                            fontSize: 18.0,
+                            fontSize: 16.0,
                             fontWeight: FontWeight.w600,
                             color: AppColors.textBlack,
                             fontFamily: 'Roboto'),
@@ -136,7 +136,7 @@ class _LeaveCreationState extends State<LeaveCreation> {
                       Text(
                         'Information about leave details',
                         style: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: 14.0,
                             fontWeight: FontWeight.w400,
                             color: AppColors.labelGrey,
                             fontFamily: 'Roboto'),
@@ -145,9 +145,6 @@ class _LeaveCreationState extends State<LeaveCreation> {
                         height: 20,
                       ),
                       LabelWidget(labelText: 'Leave Category'),
-                      SizedBox(
-                        height: 8,
-                      ),
                       Dropdown(
                         controller: _leavecategorycontroller,
                         label: 'Leave Category',
@@ -172,9 +169,6 @@ class _LeaveCreationState extends State<LeaveCreation> {
                         height: 16,
                       ),
                       LabelWidget(labelText: 'Leave Duration'),
-                      SizedBox(
-                        height: 8,
-                      ),
                       RangeDatePicker(
                         controller: _leavedurationController,
                         label: 'Leave Duration',
@@ -205,15 +199,9 @@ class _LeaveCreationState extends State<LeaveCreation> {
                         hinttext: 'Select Category',
                       ),
                       SizedBox(
-                        height: 8,
-                      ),
-                      SizedBox(
                         height: 16,
                       ),
                       LabelWidget(labelText: 'In Absence task assigned to'),
-                      SizedBox(
-                        height: 8,
-                      ),
                       Dropdown(
                         controller: _assigntoController,
                         label: 'Select Assign Person',
@@ -239,9 +227,6 @@ class _LeaveCreationState extends State<LeaveCreation> {
                       ),
                       LabelWidget(
                           labelText: 'Emergency Contact During Leave Period'),
-                      SizedBox(
-                        height: 8,
-                      ),
                       PhoneNumberInputField(
                         onPhoneChanged: (phone) {
                           setState(() {
@@ -258,35 +243,32 @@ class _LeaveCreationState extends State<LeaveCreation> {
                         height: 16,
                       ),
                       LabelWidget(labelText: 'Leave Description'),
-                      SizedBox(
-                        height: 8,
-                      ),
                       TextFormField(
                         controller: _leavedescriptioncontroller,
                         // Use the controller
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           hintText: 'Enter Leave Description',
                           labelText: 'Leave Description',
                           alignLabelWithHint: true,
                           // Ensure label stays at the top
                           labelStyle: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                             color: AppColors.labelGrey,
                             fontFamily: 'Roboto',
                           ),
                           hintStyle: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                             color: AppColors.labelGrey,
                             fontFamily: 'Roboto',
                           ),
                         ),
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.w400,
                           color: AppColors.labelGrey,
                           fontFamily: 'Roboto',
@@ -341,14 +323,14 @@ class _LeaveCreationState extends State<LeaveCreation> {
                         horizontal: 24, vertical: 12),
                     fixedSize: Size(screenWidth * 0.9, 50),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                   ),
                   child: const Text(
                     'Create Task',
                     style: TextStyle(
                       fontFamily: 'Roboto',
-                      fontSize: 16.0,
+                      fontSize: 14.0,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textWhite,
                     ),

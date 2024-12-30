@@ -59,14 +59,14 @@ class _DatePickerFormFieldState extends State<DatePickerFormField> {
             decoration: InputDecoration(
               labelText: widget.label,
               labelStyle: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: AppColors.labelGrey,
                 fontFamily: 'Roboto',
               ),
               suffixIcon: isDateSelected ? null: Icon(Icons.keyboard_arrow_down, color: AppColors.primary, size: 24,), // Calendar icon
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(4),
               ),
             ),
             readOnly: true, // Make the field non-editable, the date will be picked

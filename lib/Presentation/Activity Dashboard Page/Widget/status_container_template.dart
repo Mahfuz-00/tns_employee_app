@@ -5,7 +5,7 @@ import '../../../Core/Config/Theme/app_colors.dart';
 class TaskStatusTemplate extends StatelessWidget {
   final String imageAsset;
   final String label;
-  final String number;
+  final Widget number;
 
   const TaskStatusTemplate({
     required this.imageAsset,
@@ -45,8 +45,8 @@ class TaskStatusTemplate extends StatelessWidget {
             children: [
               Image.asset(
                 imageAsset,
-                width: 20,
-                height: 20,
+                width: 16,
+                height: 16,
                 fit: BoxFit.cover,
               ),
               SizedBox(width: 3), // Spacing between image and label
@@ -54,7 +54,7 @@ class TaskStatusTemplate extends StatelessWidget {
                 child: Text(
                   label,
                   style: TextStyle(
-                      fontSize: 12.0,
+                      fontSize: 10.0,
                       fontWeight: FontWeight.w400,
                       color: AppColors.textBlack,
                       fontFamily: 'Roboto'),
@@ -65,12 +65,7 @@ class TaskStatusTemplate extends StatelessWidget {
             ],
           ),
           SizedBox(height: 4), // Spacing between label and number
-          Text(number,
-              style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.textBlack,
-                  fontFamily: 'Roboto')),
+          number
         ],
       ),
     );

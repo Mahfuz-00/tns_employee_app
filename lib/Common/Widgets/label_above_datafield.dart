@@ -17,7 +17,7 @@ class LabelWidget extends StatelessWidget {
       child: Text(
         labelText,
         style: TextStyle(
-          fontSize: 16.0,
+          fontSize: 14.0,
           fontWeight: FontWeight.w400,
           color: AppColors.labelGrey,
           fontFamily: 'Roboto',

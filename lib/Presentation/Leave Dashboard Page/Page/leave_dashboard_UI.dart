@@ -85,7 +85,7 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                   Container(
                     width: screenWidth,
                     color: AppColors.containerBackgroundGrey300,
-                    padding: EdgeInsets.only(top: screenHeight * 0.1 + 20),
+                    padding: EdgeInsets.only(top: screenHeight * 0.09 + 20),
                     child: Column(
                       children: [
                         Padding(
@@ -116,7 +116,7 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                                             ? AppColors.NavyBlue
                                             : Colors.transparent,
                                         // Change color if selected
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(4),
                                       ),
                                       padding: EdgeInsets.all(8.0),
                                       child: Row(
@@ -124,31 +124,29 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                                             MainAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Expanded(
-                                            child: Text(
-                                              'Review',
-                                              style: TextStyle(
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: 'Roboto',
-                                                color: selectedSection == 'Review'
-                                                    ? Colors.white
-                                                    : AppColors.textBlack,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
+                                          Text(
+                                            'Review',
+                                            style: TextStyle(
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'Roboto',
+                                              color: selectedSection == 'Review'
+                                                  ? Colors.white
+                                                  : AppColors.textBlack,
                                             ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                           ),
                                           SizedBox(width: 5.0),
                                           CircleAvatar(
-                                            radius: 15.0,
+                                            radius: 12.0,
                                             backgroundColor: AppColors
                                                 .containerBackgroundGrey300,
                                             child: Text(
                                               '20',
                                               style: TextStyle(
                                                 fontFamily: 'Roboto',
-                                                fontSize: 14.0,
+                                                fontSize: 12.0,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColors.textBlack,
                                               ),
@@ -176,7 +174,7 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                                             ? AppColors.NavyBlue
                                             : Colors.transparent,
                                         // Change color if selected
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(4),
                                       ),
                                       padding: EdgeInsets.all(8.0),
                                       child: Row(
@@ -184,32 +182,30 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                                             MainAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Expanded(
-                                            child: Text(
-                                              'Approved',
-                                              style: TextStyle(
-                                                fontFamily: 'Roboto',
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.w400,
-                                                color:
-                                                    selectedSection == 'Approved'
-                                                        ? Colors.white
-                                                        : AppColors.textBlack,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
+                                          Text(
+                                            'Approved',
+                                            style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w400,
+                                              color:
+                                                  selectedSection == 'Approved'
+                                                      ? Colors.white
+                                                      : AppColors.textBlack,
                                             ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                           ),
                                           SizedBox(width: 5.0),
                                           CircleAvatar(
-                                            radius: 15.0,
+                                            radius: 12.0,
                                             backgroundColor: AppColors
                                                 .containerBackgroundGrey300,
                                             child: Text(
                                               '10',
                                               style: TextStyle(
                                                 fontFamily: 'Roboto',
-                                                fontSize: 14.0,
+                                                fontSize: 12.0,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColors.textBlack,
                                               ),
@@ -237,7 +233,7 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                                             ? AppColors.NavyBlue
                                             : Colors.transparent,
                                         // Change color if selected
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(4),
                                       ),
                                       padding: EdgeInsets.all(8.0),
                                       child: Row(
@@ -245,32 +241,30 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                                             MainAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Expanded(
-                                            child: Text(
-                                              'Rejected',
-                                              style: TextStyle(
-                                                fontFamily: 'Roboto',
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.w400,
-                                                color:
-                                                    selectedSection == 'Rejected'
-                                                        ? Colors.white
-                                                        : AppColors.textBlack,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
+                                          Text(
+                                            'Rejected',
+                                            style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w400,
+                                              color:
+                                                  selectedSection == 'Rejected'
+                                                      ? Colors.white
+                                                      : AppColors.textBlack,
                                             ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                           ),
                                           SizedBox(width: 5.0),
                                           CircleAvatar(
-                                            radius: 15.0,
+                                            radius: 12.0,
                                             backgroundColor: AppColors
                                                 .containerBackgroundGrey300,
                                             child: Text(
                                               '5',
                                               style: TextStyle(
                                                 fontFamily: 'Roboto',
-                                                fontSize: 14.0,
+                                                fontSize: 12.0,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColors.textBlack,
                                               ),
@@ -286,7 +280,7 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                           ),
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 20,
                         ),
                         LeaveContainers(
                           submitDate: '10 December 2024',
@@ -311,12 +305,12 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                 left: 0,
                 right: 0,
                 child: Container(
-                  height: screenHeight * 0.2,
+                  height: screenHeight * 0.19,
                   // Height of Container 2 (should cover part of Container 1)
                   margin: EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(4),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
@@ -333,7 +327,7 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                         Text(
                           'Total Leave',
                           style: TextStyle(
-                              fontSize: 18.0,
+                              fontSize: 16.0,
                               fontWeight: FontWeight.w600,
                               color: AppColors.textBlack,
                               fontFamily: 'Roboto'),
@@ -344,7 +338,7 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                         Text(
                           'Period 1 Jan 2024 - 30 Dec 2024',
                           style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 14.0,
                               fontWeight: FontWeight.w400,
                               color: AppColors.labelGrey,
                               fontFamily: 'Roboto'),
@@ -401,14 +395,14 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                         horizontal: 24, vertical: 12),
                     fixedSize: Size(screenWidth * 0.9, 50),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                   ),
                   child: const Text(
                     'New Leave',
                     style: TextStyle(
                       fontFamily: 'Roboto',
-                      fontSize: 16.0,
+                      fontSize: 14.0,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textWhite,
                     ),

@@ -121,28 +121,27 @@ class _ActivityCreationState extends State<ActivityCreation> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       LabelWidget(labelText: 'Task Title'),
-                      SizedBox(height: 8,),
                       TextFormField(
                         controller: _tasktitlecontroller, // Use the controller
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           hintText: 'Enter task title',
                           labelText: 'Task Title',
                           labelStyle: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                             color: AppColors.labelGrey,
                             fontFamily: 'Roboto',),
                           hintStyle: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                             color: AppColors.labelGrey,
                             fontFamily: 'Roboto',),
                         ),
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.w400,
                           color: AppColors.labelGrey,
                           fontFamily: 'Roboto',),
@@ -155,29 +154,28 @@ class _ActivityCreationState extends State<ActivityCreation> {
                       ),
                       SizedBox(height: 16,),
                       LabelWidget(labelText: 'Task Description'),
-                      SizedBox(height: 8,),
                       TextFormField(
                         controller: _taskdescriptioncontroller, // Use the controller
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           hintText: 'Enter Task Description',
                           labelText: 'Task Description',
                           alignLabelWithHint: true, // Ensure label stays at the top
                           labelStyle: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                             color: AppColors.labelGrey,
                             fontFamily: 'Roboto',),
                           hintStyle: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                             color: AppColors.labelGrey,
                             fontFamily: 'Roboto',),
                         ),
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.w400,
                           color: AppColors.labelGrey,
                           fontFamily: 'Roboto',),
@@ -193,7 +191,6 @@ class _ActivityCreationState extends State<ActivityCreation> {
                       ),
                       SizedBox(height: 16,),
                       LabelWidget(labelText: 'Select Time'),
-                      SizedBox(height: 8,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -212,7 +209,6 @@ class _ActivityCreationState extends State<ActivityCreation> {
                       ),
                       SizedBox(height: 16,),
                       LabelWidget(labelText: 'Assign To'),
-                      SizedBox(height: 8,),
                       Dropdown(
                         controller: _assigntoController,
                         label: 'Select Assign Person',
@@ -233,7 +229,6 @@ class _ActivityCreationState extends State<ActivityCreation> {
                       ),
                       SizedBox(height: 16,),
                       LabelWidget(labelText: 'Priority'),
-                      SizedBox(height: 8,),
                       Dropdown(
                         controller: _priorityController,
                         label: 'Select Priority',
@@ -254,7 +249,6 @@ class _ActivityCreationState extends State<ActivityCreation> {
                       ),
                       SizedBox(height: 16,),
                       LabelWidget(labelText: 'Status'),
-                      SizedBox(height: 8,),
                       Dropdown(
                         controller: _statusController,
                         label: 'Select Status',
@@ -306,13 +300,13 @@ class _ActivityCreationState extends State<ActivityCreation> {
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     fixedSize: Size(screenWidth*0.9, 50),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                   ),
                   child: const Text('Create Task',
                     style: TextStyle(
                       fontFamily: 'Roboto',
-                      fontSize: 16.0,
+                      fontSize: 14.0,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textWhite,
                     ),),

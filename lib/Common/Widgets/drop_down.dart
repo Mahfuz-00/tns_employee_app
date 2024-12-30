@@ -47,25 +47,25 @@ class Dropdown extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.w400,
           color: AppColors.labelGrey,
           fontFamily: 'Roboto',
         ),
         hintText: hinttext,
         hintStyle: TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.w400,
           color: AppColors.labelGrey,
           fontFamily: 'Roboto',
         ),
         /* suffixIcon: Icon(Icons.arrow_drop_down),*/
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(4),
         ),
       ),
       style: TextStyle(
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: FontWeight.w400,
         color: AppColors.labelGrey,
         fontFamily: 'Roboto',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:touch_and_solve_inventory_app/Presentation/Dashboard%20Page/Widget/progression_indicator.dart';
 
 import '../../../Core/Config/Assets/app_images.dart';
@@ -42,6 +43,19 @@ class _TaskCardState extends State<TaskCard> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+
+    // Inside _TaskCardState class
+    String _formatDate(String date) {
+      try {
+        // Parse the input date string to DateTime
+        DateTime parsedDate = DateTime.parse(date); // Ensure `widget.date` is in ISO 8601 format (yyyy-MM-dd)
+        // Format to "MMM dd" using intl
+        return DateFormat('MMM dd').format(parsedDate);
+      } catch (e) {
+        // Fallback to the original string if parsing fails
+        return date;
+      }
+    }
 
     return Container(
       margin: EdgeInsets.zero,
@@ -184,13 +198,18 @@ class _TaskCardState extends State<TaskCard> {
                                 return Positioned(
                                   left: index * 20.0,
                                   // Adjust the overlap by modifying the multiplier
-                                  child: CircleAvatar(
-                                    radius: 15, // Adjust size as needed
-                                    backgroundImage: AssetImage(
-                                      widget.images[
-                                          index], // Replace with your image paths
-                                    ),
-                                  ),
+                                    child: CircleAvatar(
+                                      radius: 15,
+                                      backgroundImage: Image.asset(
+                                        widget.images[index],
+                                        errorBuilder: (context, error, stackTrace) {
+                                          print('Error Image');
+                                          // Provide a default image when loading fails
+                                          return Image.asset('assets/default_image.png');
+                                        },
+                                      ).image,
+                                    )
+
                                 );
                               },
                             ),
@@ -241,7 +260,7 @@ class _TaskCardState extends State<TaskCard> {
                             ),
                             SizedBox(width: 5), // Spacing between icon and text
                             Text(
-                              widget.date, // Replace with your date
+                              _formatDate(widget.date),
                               style: TextStyle(
                                   color: AppColors.textBlack,
                                   fontWeight: FontWeight.w500,

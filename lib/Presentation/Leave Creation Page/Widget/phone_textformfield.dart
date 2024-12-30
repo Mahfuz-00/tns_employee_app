@@ -63,20 +63,20 @@ class _PhoneNumberInputFieldState extends State<PhoneNumberInputField> {
         hintText: '1716002011',
         //alignLabelWithHint: true,
         labelStyle: TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.w400,
           color: AppColors.labelGrey,
           fontFamily: 'Roboto',
         ),
         hintStyle: TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.w400,
           color: AppColors.labelGrey,
           fontFamily: 'Roboto',
         ),
         prefixText: '+880 ',
         prefixStyle: TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.w400,
           color: AppColors.labelGrey,
           fontFamily: 'Roboto',
@@ -109,7 +109,7 @@ class _PhoneNumberInputFieldState extends State<PhoneNumberInputField> {
                   value: value,
                   child: Text(value,
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: AppColors.labelGrey,
                         fontFamily: 'Roboto',
@@ -121,11 +121,11 @@ class _PhoneNumberInputFieldState extends State<PhoneNumberInputField> {
           ),
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(4),
         ),
       ),
       style: TextStyle(
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: FontWeight.w400,
         color: AppColors.labelGrey,
         fontFamily: 'Roboto',

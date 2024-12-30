@@ -28,7 +28,7 @@ class LeaveContainers extends StatelessWidget {
       width: screenWidth * 0.925, // Adjust width as needed
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(4),
         color: Colors.white,
         border: Border.all(color: Colors.grey.withOpacity(0.2)),
         boxShadow: [
@@ -99,7 +99,7 @@ class LeaveContainers extends StatelessWidget {
                       leaveDate,
                       style: TextStyle(
                         fontFamily: 'Roboto',
-                        fontSize: 16.0,
+                        fontSize: 14.0,
                         fontWeight: FontWeight.w500,
                         color: AppColors.textBlack,
                       ),
@@ -123,7 +123,7 @@ class LeaveContainers extends StatelessWidget {
                       totalLeave,
                       style: TextStyle(
                         fontFamily: 'Roboto',
-                        fontSize: 16.0,
+                        fontSize: 14.0,
                         fontWeight: FontWeight.w500,
                         color: AppColors.textBlack,
                       ),
@@ -143,7 +143,7 @@ class LeaveContainers extends StatelessWidget {
                 'Approved at $approvalDate',
                 style: TextStyle(
                   fontFamily: 'Roboto',
-                  fontSize: 14.0,
+                  fontSize: 12.0,
                   fontWeight: FontWeight.w500,
                   color: AppColors.primary,
                 ),
@@ -153,14 +153,14 @@ class LeaveContainers extends StatelessWidget {
                 'By',
                 style: TextStyle(
                   fontFamily: 'Roboto',
-                  fontSize: 14.0,
+                  fontSize: 12.0,
                   fontWeight: FontWeight.w500,
                   color: AppColors.textBlack,
                 ),
               ),
               SizedBox(width: 8),
               CircleAvatar(
-                radius: 15,
+                radius: 12,
                 backgroundImage: AssetImage(approvedImage),
               ),
               SizedBox(width: 8),
@@ -168,7 +168,7 @@ class LeaveContainers extends StatelessWidget {
                 approvedBy,
                 style: TextStyle(
                   fontFamily: 'Roboto',
-                  fontSize: 14.0,
+                  fontSize: 12.0,
                   fontWeight: FontWeight.w500,
                   color: AppColors.textBlack,
                 ),

@@ -95,7 +95,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                             width: screenWidth,
                             decoration: BoxDecoration(
                               color: AppColors.backgroundWhite,
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(4),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -116,7 +116,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                                             ? AppColors.textNavyBlue
                                             : Colors.transparent,
                                         // Change color if selected
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(4),
                                       ),
                                       padding: EdgeInsets.all(8.0),
                                       child: Row(
@@ -124,25 +124,23 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                                             MainAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Expanded(
-                                            child: Text(
-                                              'Review',
-                                              style: TextStyle(
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: 'Roboto',
-                                                color:
-                                                    selectedSection == 'Review'
-                                                        ? Colors.white
-                                                        : AppColors.textBlack,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
+                                          Text(
+                                            'Review',
+                                            style: TextStyle(
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'Roboto',
+                                              color:
+                                                  selectedSection == 'Review'
+                                                      ? Colors.white
+                                                      : AppColors.textBlack,
                                             ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                           ),
                                           SizedBox(width: 5.0),
                                           CircleAvatar(
-                                            radius: 15.0,
+                                            radius: 12.0,
                                             backgroundColor: selectedSection ==
                                                     'Review'
                                                 ? AppColors
@@ -153,7 +151,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                                               '20',
                                               style: TextStyle(
                                                 fontFamily: 'Roboto',
-                                                fontSize: 14.0,
+                                                fontSize: 12.0,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColors.textBlack,
                                               ),
@@ -181,7 +179,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                                             ? AppColors.textNavyBlue
                                             : Colors.transparent,
                                         // Change color if selected
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(4),
                                       ),
                                       padding: EdgeInsets.all(8.0),
                                       child: Row(
@@ -189,25 +187,23 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                                             MainAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Expanded(
-                                            child: Text(
-                                              'Approved',
-                                              style: TextStyle(
-                                                fontFamily: 'Roboto',
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.w400,
-                                                color: selectedSection ==
-                                                        'Approved'
-                                                    ? Colors.white
-                                                    : AppColors.textBlack,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
+                                          Text(
+                                            'Approved',
+                                            style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w400,
+                                              color: selectedSection ==
+                                                      'Approved'
+                                                  ? Colors.white
+                                                  : AppColors.textBlack,
                                             ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                           ),
                                           SizedBox(width: 5.0),
                                           CircleAvatar(
-                                            radius: 15.0,
+                                            radius: 12.0,
                                             backgroundColor: selectedSection ==
                                                     'Approved'
                                                 ? AppColors
@@ -218,7 +214,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                                               '10',
                                               style: TextStyle(
                                                 fontFamily: 'Roboto',
-                                                fontSize: 14.0,
+                                                fontSize: 12.0,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColors.textBlack,
                                               ),
@@ -246,7 +242,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                                             ? AppColors.textNavyBlue
                                             : Colors.transparent,
                                         // Change color if selected
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(4),
                                       ),
                                       padding: EdgeInsets.all(8.0),
                                       child: Row(
@@ -254,25 +250,23 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                                             MainAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Expanded(
-                                            child: Text(
-                                              'Rejected',
-                                              style: TextStyle(
-                                                fontFamily: 'Roboto',
-                                                fontSize: 14.0,
-                                                fontWeight: FontWeight.w400,
-                                                color: selectedSection ==
-                                                        'Rejected'
-                                                    ? Colors.white
-                                                    : AppColors.textBlack,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
+                                          Text(
+                                            'Rejected',
+                                            style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w400,
+                                              color: selectedSection ==
+                                                      'Rejected'
+                                                  ? Colors.white
+                                                  : AppColors.textBlack,
                                             ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                           ),
                                           SizedBox(width: 5.0),
                                           CircleAvatar(
-                                            radius: 15.0,
+                                            radius: 12.0,
                                             backgroundColor: selectedSection ==
                                                     'Rejected'
                                                 ? AppColors
@@ -283,7 +277,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                                               '5',
                                               style: TextStyle(
                                                 fontFamily: 'Roboto',
-                                                fontSize: 14.0,
+                                                fontSize: 12.0,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColors.textBlack,
                                               ),
@@ -299,7 +293,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                           ),
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 20,
                         ),
                         VoucherContainers(
                           submitDate: '10 December 2024',
@@ -310,7 +304,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                           expense: 'TK. 255',
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 20,
                         ),
                         VoucherContainers(
                           submitDate: '7 December 2024',
@@ -340,7 +334,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                   margin: EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(4),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
@@ -357,7 +351,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                         Text(
                           'Total Expense',
                           style: TextStyle(
-                              fontSize: 18.0,
+                              fontSize: 16.0,
                               fontWeight: FontWeight.w600,
                               color: AppColors.textBlack,
                               fontFamily: 'Roboto'),
@@ -368,7 +362,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                         Text(
                           'Period 1 Jan 2024 - 31 Dec 2024',
                           style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 14.0,
                               fontWeight: FontWeight.w400,
                               color: AppColors.labelGrey,
                               fontFamily: 'Roboto'),
@@ -430,14 +424,14 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                         horizontal: 24, vertical: 12),
                     fixedSize: Size(screenWidth * 0.9, 50),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                   ),
                   child: const Text(
                     'New Expense',
                     style: TextStyle(
                       fontFamily: 'Roboto',
-                      fontSize: 16.0,
+                      fontSize: 14.0,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textWhite,
                     ),

@@ -112,40 +112,36 @@ class _LeaveCardState extends State<LeaveCard> {
                 children: [
                   // Section 1 (Timer Status)
                   Container(
-                    height: 40,
-                    padding: EdgeInsets.symmetric(vertical: 5),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      width: screenWidth * 0.20,
-                      height: screenHeight * 0.035,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: AppColors.containerBackgroundGrey300,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.timer, // Timer icon
-                            size: 18,
-                            color: Colors.grey[600],
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    //width: screenWidth * 0.20,
+                    //height: screenHeight * 0.035,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: AppColors.containerBackgroundGrey300,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      //mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.timer, // Timer icon
+                          size: 16,
+                          color: Colors.grey[600],
+                        ),
+                        SizedBox(width: 5),
+                        Text(
+                          widget.Status,
+                          style: TextStyle(
+                            color: AppColors.textBlack,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            fontFamily: 'Roboto',
                           ),
-                          SizedBox(width: 5),
-                          Text(
-                            widget.Status,
-                            style: TextStyle(
-                              color: AppColors.textBlack,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              fontFamily: 'Roboto',
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(width: 15),
+                  SizedBox(width: 5),
 
                   // Section 2 (Leave Used)
                   Container(
@@ -159,8 +155,8 @@ class _LeaveCardState extends State<LeaveCard> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          width: 20,
-                          height: 20,
+                          width: 16,
+                          height: 16,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.grey[300], // Background color of the circle
@@ -171,7 +167,7 @@ class _LeaveCardState extends State<LeaveCard> {
                               style: TextStyle(
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                                fontSize: 12,
                                 fontFamily: 'Roboto',
                               ),
                             ),
@@ -183,7 +179,7 @@ class _LeaveCardState extends State<LeaveCard> {
                           style: TextStyle(
                             color: AppColors.textBlack,
                             fontWeight: FontWeight.w500,
-                            fontSize: 14,
+                            fontSize: 12,
                             fontFamily: 'Roboto',
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -192,55 +188,57 @@ class _LeaveCardState extends State<LeaveCard> {
                       ],
                     ),
                   ),
-                ],
-              ),
-              SizedBox(height: 5), // Spacer between rows
 
-              // Section 3 (Always in next line - Available Leave)
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                decoration: BoxDecoration(
-                  color: AppColors.textWhite,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 20,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey[300], // Background color of the circle
-                      ),
-                      child: Center(
-                        child: Text(
-                          widget.AvailableLeave, // Replace with dynamic value
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            fontFamily: 'Roboto',
+                  SizedBox(width: 5), // Spacer between rows
+
+                  // Section 3 (Always in next line - Available Leave)
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: AppColors.textWhite,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 16,
+                          height: 16,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey[300], // Background color of the circle
+                          ),
+                          child: Center(
+                            child: Text(
+                              widget.AvailableLeave, // Replace with dynamic value
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                fontFamily: 'Roboto',
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        SizedBox(width: 5),
+                        Text(
+                          'Available Leave', // Replace with dynamic text
+                          style: TextStyle(
+                            color: AppColors.textBlack,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            fontFamily: 'Roboto',
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 5),
-                    Text(
-                      'Available Leave', // Replace with dynamic text
-                      style: TextStyle(
-                        color: AppColors.textBlack,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                        fontFamily: 'Roboto',
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ],
-                ),
-              )
+                  )
+                ],
+              ),
+
 
 
 

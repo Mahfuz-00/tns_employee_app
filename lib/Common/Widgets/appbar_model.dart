@@ -48,7 +48,7 @@ class AppBarModel extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         title,
         style: TextStyle(
-            fontSize: 20.0,
+            fontSize: 16.0,
             fontWeight: FontWeight.w600,
             color: color != null ? AppColors.textWhite: AppColors.textBlack,
             fontFamily: 'Roboto'),

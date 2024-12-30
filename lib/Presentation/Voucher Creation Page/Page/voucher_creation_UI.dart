@@ -130,7 +130,7 @@ class _VoucherCreationState extends State<VoucherCreation> {
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: AppColors.backgroundWhite,
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
                 ),
                 child: Form(
                   key: _formKey,
@@ -141,7 +141,7 @@ class _VoucherCreationState extends State<VoucherCreation> {
                       Text(
                         'Fill Claim Infromation',
                         style: TextStyle(
-                            fontSize: 18.0,
+                            fontSize: 16.0,
                             fontWeight: FontWeight.w600,
                             color: AppColors.textBlack,
                             fontFamily: 'Roboto'),
@@ -152,7 +152,7 @@ class _VoucherCreationState extends State<VoucherCreation> {
                       Text(
                         'Information about claim details',
                         style: TextStyle(
-                            fontSize: 16.0,
+                            fontSize: 14.0,
                             fontWeight: FontWeight.w400,
                             color: AppColors.labelGrey,
                             fontFamily: 'Roboto'),
@@ -161,9 +161,6 @@ class _VoucherCreationState extends State<VoucherCreation> {
                         height: 20,
                       ),
                       LabelWidget(labelText: 'Expense Category'),
-                      SizedBox(
-                        height: 8,
-                      ),
                       Dropdown(
                         controller: _expensivecategoryController,
                         label: 'Select Expense Category',
@@ -188,9 +185,6 @@ class _VoucherCreationState extends State<VoucherCreation> {
                         height: 16,
                       ),
                       LabelWidget(labelText: 'Transaction Date'),
-                      SizedBox(
-                        height: 8,
-                      ),
                       SingleDatePicker(
                         controller: _transactionDateController,
                         label: 'Transaction Date',
@@ -200,26 +194,23 @@ class _VoucherCreationState extends State<VoucherCreation> {
                         height: 16,
                       ),
                       LabelWidget(labelText: 'Expense Amount'),
-                      SizedBox(
-                        height: 8,
-                      ),
                       TextFormField(
                         controller: _expenseamountcontroller,
                         // Use the controller
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(4),
                             ),
                             hintText: 'Enter expense amount',
                             labelText: 'Expense Amount',
                             labelStyle: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.w400,
                               color: AppColors.labelGrey,
                               fontFamily: 'Roboto',
                             ),
                             hintStyle: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.w400,
                               color: AppColors.labelGrey,
                               fontFamily: 'Roboto',
@@ -230,7 +221,7 @@ class _VoucherCreationState extends State<VoucherCreation> {
                               size: 24,
                             )),
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.w400,
                           color: AppColors.labelGrey,
                           fontFamily: 'Roboto',
@@ -246,35 +237,32 @@ class _VoucherCreationState extends State<VoucherCreation> {
                         height: 16,
                       ),
                       LabelWidget(labelText: 'Expense Description'),
-                      SizedBox(
-                        height: 8,
-                      ),
                       TextFormField(
                         controller: _expensedescriptioncontroller,
                         // Use the controller
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           hintText: 'Enter Expense Description',
                           labelText: 'Expense Description',
                           alignLabelWithHint: true,
                           // Ensure label stays at the top
                           labelStyle: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                             color: AppColors.labelGrey,
                             fontFamily: 'Roboto',
                           ),
                           hintStyle: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                             color: AppColors.labelGrey,
                             fontFamily: 'Roboto',
                           ),
                         ),
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.w400,
                           color: AppColors.labelGrey,
                           fontFamily: 'Roboto',
@@ -303,10 +291,10 @@ class _VoucherCreationState extends State<VoucherCreation> {
                             decoration: BoxDecoration(
                               color: AppColors.containerBackgroundPurple,
                               //border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(4),
                             ),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(4),
                               child: CustomPaint(
                                 painter: DashedBorderPainter(),
                                 child: Column(
@@ -321,7 +309,7 @@ class _VoucherCreationState extends State<VoucherCreation> {
                                     Text(
                                       "Upload Claim Document",
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: AppColors.primary,
                                         fontFamily: 'Roboto',
@@ -331,7 +319,7 @@ class _VoucherCreationState extends State<VoucherCreation> {
                                     Text(
                                       "Format should be in .pdf, .jpeg, .png less than 5 MB",
                                       style: TextStyle(
-                                        fontSize: 12,
+                                        fontSize: 10,
                                         fontWeight: FontWeight.w400,
                                         color: AppColors.labelGrey,
                                         fontFamily: 'Roboto',
@@ -383,14 +371,14 @@ class _VoucherCreationState extends State<VoucherCreation> {
                         horizontal: 24, vertical: 12),
                     fixedSize: Size(screenWidth * 0.9, 50),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                   ),
                   child: const Text(
                     'Submit Expense',
                     style: TextStyle(
                       fontFamily: 'Roboto',
-                      fontSize: 16.0,
+                      fontSize: 14.0,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textWhite,
                     ),
@@ -401,7 +389,7 @@ class _VoucherCreationState extends State<VoucherCreation> {
             Expanded(
               child: BottomNavBar(
                 containerHeight: screenHeight * 0.08,
-                currentPage: 'Activity',
+                currentPage: 'Voucher',
               ),
             ),
           ],
