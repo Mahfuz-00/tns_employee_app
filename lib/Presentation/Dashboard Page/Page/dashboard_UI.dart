@@ -124,10 +124,10 @@ class _DashboardState extends State<Dashboard> {
                 child: Column(
                   children: [
                     MyWorkSummary(screenWidth: screenWidth, screenHeight: screenHeight),
-                    SizedBox(
+                   /* SizedBox(
                       height: 10,
                     ),
-                    MeetingSection(),
+                    MeetingSection(),*/
                     SizedBox(
                       height: 10,
                     ),

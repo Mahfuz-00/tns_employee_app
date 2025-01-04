@@ -6,7 +6,10 @@ import 'package:sqflite/sqflite.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../Common/Helper/local_database_helper.dart';
+import '../../../Data/Repositories/sign_in_repositories_impl.dart';
+import '../../../Domain/Repositories/sign_in_repositories.dart';
 import '../../../Domain/Repositories/task_repositories.dart';
+import '../../../Domain/Usecases/sign_in_usercases.dart';
 
 
 final GetIt getIt = GetIt.instance;
@@ -39,4 +42,15 @@ Future<void> init() async {
 
   // Register UseCases
   getIt.registerLazySingleton<FetchTasksUseCase>(() => FetchTasksUseCase(getIt<TaskRepository>()));
+
+
+  getIt.registerLazySingleton<SigninRepository>(() => SigninRepositoryImpl());
+
+  // Register SigninUseCase with its dependencies
+  getIt.registerLazySingleton<SigninUseCase>(
+        () => SigninUseCase(
+      getIt<SigninRepository>(),       // Inject TokenRepository
+      getIt<RemoteDataSource>(),      // Inject RemoteDataSource
+    ),
+  );
 }

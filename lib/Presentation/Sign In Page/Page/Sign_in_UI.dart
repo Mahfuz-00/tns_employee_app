@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/Label_Text_Without_Asterisk.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/internet_connection_check.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/text_editor.dart';
@@ -8,6 +9,9 @@ import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart'
 import 'package:touch_and_solve_inventory_app/Presentation/Dashboard%20Page/Page/dashboard_UI.dart';
 
 import '../../../Common/Bloc/bottom_navigation_with_swipe_cubit.dart';
+import '../../../Common/Helper/dimmed_overlay.dart';
+import '../../../Data/Repositories/sign_in_repositories_impl.dart';
+import '../Bloc/sign_in_bloc.dart';
 import '../Widgets/finger_scan_overlay.dart';
 
 class SignInPage extends StatefulWidget {
@@ -39,6 +43,49 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    // Check if token exists for auto login
+    checkandauthenticate();
+  }
+
+  Future<void> checkandauthenticate() async {
+    // First, check the token from the repository
+    final repository = SigninRepositoryImpl();
+
+    // Get token from the repository
+    String? token = await repository.getToken();
+
+    if (token != null && token.isNotEmpty) {
+      print("Token: $token");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboard()),
+      );
+    } else {
+      // If no token, check if "Remember Me" is checked in SharedPreferences
+      bool? isChecked = await SharedPreferences.getInstance()
+          .then((prefs) => prefs.getBool('rememberMe') ?? false);
+
+      if (isChecked == true) {
+        // If "Remember Me" is checked, retrieve saved email and password
+        String? savedEmail = await SharedPreferences.getInstance()
+            .then((prefs) => prefs.getString('savedEmail'));
+        String? savedPassword = await SharedPreferences.getInstance()
+            .then((prefs) => prefs.getString('savedPassword'));
+
+        // Populate the email and password fields if available
+        if (savedEmail != null && savedPassword != null) {
+          _emailcontroller.text = savedEmail;
+          _passwordController.text = savedPassword;
+        }
+      }
+    }
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -47,55 +94,74 @@ class _SignInPageState extends State<SignInPage> {
         child: Scaffold(
       resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.only(
-            top: screenWidth * 0.2,
-            left: screenWidth * 0.1,
-            right: screenWidth * 0.1,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              buildSignInText(),
-              SizedBox(
-                height: screenHeight * 0.1,
+        child: BlocConsumer<SignInBloc, SignInState>(
+          listener: (context, state) {
+            if (state is SignInFailure) {
+              // Handle failure (e.g., show a snackbar)
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.error)),
+              );
+            } else if (state is SignInSuccess) {
+              // Handle success (e.g., navigate to Dashboard)
+              Navigator.pushReplacementNamed(context, '/Home');
+            }
+          },
+          builder: (context, state) {
+            if (state is SignInLoading) {
+              // Show loading spinner when the state is loading
+              return Center(child: OverlayLoader());
+            }
+            return Container(
+              padding: EdgeInsets.only(
+                top: screenWidth * 0.2,
+                left: screenWidth * 0.1,
+                right: screenWidth * 0.1,
               ),
-              LabeledTextWithoutAsterisk(text: 'Email'),
-              SizedBox(
-                height: 5,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildSignInText(),
+                  SizedBox(
+                    height: screenHeight * 0.1,
+                  ),
+                  LabeledTextWithoutAsterisk(text: 'Email'),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  IDTextEditor(),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  LabeledTextWithoutAsterisk(text: 'Password'),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  PasswordTextEditor(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  RememberMeAndForgotPassword(),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  SignInandFingerScanButtons(context),
+                  SizedBox(
+                    height: screenHeight * 0.1,
+                  ),
+                  ORDivider(),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  IDSwitchButton(context),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  FooterButton()
+                ],
               ),
-              IDTextEditor(),
-              SizedBox(
-                height: 20,
-              ),
-              LabeledTextWithoutAsterisk(text: 'Password'),
-              SizedBox(
-                height: 5,
-              ),
-              PasswordTextEditor(),
-              SizedBox(
-                height: 10,
-              ),
-              RememberMeAndForgotPassword(),
-              SizedBox(
-                height: 40,
-              ),
-              SignInandFingerScanButtons(context),
-              SizedBox(
-                height: screenHeight * 0.1,
-              ),
-              ORDivider(),
-              SizedBox(
-                height: 30,
-              ),
-              IDSwitchButton(context),
-              SizedBox(
-                height: 20,
-              ),
-              FooterButton()
-            ],
-          ),
+            );
+          },
         ),
       ),
     ));
@@ -225,12 +291,23 @@ class _SignInPageState extends State<SignInPage> {
               ),
             ),
             onPressed: () {
-              Navigator.pushReplacement(
+              print('Email: ${_emailcontroller.text}');
+              print('Password: ${_passwordController.text}');
+              print('RememberMe: $isChecked');
+              // Trigger the sign-in event
+              BlocProvider.of<SignInBloc>(context).add(
+                PerformSignInEvent(
+                  username: _emailcontroller.text,
+                  password: _passwordController.text,
+                  rememberMe: isChecked,
+                ),
+              );
+              /* Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => Dashboard(),
                 ),
-              );
+              );*/
             },
             child: Text(
               'Sign In',

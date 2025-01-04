@@ -45,6 +45,12 @@ dependencies:
   equatable:
   sqflite:
   get_it:
+  gif:
+  image:
+  path_provider:
+  shared_preferences:
+  dartz:
+  http:
 
 dev_dependencies:
   flutter_test:

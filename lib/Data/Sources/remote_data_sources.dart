@@ -1,24 +1,22 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
 import '../Models/tasks.dart';
+import 'activity_remote_source.dart';
+import 'signin_remote_source.dart';
 
 class RemoteDataSource {
-  // Fetch tasks from local JSON file (mock data) or replace with remote URL when needed.
+  final TaskRemoteDataSource taskDataSource = TaskRemoteDataSource();
+  final AuthenticationRemoteDataSource authDataSource = AuthenticationRemoteDataSource();
+
+  // Expose task data fetching functionality
   Future<List<TaskModel>> getTasks() async {
-    // Load the mock tasks from assets.
-    final jsonString = await rootBundle.loadString('Assets/Mock/task.json');
-    final data = json.decode(jsonString) as List;
+    return await taskDataSource.getTasks();
+  }
 
-    // Convert the JSON data into TaskModel list using fromJson
-    return data.map((e) => TaskModel.fromJson(e)).toList();
+  // Expose authentication functionality
+  Future<String> authenticateUsingMockJson(String email, String password) async {
+    return await authDataSource.authenticateUsingMockJson(email, password);
+  }
 
-    // Example URL for future implementation (to fetch tasks from a remote server):
-    // final response = await http.get(Uri.parse('https://your-api-url.com/tasks'));
-    // if (response.statusCode == 200) {
-    //   final data = json.decode(response.body) as List;
-    //   return data.map((e) => TaskModel.fromJson(e)).toList();
-    // } else {
-    //   throw Exception('Failed to load tasks');
-    // }
+  Future<String> authenticate(String email, String password) async {
+    return await authDataSource.authenticate(email, password);
   }
 }

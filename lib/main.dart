@@ -6,15 +6,20 @@ import 'package:touch_and_solve_inventory_app/Presentation/Onboarding%20Page/Pag
 
 import 'Common/Bloc/bottom_navigation_with_swipe_cubit.dart';
 import 'Common/Helper/local_database_helper.dart';
+import 'Core/Config/Dependency Injection/injection.dart';
 import 'Data/Repositories/task_repositories_impl.dart';
 import 'Data/Sources/local_data_sources.dart';
 import 'Data/Sources/remote_data_sources.dart';
 import 'Domain/Usecases/fetch_task_usecases.dart';
+import 'Domain/Usecases/sign_in_usercases.dart';
 import 'Presentation/Activity Dashboard Page/Bloc/task_bloc.dart';
 import 'Presentation/Activity Dashboard Page/Bloc/task_event.dart';
 import 'Presentation/Dashboard Page/Page/dashboard_UI.dart';
 import 'package:touch_and_solve_inventory_app/Core/Config/Dependency Injection/injection.dart'
     as di;
+
+import 'Presentation/Sign In Page/Bloc/sign_in_bloc.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,7 +58,7 @@ class MyApp extends StatelessWidget {
             background: AppColors.lightBackground),
         useMaterial3: true,
       ),
-      home: const OnboardingPage(),
+      home: OnboardingPage(),
       routes: {
         '/Home': (context) => Dashboard(),
       },
@@ -85,6 +90,12 @@ class MyApp extends StatelessWidget {
                   taskBloc.add(
                       LoadTasksEvent()); // Add the event right after Bloc initialization
                   return taskBloc;
+                },
+              ),
+              BlocProvider<SignInBloc>(
+                create: (context) {
+                  final loginUseCase = getIt<SigninUseCase>();
+                  return SignInBloc(loginUseCase);
                 },
               ),
             ],

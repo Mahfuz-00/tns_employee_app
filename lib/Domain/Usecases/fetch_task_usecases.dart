@@ -7,23 +7,48 @@ class FetchTasksUseCase {
   FetchTasksUseCase(this.repository);
 
   Future<List<TaskEntity>> execute() async {
-    // Fetch tasks from the repository (could be remote or local)
-    final tasks = await repository.fetchTasks();
-    print('Tasks fetched from remote and local -- UseCase:');
-    print(tasks);
+    try {
+      // Step 1: Fetch tasks from the local data source first (for faster loading)
+      final localTasks = await repository.getLocalTasks();
+      print('Tasks fetched from local storage -- UseCase:');
+      print(localTasks);
 
-    // Save fetched tasks to local storage
-    await repository.saveTasksToLocal(tasks);
-    print('Tasks saved to local storage -- UseCase');
+      // Step 5: Optionally, delete old tasks if necessary
+      await repository.deleteOldTasks();
 
-    // Optionally, delete old tasks if needed
-    await repository.deleteOldTasks();
+      // Step 2: Fetch tasks from the remote data source (API)
+      final remoteTasks = await repository.fetchTasks();
+      print('Tasks fetched from remote storage -- UseCase:');
+      print(remoteTasks);
 
-    // Fetch the tasks from local storage after saving
-    final localTasks = await repository.getLocalTasks();
-    print('Tasks fetched from local storage -- Usecase');
-    print(localTasks);
+      // Step 3: Combine tasks from both sources
+      // Ensure that tasks from remote are not duplicated with tasks from local storage
+      final allTasks = [...localTasks];
 
-    return localTasks;
+      // Add remote tasks that do not already exist in local tasks
+      remoteTasks.forEach((remoteTask) {
+        if (!localTasks.any((localTask) => localTask.taskHeader == remoteTask.taskHeader)) {
+          allTasks.add(remoteTask);
+        }
+      });
+
+      print('Combined tasks (local + remote):');
+      print(allTasks);
+
+      // Step 4: Save any new tasks to local storage (remote tasks that were not previously saved)
+      await repository.saveTasksToLocal(allTasks);
+      print('Combined tasks saved to local storage -- UseCase');
+
+      // Step 6: Fetch the tasks from local storage after saving and delete old tasks
+      final updatedLocalTasks = await repository.getLocalTasks();
+      print('Tasks fetched from local storage after update -- UseCase:');
+      print(updatedLocalTasks);
+
+      return allTasks;
+    } catch (e) {
+      print('Error in FetchTasksUseCase: $e');
+      throw Exception('Failed to fetch and combine tasks: $e');
+    }
   }
 }
+

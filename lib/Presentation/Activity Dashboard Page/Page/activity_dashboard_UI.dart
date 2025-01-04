@@ -7,6 +7,7 @@ import 'package:touch_and_solve_inventory_app/Domain/Entities/task_entities.dart
 import 'package:touch_and_solve_inventory_app/Presentation/Activity%20Creation%20Page/Page/activity_creation_UI.dart';
 import 'package:touch_and_solve_inventory_app/Presentation/Dashboard%20Page/Widget/task_card.dart';
 
+import '../../../Common/Helper/dimmed_overlay.dart';
 import '../../../Common/Helper/navigation_transition.dart';
 import '../../../Core/Config/Assets/app_images.dart';
 import '../Bloc/task_bloc.dart';
@@ -43,137 +44,166 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              // First container (30% of the screen height)
-              Column(
-                children: [
-                  Container(
-                    height: screenHeight * 0.25,
-                    // First container occupies 30% of the screen height
-                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 30),
-                    color: AppColors.primary,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
+      body: BlocBuilder<TaskBloc, TaskState>(
+        builder: (context, state) {
+          if (state is TaskLoadingState) {
+            // Show a loading spinner when the tasks are being loaded
+            return Center(child: OverlayLoader());
+          } else if (state is TaskLoadedState) {
+            return SafeArea(
+              child: SingleChildScrollView(
+                child: Stack(
+                  children: [
+                    // First container (30% of the screen height)
+                    Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Column(
+                        Container(
+                          height: screenHeight * 0.25,
+                          // First container occupies 30% of the screen height
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 30),
+                          color: AppColors.primary,
+                          child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(
-                                'Challenges Awaiting',
-                                style: TextStyle(
-                                    fontSize: 24.0,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.textWhite,
-                                    fontFamily: 'Roboto'),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Challenges Awaiting',
+                                      style: TextStyle(
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.textWhite,
+                                          fontFamily: 'Roboto'),
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      'Let\'s tackle your to-do list',
+                                      style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.textWhite,
+                                          fontFamily: 'Roboto'),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              SizedBox(height: 5),
-                              Text(
-                                'Let\'s tackle your to-do list',
-                                style: TextStyle(
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.textWhite,
-                                    fontFamily: 'Roboto'),
-                              ),
+                              Spacer(),
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.only(bottom: 60.0),
+                                child: Image.asset(
+                                  AppImages.TaskImage,
+                                  height: 100,
+                                  width: 100,
+                                ),
+                              )
                             ],
                           ),
                         ),
-                        Spacer(),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.only(bottom: 60.0),
-                          child: Image.asset(
-                            AppImages.TaskImage,
-                            height: 100,
-                            width: 100,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
 
-                  // Third container (Rest of the body content below Container 1)
-                  Container(
-                    width: screenWidth,
-                    color: AppColors.containerBackgroundGrey300,
-                    padding: EdgeInsets.only(top: screenHeight * 0.09 + 20),
-                    child: Column(
-                      children: [
-                        // Second container with task sections
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: Container(
-                            //padding: const EdgeInsets.all(16.0),
-                            width: screenWidth,
-                            decoration: BoxDecoration(
-                              color: AppColors.backgroundWhite,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                SectionTile(
-                                  title: 'All',
-                                  count: blocBuilderForCount(
-                                      'All', AppColors.textBlack),
-                                  selectedSection: selectedSection,
-                                  onTap: (section) {
-                                    setState(() {
-                                      selectedSection = section;
-                                    });
-                                  },
+                        // Third container (Rest of the body content below Container 1)
+                        Container(
+                          width: screenWidth,
+                          color: AppColors.containerBackgroundGrey300,
+                          padding:
+                              EdgeInsets.only(top: screenHeight * 0.09 + 20),
+                          child: Column(
+                            children: [
+                              // Second container with task sections
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Container(
+                                  //padding: const EdgeInsets.all(16.0),
+                                  width: screenWidth,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.backgroundWhite,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      SectionTile(
+                                        title: 'All',
+                                        count: state.taskCounts['All']
+                                                ?.toString() ??
+                                            '0' /*blocBuilderForCount(
+
+                                          'All', AppColors.textBlack)*/
+                                        ,
+                                        selectedSection: selectedSection,
+                                        onTap: (section) {
+                                          setState(() {
+                                            selectedSection = section;
+                                          });
+                                        },
+                                      ),
+                                      SectionTile(
+                                        title: 'In Progress',
+                                        count: state.taskCounts['In Progress']
+                                                ?.toString() ??
+                                            '0' /*blocBuilderForCount(
+                                          'In Progress', AppColors.textBlack)*/
+                                        ,
+                                        selectedSection: selectedSection,
+                                        onTap: (section) {
+                                          setState(() {
+                                            selectedSection = section;
+                                          });
+                                        },
+                                      ),
+                                      SectionTile(
+                                        title: 'Finished',
+                                        count: state.taskCounts['Finished']
+                                                ?.toString() ??
+                                            '0' /*blocBuilderForCount(
+                                          'Finish', AppColors.textBlack)*/
+                                        ,
+                                        selectedSection: selectedSection,
+                                        onTap: (section) {
+                                          setState(() {
+                                            selectedSection = section;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                SectionTile(
-                                  title: 'In Progress',
-                                  count: blocBuilderForCount(
-                                      'In Progress', AppColors.textBlack),
-                                  selectedSection: selectedSection,
-                                  onTap: (section) {
-                                    setState(() {
-                                      selectedSection = section;
-                                    });
-                                  },
-                                ),
-                                SectionTile(
-                                  title: 'Finish',
-                                  count: blocBuilderForCount(
-                                      'Finish', AppColors.textBlack),
-                                  selectedSection: selectedSection,
-                                  onTap: (section) {
-                                    setState(() {
-                                      selectedSection = section;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        BlocBuilder<TaskBloc, TaskState>(
-                          builder: (context, state) {
-                            if (state is TaskLoadingState) {
-                              // Show a loading spinner when the tasks are being loaded
-                              return Center(child: CircularProgressIndicator());
-                            } else if (state is TaskLoadedState) {
-                              // Display the list of tasks when they are loaded
-                              return ListView.builder(
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              ListView.builder(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: state.tasks.length,
+                                itemCount: state.tasks.where((task) {
+                                  // Filter tasks based on selectedSection
+                                  if (selectedSection == 'All') {
+                                    return true; // Show all tasks
+                                  } else {
+                                    print('Tasks selected: ${task.progress}');
+                                    return task.progress ==
+                                        selectedSection; // Show tasks with matching progress
+                                  }
+                                }).length,
                                 itemBuilder: (context, index) {
-                                  final task = state.tasks[index];
+                                  // Create the filtered list of tasks
+                                  final filteredTasks = state.tasks.where((task) {
+                                    if (selectedSection == 'All') {
+                                      return true;
+                                    } else {
+                                      return task.progress == selectedSection;
+                                    }
+                                  }).toList();
+
+                                  final task = filteredTasks[index];
                                   return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                     child: TaskCard(
                                       taskHeader: task.taskHeader,
                                       date: task.date,
@@ -185,114 +215,181 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                                     ),
                                   );
                                 },
-                              );
-                            } else if (state is TaskErrorState) {
-                              // Show an error message if there's an error while fetching tasks
-                              return Center(
-                                child: Text('Error: ${state.errorMessage}'),
-                              );
-                            } else {
-                              // Default state (TaskInitialState), when no data has been loaded yet
-                              return Center(
-                                  child: Text(
-                                'No tasks available.',
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.textBlack,
-                                    fontFamily: 'Roboto'),
-                              ));
-                            }
-                          },
+                              ),
+                              /*  BlocBuilder<TaskBloc, TaskState>(
+                                builder: (context, state) {
+                                  if (state is TaskLoadingState) {
+                                    // Show a loading spinner when the tasks are being loaded
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  } else if (state is TaskLoadedState) {
+                                    // Display the list of tasks when they are loaded
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: state.tasks.length,
+                                      itemBuilder: (context, index) {
+                                        final task = state.tasks[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16.0),
+                                          child: TaskCard(
+                                            taskHeader: task.taskHeader,
+                                            date: task.date,
+                                            priority: task.priority,
+                                            progress: task.progress,
+                                            progression: task.progression,
+                                            images: task.images,
+                                            commentCount: task.commentCount,
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  } else if (state is TaskErrorState) {
+                                    // Show an error message if there's an error while fetching tasks
+                                    return Center(
+                                      child:
+                                          Text('Error: ${state.errorMessage}'),
+                                    );
+                                  } else {
+                                    // Default state (TaskInitialState), when no data has been loaded yet
+                                    return Center(
+                                        child: Text(
+                                      'No tasks available.',
+                                      style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.textBlack,
+                                          fontFamily: 'Roboto'),
+                                    ));
+                                  }
+                                },
+                              ),*/
+                              SizedBox(
+                                height: 20,
+                              )
+                            ],
+                          ),
                         ),
-                        SizedBox(
-                          height: 20,
-                        )
                       ],
                     ),
-                  ),
-                ],
-              ),
 
-              // Second container (Stacked on top of Container 1 and Container 3)
-              Positioned(
-                top: screenHeight * 0.15, // Adjust to start over Container 1
-                left: 0,
-                right: 0,
-                child: Container(
-                  height: screenHeight * 0.18,
-                  // Height of Container 2 (should cover part of Container 1)
-                  margin: EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Summary of Your Work',
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textBlack,
-                              fontFamily: 'Roboto'),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'Your current task progress',
-                          style: TextStyle(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.labelGrey,
-                              fontFamily: 'Roboto'),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TaskStatusTemplate(
-                              imageAsset: AppImages.TodoIcon,
-                              label: 'To Do',
-                              // BlocBuilder wraps only the number, not the whole widget
-                              number: blocBuilderForCount(
-                                  'To Do', AppColors.textBlack),
-                            ),
-                            TaskStatusTemplate(
-                              imageAsset: AppImages.InProgressIcon,
-                              label: 'In Progress',
-                              number: blocBuilderForCount(
-                                  'In Progress', AppColors.textBlack),
-                            ),
-                            TaskStatusTemplate(
-                              imageAsset: AppImages.DoneIcon,
-                              label: 'Done',
-                              number: blocBuilderForCount(
-                                  'Finish', AppColors.textBlack),
+                    // Second container (Stacked on top of Container 1 and Container 3)
+                    Positioned(
+                      top: screenHeight * 0.15,
+                      // Adjust to start over Container 1
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: screenHeight * 0.18,
+                        // Height of Container 2 (should cover part of Container 1)
+                        margin: EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: Offset(0, 5),
                             ),
                           ],
-                        )
-                      ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Summary of Your Work',
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textBlack,
+                                    fontFamily: 'Roboto'),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                'Your current task progress',
+                                style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.labelGrey,
+                                    fontFamily: 'Roboto'),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    fit: FlexFit.loose,
+                                    child: TaskStatusTemplate(
+                                        imageAsset: AppImages.TodoIcon,
+                                        label: 'To Do',
+                                        // BlocBuilder wraps only the number, not the whole widget
+                                        number: state.taskCounts['All']
+                                                ?.toString() ??
+                                            '0' /*blocBuilderForCount(
+                                          'To Do', AppColors.textBlack),*/
+                                        ),
+                                  ),
+                                  Flexible(
+                                    fit: FlexFit.loose,
+                                    child: TaskStatusTemplate(
+                                      imageAsset: AppImages.InProgressIcon,
+                                      label: 'In Progress',
+                                      number: state.taskCounts['In Progress']
+                                              ?.toString() ??
+                                          '0', /*blocBuilderForCount(
+                                          'In Progress', AppColors.textBlack),*/
+                                    ),
+                                  ),
+                                  Flexible(
+                                    fit: FlexFit.loose,
+                                    child: TaskStatusTemplate(
+                                      imageAsset: AppImages.DoneIcon,
+                                      label: 'Done',
+                                      number: state.taskCounts['Finished']
+                                              ?.toString() ??
+                                          '0' /* blocBuilderForCount(
+                                          'Finish', AppColors.textBlack)*/
+                                      ,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            );
+          } else if (state is TaskErrorState) {
+            // Show an error message if there's an error while fetching tasks
+            return Center(
+              child: Text('Error: ${state.errorMessage}'),
+            );
+          } else {
+            // Default state (TaskInitialState), when no data has been loaded yet
+            return Center(
+                child: Text(
+              'No tasks available.',
+              style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.textBlack,
+                  fontFamily: 'Roboto'),
+            ));
+          }
+        },
       ),
       bottomNavigationBar: SizedBox(
         height: screenHeight * 0.18,

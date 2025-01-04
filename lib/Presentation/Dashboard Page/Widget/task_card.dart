@@ -321,6 +321,8 @@ class _TaskCardState extends State<TaskCard> {
 
   String _getProgressionText(String progression) {
     switch (progression.toLowerCase()) {
+      case 'emergency':
+        return 'Emergency';
       case 'low':
         return 'Low';
       case 'medium':
@@ -334,6 +336,8 @@ class _TaskCardState extends State<TaskCard> {
 
   Color _getBackgroundColor(String progression) {
     switch (progression.toLowerCase()) {
+      case 'emergency':
+        return AppColors.containerBackgroundRed2; // Define in your AppColors
       case 'low':
         return AppColors.primary; // Define in your AppColors
       case 'medium':

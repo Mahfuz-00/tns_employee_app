@@ -36,12 +36,16 @@ class TaskRepositoryImpl implements TaskRepository {
 
       // Step 3: Check for new tasks from the remote API that are not in the local database
       final List<TaskModel> newTaskModels = taskModels.where((remoteTask) {
-        // Compare by taskHeader, and optionally other fields like priority, date, etc.
-        return !localTasks.any((localTask) => localTask.taskHeader == remoteTask.taskHeader);
+        return !localTasks.any((localTask) =>
+        localTask.taskHeader.trim().toLowerCase() == remoteTask.taskHeader.trim().toLowerCase() &&
+            localTask.priority == remoteTask.priority &&
+            localTask.date == remoteTask.date);
       }).toList();
+
 
       print('--------------------------------');
       print('New tasks from remote that are not in local:');
+      print('Converting TaskModel to TaskEntity:');
       newTaskModels.forEach((task) {
         print('Task Header: ${task.taskHeader}, Task Name: ${task.taskHeader}, Task Priority: ${task.priority}, Task Date : ${task.date}, Task Progression : ${task.progression}');
       });
@@ -54,7 +58,10 @@ class TaskRepositoryImpl implements TaskRepository {
       }
 
       // Step 5: Return the combined list of local tasks and new tasks (remote data)
-      final allTasks = localTasks + newTaskModels.map((taskModel) => taskModel.toEntity()).toList();
+      final allTasks = [
+        ...localTasks,
+        ...newTaskModels.map((taskModel) => taskModel.toEntity()).toList()
+      ];
       print('Returning combined tasks (local + new):');
       allTasks.forEach((task) {
         print('Task Header: ${task.taskHeader}, Task Name: ${task.taskHeader}, Task Priority: ${task.priority}, Task Date : ${task.date}, Task Progression : ${task.progression}');

@@ -38,7 +38,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       'All': tasks.length,
       'To Do': tasks.where((task) => task.progress == 'To Do' || task.progress == 'Pending').length,
       'In Progress': tasks.where((task) => task.progress == 'In Progress').length,
-      'Finish': tasks.where((task) => task.progress == 'Finished').length,
+      'Finished': tasks.where((task) => task.progress == 'Complete' || task.progress == 'Finished').length,
     };
     return taskCounts;
   }

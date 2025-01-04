@@ -5,7 +5,8 @@ import '../../../Core/Config/Theme/app_colors.dart';
 class TaskStatusTemplate extends StatelessWidget {
   final String imageAsset;
   final String label;
-  final Widget number;
+/*  final Widget number;*/
+  final String number;
 
   const TaskStatusTemplate({
     required this.imageAsset,
@@ -20,6 +21,7 @@ class TaskStatusTemplate extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     return Container(
       width: screenWidth * 0.255,
+      height: screenHeight * 0.065,
       //margin: EdgeInsets.symmetric(horizontal: 10),
       padding: EdgeInsets.all(7),
       decoration: BoxDecoration(
@@ -65,7 +67,19 @@ class TaskStatusTemplate extends StatelessWidget {
             ],
           ),
           SizedBox(height: 4), // Spacing between label and number
-          number
+          /*number*/
+          Expanded(
+            child: Text(
+              number,
+              style: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.textBlack,
+                  fontFamily: 'Roboto'),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ),
         ],
       ),
     );

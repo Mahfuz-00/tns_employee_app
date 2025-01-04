@@ -24,6 +24,7 @@ class AppColors {
   static const containerBackgroundGrey300 = Color(0xFFEAECF0);
   static const containerBackgroundGrey400 = Color(0xFFF4F6F9);
   static const containerBackgroundRed = Color(0xFFF95555);
+  static const containerBackgroundRed2 = Color(0xFFE50404);
   static const containerBackgroundGreen = Color(0xFF3FEF09);
   static const containerBackgroundYellow = Color(0xFFF79009);
   static const containerBackgroundPurple = Color(0xFFF4F3FF);

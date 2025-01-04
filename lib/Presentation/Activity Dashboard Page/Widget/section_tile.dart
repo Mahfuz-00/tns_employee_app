@@ -4,7 +4,8 @@ import '../../../Core/Config/Theme/app_colors.dart';
 
 class SectionTile extends StatelessWidget {
   final String title;
-  final Widget count;
+/*  final Widget count;*/
+  final String count;
   final String selectedSection;
   final Function(String) onTap;
 
@@ -48,7 +49,7 @@ class SectionTile extends StatelessWidget {
                 radius: 12.0,
                 backgroundColor: Colors.grey[300], // Background color for the circle
                 child: Center(
-                  child: count /*Text(
+                  child: /*count*/ Text(
                     count,
                     style: TextStyle(
                       fontFamily: 'Roboto',
@@ -56,7 +57,7 @@ class SectionTile extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       color: Colors.black,
                     ),
-                  )*/,
+                  ),
                 ),
               ),
             ],
