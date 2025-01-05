@@ -1,22 +1,22 @@
 import 'package:bloc/bloc.dart';
-import 'package:touch_and_solve_inventory_app/Domain/Entities/task_entities.dart';
-import '../../../Domain/Usecases/fetch_task_usecases.dart';
-import 'task_event.dart';
-import 'task_state.dart';
+import 'package:touch_and_solve_inventory_app/Domain/Entities/activity_entities.dart';
+import '../../../Domain/Usecases/activity_usecases.dart';
+import 'activity_event.dart';
+import 'activity_state.dart';
 
-class TaskBloc extends Bloc<TaskEvent, TaskState> {
-  final FetchTasksUseCase useCase;
+class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
+  final ActivityUseCase useCase;
 
-  TaskBloc(this.useCase) : super(TaskInitialState()) {
-    on<LoadTasksEvent>(_onLoadTasksEvent);
+  ActivityBloc(this.useCase) : super(ActivityInitialState()) {
+    on<LoadActivityEvent>(_onLoadTasksEvent);
   }
 
   // Event handler method
   Future<void> _onLoadTasksEvent(
-      LoadTasksEvent event,
-      Emitter<TaskState> emit,
+      LoadActivityEvent event,
+      Emitter<ActivityState> emit,
       ) async {
-    emit(TaskLoadingState());
+    emit(ActivityLoadingState());
     try {
       print("Loading tasks...");
       final tasks = await useCase.execute();
@@ -25,15 +25,15 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       final taskCounts = _calculateTaskCounts(tasks);
 
       // Emit the loaded state with tasks and task counts
-      emit(TaskLoadedState(tasks, taskCounts));
+      emit(ActivityLoadedState(tasks, taskCounts));
     } catch (error) {
       print("Error loading tasks: $error");
-      emit(TaskErrorState(error.toString()));
+      emit(ActivityErrorState(error.toString()));
     }
   }
 
   // Helper method to calculate task counts
-  Map<String, int> _calculateTaskCounts(List<TaskEntity> tasks) {
+  Map<String, int> _calculateTaskCounts(List<ActivityEntity> tasks) {
     final taskCounts = {
       'All': tasks.length,
       'To Do': tasks.where((task) => task.progress == 'To Do' || task.progress == 'Pending').length,

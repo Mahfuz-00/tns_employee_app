@@ -7,13 +7,15 @@ import 'package:touch_and_solve_inventory_app/Presentation/Onboarding%20Page/Pag
 import 'Common/Bloc/bottom_navigation_with_swipe_cubit.dart';
 import 'Common/Helper/local_database_helper.dart';
 import 'Core/Config/Dependency Injection/injection.dart';
-import 'Data/Repositories/task_repositories_impl.dart';
+import 'Data/Repositories/activity_repositories_impl.dart';
 import 'Data/Sources/local_data_sources.dart';
 import 'Data/Sources/remote_data_sources.dart';
-import 'Domain/Usecases/fetch_task_usecases.dart';
+import 'Domain/Usecases/activity_form_usercase.dart';
+import 'Domain/Usecases/activity_usecases.dart';
 import 'Domain/Usecases/sign_in_usercases.dart';
-import 'Presentation/Activity Dashboard Page/Bloc/task_bloc.dart';
-import 'Presentation/Activity Dashboard Page/Bloc/task_event.dart';
+import 'Presentation/Activity Creation Page/Bloc/activity_form_bloc.dart';
+import 'Presentation/Activity Dashboard Page/Bloc/activity_bloc.dart';
+import 'Presentation/Activity Dashboard Page/Bloc/activity_event.dart';
 import 'Presentation/Dashboard Page/Page/dashboard_UI.dart';
 import 'package:touch_and_solve_inventory_app/Core/Config/Dependency Injection/injection.dart'
     as di;
@@ -41,10 +43,10 @@ class MyApp extends StatelessWidget {
     final localDataSource = LocalDataSource(database);
     final remoteDataSource = RemoteDataSource();
     final taskRepository =
-        TaskRepositoryImpl(remoteDataSource, localDataSource);
+        ActivityRepositoryImpl(remoteDataSource, localDataSource);
 
     // Initialize the use case
-    final fetchTasksUseCase = FetchTasksUseCase(taskRepository);
+    final fetchTasksUseCase = ActivityUseCase(taskRepository);
 
     return MaterialApp(
       title: 'Touch and Solve Inventory App',
@@ -82,13 +84,13 @@ class MyApp extends StatelessWidget {
           return MultiBlocProvider(
             providers: [
               BlocProvider(create: (context) => BottomNavBarCubit(0)),
-              BlocProvider<TaskBloc>(
+              BlocProvider<ActivityBloc>(
                 create: (context) {
                   final fetchTasksUseCase =
-                      di.getIt<FetchTasksUseCase>(); // DI resolve here
-                  final taskBloc = TaskBloc(fetchTasksUseCase);
+                      di.getIt<ActivityUseCase>(); // DI resolve here
+                  final taskBloc = ActivityBloc(fetchTasksUseCase);
                   taskBloc.add(
-                      LoadTasksEvent()); // Add the event right after Bloc initialization
+                      LoadActivityEvent()); // Add the event right after Bloc initialization
                   return taskBloc;
                 },
               ),
@@ -96,6 +98,12 @@ class MyApp extends StatelessWidget {
                 create: (context) {
                   final loginUseCase = getIt<SigninUseCase>();
                   return SignInBloc(loginUseCase);
+                },
+              ),
+              BlocProvider<ActivityFormBloc>(
+                create: (context) {
+                  final activityFormUseCase = getIt<ActivityFormUseCase>();
+                  return ActivityFormBloc(activityFormUseCase);
                 },
               ),
             ],

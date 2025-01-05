@@ -1,12 +1,12 @@
-import 'package:touch_and_solve_inventory_app/Domain/Entities/task_entities.dart';
-import '../Repositories/task_repositories.dart';
+import 'package:touch_and_solve_inventory_app/Domain/Entities/activity_entities.dart';
+import '../Repositories/activity_repositories.dart';
 
-class FetchTasksUseCase {
-  final TaskRepository repository;
+class ActivityUseCase {
+  final ActivityRepository repository;
 
-  FetchTasksUseCase(this.repository);
+  ActivityUseCase(this.repository);
 
-  Future<List<TaskEntity>> execute() async {
+  Future<List<ActivityEntity>> execute() async {
     try {
       // Step 1: Fetch tasks from the local data source first (for faster loading)
       final localTasks = await repository.getLocalTasks();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/bottom_navigation_bar.dart';
+import 'package:touch_and_solve_inventory_app/Common/Widgets/internet_connection_check.dart';
 import 'package:touch_and_solve_inventory_app/Core/Config/Assets/app_images.dart';
 import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart';
 import 'package:touch_and_solve_inventory_app/Presentation/Dashboard%20Page/Widget/cards.dart';
@@ -22,132 +23,134 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                color: AppColors.backgroundWhite,
-                padding: EdgeInsets.all(5),
-                height: screenHeight * 0.1,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Avatar in the first container
-                    GestureDetector(
-                      onTap: () {
-                        // Navigate to user profile page
-                        // Replace 'ProfilePage' with your actual page
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Profile(),
+    return InternetConnectionChecker(
+      child: Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  color: AppColors.backgroundWhite,
+                  padding: EdgeInsets.all(5),
+                  height: screenHeight * 0.1,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Avatar in the first container
+                      GestureDetector(
+                        onTap: () {
+                          // Navigate to user profile page
+                          // Replace 'ProfilePage' with your actual page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Profile(),
+                            ),
+                          );
+                        },
+                        child: SizedBox(
+                          width: screenWidth * 0.18,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: CircleAvatar(
+                              radius: 30.0,
+                              backgroundImage: AssetImage(AppImages
+                                  .ProfileIcon), // Replace with your image path
+                            ),
                           ),
-                        );
-                      },
-                      child: SizedBox(
-                        width: screenWidth * 0.18,
+                        ),
+                      ),
+                      // Name, verified mark, and designation in the second container
+                      SizedBox(
+                        width: screenWidth * 0.55,  // Set width relative to screen width
                         child: Container(
-                          alignment: Alignment.center,
-                          child: CircleAvatar(
-                            radius: 30.0,
-                            backgroundImage: AssetImage(AppImages
-                                .ProfileIcon), // Replace with your image path
+                          padding: EdgeInsets.symmetric(horizontal: 8.0), // Added padding for better spacing
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Row for name and verified badge
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 6,
+                                    child: Text(
+                                      'Humayun Kabir Piash',
+                                      style: TextStyle(
+                                        fontSize: 16, // Adjust font size based on screen width
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Roboto',
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8.0),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Icon(
+                                      Icons.verified,
+                                      color: AppColors.primary,
+                                      size: screenWidth * 0.05, // Adjust icon size based on screen width
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 5),  // Adjust height relative to screen height
+                              // Designation text
+                              Text(
+                                'UI/UX Designer',
+                                style: TextStyle(
+                                  fontSize: 14, // Adjust font size based on screen width
+                                  color: AppColors.primary,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ),
-                    // Name, verified mark, and designation in the second container
-                    SizedBox(
-                      width: screenWidth * 0.55,  // Set width relative to screen width
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0), // Added padding for better spacing
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // Row for name and verified badge
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 6,
-                                  child: Text(
-                                    'Humayun Kabir Piash',
-                                    style: TextStyle(
-                                      fontSize: 16, // Adjust font size based on screen width
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Roboto',
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                ),
-                                SizedBox(width: 8.0),
-                                Expanded(
-                                  flex: 1,
-                                  child: Icon(
-                                    Icons.verified,
-                                    color: AppColors.primary,
-                                    size: screenWidth * 0.05, // Adjust icon size based on screen width
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 5),  // Adjust height relative to screen height
-                            // Designation text
-                            Text(
-                              'UI/UX Designer',
-                              style: TextStyle(
-                                fontSize: 14, // Adjust font size based on screen width
-                                color: AppColors.primary,
-                                fontFamily: 'Roboto',
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
+                      ActionIcons(screenWidth, AppImages.CommentIcon),
+                      SizedBox(
+                        width: 8,
                       ),
-                    ),
-                    ActionIcons(screenWidth, AppImages.CommentIcon),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    ActionIcons(screenWidth, AppImages.NotificationIcon),
-                  ],
+                      ActionIcons(screenWidth, AppImages.NotificationIcon),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.all(12),
-                color: AppColors.containerBackgroundGrey300,
-                child: Column(
-                  children: [
-                    MyWorkSummary(screenWidth: screenWidth, screenHeight: screenHeight),
-                   /* SizedBox(
-                      height: 10,
-                    ),
-                    MeetingSection(),*/
-                    SizedBox(
-                      height: 10,
-                    ),
-                    ActivitySection(),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    LeaveSection(),
-                  ],
-                ),
-              )
-            ],
+                Container(
+                  padding: EdgeInsets.all(12),
+                  color: AppColors.containerBackgroundGrey300,
+                  child: Column(
+                    children: [
+                      MyWorkSummary(screenWidth: screenWidth, screenHeight: screenHeight),
+                     /* SizedBox(
+                        height: 10,
+                      ),
+                      MeetingSection(),*/
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ActivitySection(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      LeaveSection(),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
-      ),
-      bottomNavigationBar: SizedBox(
-        height: screenHeight * 0.08,
-        child: BottomNavBar(
-          containerHeight: screenHeight * 0.08,
-          currentPage: 'Home',
+        bottomNavigationBar: SizedBox(
+          height: screenHeight * 0.08,
+          child: BottomNavBar(
+            containerHeight: screenHeight * 0.08,
+            currentPage: 'Home',
+          ),
         ),
       ),
     );

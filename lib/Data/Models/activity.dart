@@ -1,7 +1,7 @@
-import '../../Domain/Entities/task_entities.dart';
+import '../../Domain/Entities/activity_entities.dart';
 
-class TaskModel extends TaskEntity {
-  TaskModel({
+class ActivityModel extends ActivityEntity {
+  ActivityModel({
     required int id,
     required String taskHeader,
     required double progression,
@@ -22,8 +22,8 @@ class TaskModel extends TaskEntity {
   );
 
   // Convert JSON data into a TaskModel
-  factory TaskModel.fromJson(Map<String, dynamic> json) {
-    return TaskModel(
+  factory ActivityModel.fromJson(Map<String, dynamic> json) {
+    return ActivityModel(
       id: json['id'] ?? 0,
       taskHeader: json['taskHeader'] ?? '',
       progression: json['progression'] ?? 0.0,
@@ -52,8 +52,8 @@ class TaskModel extends TaskEntity {
   }
 
   // Convert TaskModel to TaskEntity
-  TaskEntity toEntity() {
-    return TaskEntity(
+  ActivityEntity toEntity() {
+    return ActivityEntity(
       id: id,
       taskHeader: taskHeader,
       progression: progression,
@@ -66,8 +66,8 @@ class TaskModel extends TaskEntity {
   }
 
   // Convert TaskEntity to TaskModel
-  static TaskModel fromEntity(TaskEntity entity) {
-    return TaskModel(
+  static ActivityModel fromEntity(ActivityEntity entity) {
+    return ActivityModel(
       id: entity.id,
       taskHeader: entity.taskHeader,
       progression: entity.progression,

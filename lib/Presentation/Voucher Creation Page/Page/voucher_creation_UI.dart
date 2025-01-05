@@ -9,6 +9,7 @@ import '../../../Common/Widgets/appbar_model.dart';
 import '../../../Common/Widgets/bottom_navigation_bar.dart';
 import '../../../Common/Widgets/bottom_navigation_bar_with_swipe.dart';
 import '../../../Common/Widgets/drop_down.dart';
+import '../../../Common/Widgets/internet_connection_check.dart';
 import '../../../Core/Config/Assets/app_images.dart';
 import '../../Activity Creation Page/Widget/date_picker.dart';
 import '../Widget/custom_border_painter.dart';
@@ -117,92 +118,138 @@ class _VoucherCreationState extends State<VoucherCreation> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: AppBarModel(
-        title: 'Submit Expense',
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.all(16),
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.backgroundWhite,
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                ),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    //mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Fill Claim Infromation',
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textBlack,
-                            fontFamily: 'Roboto'),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        'Information about claim details',
-                        style: TextStyle(
-                            fontSize: 14.0,
+    return InternetConnectionChecker(
+      child: Scaffold(
+        appBar: AppBarModel(
+          title: 'Submit Expense',
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundWhite,
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      //mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Fill Claim Infromation',
+                          style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textBlack,
+                              fontFamily: 'Roboto'),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Information about claim details',
+                          style: TextStyle(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.labelGrey,
+                              fontFamily: 'Roboto'),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        LabelWidget(labelText: 'Expense Category'),
+                        Dropdown(
+                          controller: _expensivecategoryController,
+                          label: 'Select Expense Category',
+                          options: ['Sajjad', 'Shihab', 'Munna'],
+                          // List of options
+                          selectedValue: _selectedExpenseCategory,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedExpenseCategory = value!;
+                              _expensivecategoryController.text = value ?? '';
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select a expense category';
+                            }
+                            return null;
+                          },
+                          hinttext: 'Select Expense Category',
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        LabelWidget(labelText: 'Transaction Date'),
+                        SingleDatePicker(
+                          controller: _transactionDateController,
+                          label: 'Transaction Date',
+                          onDateSelected: _onTransactionDateSelected,
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        LabelWidget(labelText: 'Expense Amount'),
+                        TextFormField(
+                          controller: _expenseamountcontroller,
+                          // Use the controller
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              hintText: 'Enter expense amount',
+                              labelText: 'Expense Amount',
+                              labelStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.labelGrey,
+                                fontFamily: 'Roboto',
+                              ),
+                              hintStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.labelGrey,
+                                fontFamily: 'Roboto',
+                              ),
+                              suffixIcon: Icon(
+                                Icons.add,
+                                color: AppColors.primary,
+                                size: 24,
+                              )),
+                          style: TextStyle(
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                             color: AppColors.labelGrey,
-                            fontFamily: 'Roboto'),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      LabelWidget(labelText: 'Expense Category'),
-                      Dropdown(
-                        controller: _expensivecategoryController,
-                        label: 'Select Expense Category',
-                        options: ['Sajjad', 'Shihab', 'Munna'],
-                        // List of options
-                        selectedValue: _selectedExpenseCategory,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedExpenseCategory = value!;
-                            _expensivecategoryController.text = value ?? '';
-                          });
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please select a expense category';
-                          }
-                          return null;
-                        },
-                        hinttext: 'Select Expense Category',
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      LabelWidget(labelText: 'Transaction Date'),
-                      SingleDatePicker(
-                        controller: _transactionDateController,
-                        label: 'Transaction Date',
-                        onDateSelected: _onTransactionDateSelected,
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      LabelWidget(labelText: 'Expense Amount'),
-                      TextFormField(
-                        controller: _expenseamountcontroller,
-                        // Use the controller
-                        decoration: InputDecoration(
+                            fontFamily: 'Roboto',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your expense amount';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        LabelWidget(labelText: 'Expense Description'),
+                        TextFormField(
+                          controller: _expensedescriptioncontroller,
+                          // Use the controller
+                          decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            hintText: 'Enter expense amount',
-                            labelText: 'Expense Amount',
+                            hintText: 'Enter Expense Description',
+                            labelText: 'Expense Description',
+                            alignLabelWithHint: true,
+                            // Ensure label stays at the top
                             labelStyle: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
@@ -215,184 +262,140 @@ class _VoucherCreationState extends State<VoucherCreation> {
                               color: AppColors.labelGrey,
                               fontFamily: 'Roboto',
                             ),
-                            suffixIcon: Icon(
-                              Icons.add,
-                              color: AppColors.primary,
-                              size: 24,
-                            )),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.labelGrey,
-                          fontFamily: 'Roboto',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your expense amount';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      LabelWidget(labelText: 'Expense Description'),
-                      TextFormField(
-                        controller: _expensedescriptioncontroller,
-                        // Use the controller
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
                           ),
-                          hintText: 'Enter Expense Description',
-                          labelText: 'Expense Description',
-                          alignLabelWithHint: true,
-                          // Ensure label stays at the top
-                          labelStyle: TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                             color: AppColors.labelGrey,
                             fontFamily: 'Roboto',
                           ),
-                          hintStyle: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.labelGrey,
-                            fontFamily: 'Roboto',
-                          ),
+                          maxLines: 3,
+                          // Make the field larger by increasing maxLines
+                          minLines: 3,
+                          // Set the minimum number of lines to display
+                          // floatingLabelBehavior: FloatingLabelBehavior.always, // Ensure the label stays at the top
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a expense description';
+                            }
+                            return null;
+                          },
                         ),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.labelGrey,
-                          fontFamily: 'Roboto',
+                        SizedBox(
+                          height: 16,
                         ),
-                        maxLines: 3,
-                        // Make the field larger by increasing maxLines
-                        minLines: 3,
-                        // Set the minimum number of lines to display
-                        // floatingLabelBehavior: FloatingLabelBehavior.always, // Ensure the label stays at the top
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a expense description';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Center(
-                        child: GestureDetector(
-                          onTap: _pickFile,
-                          child: Container(
-                            height: 120,
-                            width: screenWidth * 0.9,
-                            decoration: BoxDecoration(
-                              color: AppColors.containerBackgroundPurple,
-                              //border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(4),
-                              child: CustomPaint(
-                                painter: DashedBorderPainter(),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      AppImages.VoucherFileUploadIcon,
-                                      height: 30,
-                                      width: 30,
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      "Upload Claim Document",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.primary,
-                                        fontFamily: 'Roboto',
+                        Center(
+                          child: GestureDetector(
+                            onTap: _pickFile,
+                            child: Container(
+                              height: 120,
+                              width: screenWidth * 0.9,
+                              decoration: BoxDecoration(
+                                color: AppColors.containerBackgroundPurple,
+                                //border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(4),
+                                child: CustomPaint(
+                                  painter: DashedBorderPainter(),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        AppImages.VoucherFileUploadIcon,
+                                        height: 30,
+                                        width: 30,
                                       ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      "Format should be in .pdf, .jpeg, .png less than 5 MB",
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.labelGrey,
-                                        fontFamily: 'Roboto',
+                                      SizedBox(height: 8),
+                                      Text(
+                                        "Upload Claim Document",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.primary,
+                                          fontFamily: 'Roboto',
+                                        ),
                                       ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
+                                      SizedBox(height: 4),
+                                      Text(
+                                        "Format should be in .pdf, .jpeg, .png less than 5 MB",
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.labelGrey,
+                                          fontFamily: 'Roboto',
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: SizedBox(
+          height: screenHeight * 0.18,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: screenHeight * 0.1,
+                width: screenWidth,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Center(
+                  child: ElevatedButton(
+                    onPressed: isButtonEnabled
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ActivityDashboard()),
+                            );
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isButtonEnabled
+                          ? AppColors.primary
+                          : AppColors.labelGrey,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                      fixedSize: Size(screenWidth * 0.9, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    child: const Text(
+                      'Submit Expense',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textWhite,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: BottomNavBar(
+                  containerHeight: screenHeight * 0.08,
+                  currentPage: 'Voucher',
                 ),
               ),
             ],
           ),
-        ),
-      ),
-      bottomNavigationBar: SizedBox(
-        height: screenHeight * 0.18,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              height: screenHeight * 0.1,
-              width: screenWidth,
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
-              child: Center(
-                child: ElevatedButton(
-                  onPressed: isButtonEnabled
-                      ? () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ActivityDashboard()),
-                          );
-                        }
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isButtonEnabled
-                        ? AppColors.primary
-                        : AppColors.labelGrey,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
-                    fixedSize: Size(screenWidth * 0.9, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                  child: const Text(
-                    'Submit Expense',
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textWhite,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: BottomNavBar(
-                containerHeight: screenHeight * 0.08,
-                currentPage: 'Voucher',
-              ),
-            ),
-          ],
         ),
       ),
     );

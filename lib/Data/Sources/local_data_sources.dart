@@ -1,5 +1,5 @@
 import 'package:sqflite/sqflite.dart';
-import '../Models/tasks.dart';
+import '../Models/activity.dart';
 
 class LocalDataSource {
   final Database db;
@@ -7,7 +7,7 @@ class LocalDataSource {
   LocalDataSource(this.db);
 
   // Save a list of tasks to the local database
-  Future<void> saveTasks(List<TaskModel> tasks) async {
+  Future<void> saveTasks(List<ActivityModel> tasks) async {
     for (final task in tasks) {
       try {
         await db.insert(
@@ -26,9 +26,9 @@ class LocalDataSource {
 
 
   // Fetch tasks from the local database
-  Future<List<TaskModel>> getTasks() async {
+  Future<List<ActivityModel>> getTasks() async {
     final result = await db.query('tasks');
-    return result.map((e) => TaskModel.fromJson(e)).toList();
+    return result.map((e) => ActivityModel.fromJson(e)).toList();
   }
 
   // Delete old tasks from the local database

@@ -1,4 +1,4 @@
-class TaskEntity {
+class ActivityEntity {
   final int id;
   final String taskHeader;
   final double progression;
@@ -8,7 +8,7 @@ class TaskEntity {
   final String date;
   final String commentCount;
 
-  TaskEntity({
+  ActivityEntity({
     required this.id,
     required this.taskHeader,
     required this.progression,
