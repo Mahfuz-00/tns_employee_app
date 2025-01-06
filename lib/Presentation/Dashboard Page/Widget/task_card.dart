@@ -9,15 +9,15 @@ class TaskCard extends StatefulWidget {
   final String taskHeader;
   final String progress;
   final String priority;
-  final double progression;
+ /* final double progression;*/
   final String date;
-  final String commentCount;
+  final int commentCount;
   final List<String> images;
 
   const TaskCard({
     super.key,
     required this.taskHeader,
-    required this.progression,
+ /*   required this.progression,*/
     required this.images,
     required this.priority,
     required this.progress,
@@ -35,8 +35,8 @@ class _TaskCardState extends State<TaskCard> {
   @override
   void initState() {
     super.initState();
-    _progress =
-        widget.progression; // Use widget.progression to access the value
+ /*   _progress =
+        widget.progression; // Use widget.progression to access the value*/
   }
 
   @override
@@ -108,7 +108,13 @@ class _TaskCardState extends State<TaskCard> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
+                        widget.progress == 'Finished'
+                            ? Icon(
+                          Icons.check, // Checkmark icon
+                          size: 16,
+                          color: AppColors.primary, // Primary color
+                        )
+                            : Icon(
                           Icons.timer, // Timer icon
                           size: 16,
                           color: Colors.grey[600],
@@ -169,7 +175,7 @@ class _TaskCardState extends State<TaskCard> {
                 ],
               ),
               SizedBox(height: 8),
-              InteractiveProgressBar(
+             /* InteractiveProgressBar(
                 initialProgress: _progress,
                 onProgressChanged: (newProgress) {
                   setState(() {
@@ -178,7 +184,7 @@ class _TaskCardState extends State<TaskCard> {
                 },
               ),
               SizedBox(height: 8),
-              // Row with circular images (people) and button
+              // Row with circular images (people) and button*/
               Container(
                 child: Row(
                   children: [
@@ -297,7 +303,7 @@ class _TaskCardState extends State<TaskCard> {
                             ),
                             SizedBox(width: 5), // Spacing between icon and text
                             Text(
-                              widget.commentCount,
+                              widget.commentCount.toString(),
                               // Replace with your comment count
                               style: TextStyle(
                                   color: AppColors.textBlack,

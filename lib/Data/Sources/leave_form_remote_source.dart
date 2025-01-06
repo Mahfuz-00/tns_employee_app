@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:touch_and_solve_inventory_app/Core/Config/Constants/app_urls.dart';
+import '../Models/leave_form.dart';
 
-import '../../Core/Config/Constants/app_urls.dart';
-import '../Models/activity_form.dart';
-
-class ActivityFormRemoteDataSource {
+class LeaveFormRemoteSource {
   final http.Client client;
 
-  ActivityFormRemoteDataSource(this.client);
+  LeaveFormRemoteSource(this.client);
 
-  Future<void> createActivity(ActivityFormModel activity) async {
+  // Submit leave form
+  Future<void> submitLeaveForm(LeaveFormModel leaveForm) async {
     AppURLS appURLs = AppURLS();
 
     // Fetch the token using the AppURLS class
@@ -21,32 +21,22 @@ class ActivityFormRemoteDataSource {
       print('Token is not available.');
     }
 
-    final url = Uri.parse('${AppURLS().Basepath}/api/activity/task/store');
+
+    print(leaveForm.toJson());
+
     final response = await client.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $authToken',
-      },
-      body: json.encode({
-        'actvTitle': activity.title,
-        'actvProject': activity.project,
-        'actvStartDate': activity.startDate,
-        'actvEndDate': activity.endDate,
-        'actvEstimatedHour': activity.estimatedHour,
-        'actvProjectUser': activity.projectUser,
-        'actvDescription': activity.description,
-        'priority': activity.priority,
-        'status': activity.status,
-      }),
+      Uri.parse('${AppURLS().Basepath}/api/activity/leave/application/store'),
+      headers: {'Content-Type': 'application/json',  'Authorization': 'Bearer $authToken',},
+      body: jsonEncode(leaveForm.toJson()),
     );
+
     print('Response Status Code: ${response.statusCode}');
     print('Response Body: ${response.body}');
 
     if (response.statusCode == 200) {
       print('Response Body: ${response.body}');
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-      print('Activity data sent successfully');
+      print('Leave data sent successfully');
       print(jsonResponse);
       //return jsonResponse;
     } else {
@@ -54,7 +44,7 @@ class ActivityFormRemoteDataSource {
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
       print('Missing Data :$jsonResponse');
       print(
-          'Failed to send activity data. Status code: ${response.statusCode}');
+          'Failed to send leave data. Status code: ${response.statusCode}');
       throw Exception('Failed to create activity: ${response.body}');
     }
   }

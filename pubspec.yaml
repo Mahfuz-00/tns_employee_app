@@ -51,6 +51,7 @@ dependencies:
   shared_preferences:
   dartz:
   http:
+  sqflite_sqlcipher:
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:sqflite/sqflite.dart';
 import 'package:touch_and_solve_inventory_app/Domain/Repositories/activity_repositories.dart';
 import '../../Domain/Entities/activity_entities.dart';
 import '../Models/activity.dart';
@@ -21,7 +22,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
       print('--------------------------------');
       print('Local activities:');
       localTasks.forEach((task) {
-        print('activity Header: ${task.taskHeader}, Task Name: ${task.taskHeader}, Task Priority: ${task.priority}, Task Date : ${task.date}, Task Progression : ${task.progression}');
+        print('activity Header: ${task.title}, Task Name: ${task.title}, Task Priority: ${task.priority}, Task Date : ${task.startDate}');
       });
       print('--------------------------------');
 
@@ -30,16 +31,16 @@ class ActivityRepositoryImpl implements ActivityRepository {
       print('--------------------------------');
       print('Remote activities:');
       taskModels.forEach((task) {
-        print('activity Header: ${task.taskHeader}, Task Name: ${task.taskHeader}, Task Priority: ${task.priority}, Task Date : ${task.date}, Task Progression : ${task.progression}');
+        print('activity Header: ${task.title}, Task Name: ${task.title}, Task Priority: ${task.priority}, Task Date : ${task.startDate}');
       });
       print('--------------------------------');
 
       // Step 3: Check for new tasks from the remote API that are not in the local database
       final List<ActivityModel> newTaskModels = taskModels.where((remoteTask) {
         return !localTasks.any((localTask) =>
-        localTask.taskHeader.trim().toLowerCase() == remoteTask.taskHeader.trim().toLowerCase() &&
+        localTask.title?.trim().toLowerCase() == remoteTask.title?.trim().toLowerCase() &&
             localTask.priority == remoteTask.priority &&
-            localTask.date == remoteTask.date);
+            localTask.startDate == remoteTask.startDate);
       }).toList();
 
 
@@ -47,13 +48,15 @@ class ActivityRepositoryImpl implements ActivityRepository {
       print('New activities from remote that are not in local:');
       print('Converting activityModel to activityEntity:');
       newTaskModels.forEach((task) {
-        print('activity Header: ${task.taskHeader}, Task Name: ${task.taskHeader}, Task Priority: ${task.priority}, Task Date : ${task.date}, Task Progression : ${task.progression}');
+        print('activity Header: ${task.title}, Task Name: ${task.title}, Task Priority: ${task.priority}, Task Date : ${task.startDate}, Task Assignor : ${task.assignor}');
       });
       print('--------------------------------');
 
       // Step 4: Save new tasks to the local database
       if (newTaskModels.isNotEmpty) {
-        await saveTasksToLocal(newTaskModels); // Call method to save new tasks to local database
+        final List<ActivityEntity> activityEntities =
+        newTaskModels.map((task) => task.toEntity()).toList();
+        await saveTasksToLocal(activityEntities); // Call method to save new tasks to local database
         print('New activities saved to local database');
       }
 
@@ -64,7 +67,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
       ];
       print('Returning combined activities (local + new):');
       allTasks.forEach((task) {
-        print('activity Header: ${task.taskHeader}, Task Name: ${task.taskHeader}, Task Priority: ${task.priority}, Task Date : ${task.date}, Task Progression : ${task.progression}');
+        print('activity Header: ${task.title}, Task Name: ${task.title}, Task Priority: ${task.priority}, Task Date : ${task.startDate}');
       });
 
       return allTasks;
@@ -82,31 +85,32 @@ class ActivityRepositoryImpl implements ActivityRepository {
       final List<ActivityEntity> existingTasks = await getLocalTasks();
       print('Existing activities in local database:');
       existingTasks.forEach((task) {
-        print('Task Header: ${task.taskHeader}, Task Priority: ${task.priority}, Task Date: ${task.date}, Task Progression: ${task.progression}');
+        print('Task Header: ${task.title}, Task Priority: ${task.priority}, Task Date: ${task.startDate}');
       });
 
       // Convert TaskEntity to TaskModel before saving
       final List<ActivityModel> taskModelsToSave = tasks.map((task) => ActivityModel.fromEntity(task)).toList();
       print('Converting activities to activityModel:');
       taskModelsToSave.forEach((task) {
-        print('Task Header: ${task.taskHeader}, Task Priority: ${task.priority}, Task Date: ${task.date}, Task Progression: ${task.progression}');
+        print('Task Header: ${task.title}, Task Priority: ${task.priority}, Task Date: ${task.startDate}');
       });
 
       // Check if the task already exists in the local database (by comparing taskHeader, priority, and date)
       final List<ActivityModel> uniqueTasks = taskModelsToSave.where((taskToSave) {
         return !existingTasks.any((existingTask) =>
-        existingTask.taskHeader == taskToSave.taskHeader &&
+        existingTask.title == taskToSave.title &&
             existingTask.priority == taskToSave.priority &&
-            existingTask.date == taskToSave.date);
+            existingTask.startDate == taskToSave.startDate);
       }).toList();
 
       print('Unique activities to be saved:');
       uniqueTasks.forEach((task) {
-        print('Task Header: ${task.taskHeader}, Task Priority: ${task.priority}, Task Date: ${task.date}, Task Progression: ${task.progression}');
+        print('Task Header: ${task.title}, Task Priority: ${task.priority}, Task Date: ${task.startDate}');
       });
 
       // Save only unique tasks to local storage
       if (uniqueTasks.isNotEmpty) {
+        // Directly save as ActivityModel (do not convert to ActivityEntity)
         await localDataSource.saveTasks(uniqueTasks);
         print('Successfully saved unique tasks to local storage.');
       } else {
@@ -114,10 +118,20 @@ class ActivityRepositoryImpl implements ActivityRepository {
       }
     } catch (e) {
       // Handle errors (e.g., database errors)
-      print('Error saving activities: $e');
+      print('Error occurred while saving activities: $e');
+      if (e is DatabaseException) {
+        print('Database error: ${e.toString()}'); // Use e.toString() to access the full error message
+      } else if (e is SocketException) {
+        print('Network error: ${e.message}');
+      } else {
+        print('Unknown error: ${e.toString()}');
+      }
       throw Exception('Failed to save activities to local storage: $e');
     }
   }
+
+
+
 
 
   @override
@@ -127,7 +141,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
       final List<ActivityModel> taskModels = await localDataSource.getTasks();
       print('Local activities retrieved from local data source:');
       taskModels.forEach((task) {
-        print('activity Header: ${task.taskHeader}, Task Name: ${task.taskHeader}, Task Priority: ${task.priority}, Task Date : ${task.date}, Task Progression : ${task.progression}');
+        print('activity Header: ${task.title}, Task Name: ${task.title}, Task Priority: ${task.priority}, Task Date : ${task.startDate}');
       });
 
       // Convert TaskModel to TaskEntity and return

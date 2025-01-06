@@ -223,11 +223,11 @@ class ActivitySection extends StatelessWidget {
           AppImages.MeetingPerson3,
           AppImages.MeetingPerson1
         ],
-        progression: 1.0,
+     /*   progression: 1.0,*/
         priority: 'High',
         progress: 'In Progress',
         date: '7 Dec',
-        commentCount: '10',
+        commentCount: 10,
       ),
     );
   }

@@ -9,9 +9,17 @@ abstract class ActivityFormState extends Equatable {
 
 class ActivityFormInitial extends ActivityFormState {}
 
-class ActivityFormLoading extends ActivityFormState {}
+class ActivityFormLoading extends ActivityFormState {
+  @override
+  String toString() => 'ActivityFormLoading';
+}
 
-class ActivityFormSuccess extends ActivityFormState {}
+class ActivityFormSuccess extends ActivityFormState {
+  @override
+  String toString() => 'ActivityFormSuccess';
+}
+
+
 
 class ActivityFormFailure extends ActivityFormState {
   final String error;

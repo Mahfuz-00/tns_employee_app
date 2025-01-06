@@ -36,9 +36,9 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
   Map<String, int> _calculateTaskCounts(List<ActivityEntity> tasks) {
     final taskCounts = {
       'All': tasks.length,
-      'To Do': tasks.where((task) => task.progress == 'To Do' || task.progress == 'Pending').length,
-      'In Progress': tasks.where((task) => task.progress == 'In Progress').length,
-      'Finished': tasks.where((task) => task.progress == 'Complete' || task.progress == 'Finished').length,
+      'To Do': tasks.where((task) => task.status == 'To Do' || task.status == 'Pending'|| task.status == 'pending').length,
+      'In Progress': tasks.where((task) => task.status == 'In Progress'|| task.status == 'in_progress').length,
+      'Finished': tasks.where((task) => task.status == 'Complete' || task.status == 'Finished'|| task.status == 'complete').length,
     };
     return taskCounts;
   }

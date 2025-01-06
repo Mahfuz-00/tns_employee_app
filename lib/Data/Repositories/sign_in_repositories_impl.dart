@@ -15,7 +15,8 @@ class SigninRepositoryImpl implements SigninRepository {
   @override
   Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_tokenKey);
+    final String? Token = prefs.getString(_tokenKey);
+    return Token;
   }
 
   @override

@@ -27,7 +27,7 @@ class ActivityUseCase {
 
       // Add remote tasks that do not already exist in local tasks
       remoteTasks.forEach((remoteTask) {
-        if (!localTasks.any((localTask) => localTask.taskHeader == remoteTask.taskHeader)) {
+        if (!localTasks.any((localTask) => localTask.title == remoteTask.title)) {
           allTasks.add(remoteTask);
         }
       });

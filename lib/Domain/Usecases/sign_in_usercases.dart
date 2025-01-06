@@ -21,10 +21,7 @@ class SigninUseCase {
         await prefs.setString('savedPassword', password);
       }
 
-      // Save the token locally if "rememberMe" is true
-      if (rememberMe) {
-        await tokenRepository.saveToken(token);
-      }
+      await tokenRepository.saveToken(token);
 
       return token; // Return the token after successful login
     } catch (e) {

@@ -188,32 +188,97 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                                     if (selectedSection == 'All') {
                                       return true; // Show all tasks
                                     } else {
-                                      print('Tasks selected: ${task.progress}');
-                                      return task.progress ==
+                                      print('Tasks selected: ${task.status}');
+                                      print('Selected: $selectedSection');
+                                      String Status = 'N/A';
+                                      if (task.status == 'pending') {
+                                          Status = 'To Do';
+                                      }
+
+                                      // Change 'in_progress' to 'In Progress'
+                                      if (task.status == 'in_progress') {
+                                          Status = 'In Progress';
+                                          print('Yay! You');
+                                      }
+
+                                      // Change 'complete' to 'Finished'
+                                      if (task.status == 'complete') {
+                                          Status = 'Finished';
+                                      }
+
+                                      print(Status);
+                                      return Status ==
                                           selectedSection; // Show tasks with matching progress
                                     }
                                   }).length,
                                   itemBuilder: (context, index) {
+                                    // Calculate the total number of comments for all tasks
+                                    final totalComments = state.tasks.fold<int>(
+                                      0,
+                                          (sum, task) {
+                                        final commentCount = (task.comment?.split(',').length ?? 0);
+                                        return sum + commentCount;
+                                      },
+                                    );
+
                                     // Create the filtered list of tasks
                                     final filteredTasks = state.tasks.where((task) {
+                                      print('Selected 1: $selectedSection');
                                       if (selectedSection == 'All') {
                                         return true;
                                       } else {
-                                        return task.progress == selectedSection;
+                                        print('Selected: $selectedSection');
+                                        String Status = 'N/A';
+                                        if (task.status == 'pending') {
+                                            Status = 'To Do';
+                                        }
+
+                                        // Change 'in_progress' to 'In Progress'
+                                        if (task.status == 'in_progress') {
+                                            Status = 'In Progress';
+                                            print('Yay! You');
+                                        }
+
+                                        // Change 'complete' to 'Finished'
+                                        if (task.status == 'complete') {
+                                            Status = 'Finished';
+                                        }
+
+                                        print(Status);
+                                        return selectedSection == Status;
                                       }
                                     }).toList();
 
                                     final task = filteredTasks[index];
+
+                                    String Status = 'N/A';
+                                    if (task.status == 'pending') {
+                                      Status = 'To Do';
+                                    }
+
+                                    // Change 'in_progress' to 'In Progress'
+                                    if (task.status == 'in_progress') {
+                                      Status = 'In Progress';
+                                    }
+
+                                    // Change 'complete' to 'Finished'
+                                    if (task.status == 'complete') {
+                                      Status = 'Finished';
+                                    }
+
+
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                       child: TaskCard(
-                                        taskHeader: task.taskHeader,
-                                        date: task.date,
-                                        priority: task.priority,
-                                        progress: task.progress,
-                                        progression: task.progression,
-                                        images: task.images,
-                                        commentCount: task.commentCount,
+                                        taskHeader: task.title ?? 'N/A',
+                                        date: task.startDate ?? 'N/A',
+                                        priority: task.priority ?? 'N/A',
+                                        progress: Status ?? 'N/A',
+                                     /*   progression: task.progression,*/
+                                        images: task.assignedUsers != null
+                                            ? task.assignedUsers!.map((user) => user.name ?? 'Unknown').toList()
+                                            : [],
+                                        commentCount: totalComments,
                                       ),
                                     );
                                   },

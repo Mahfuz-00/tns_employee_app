@@ -17,7 +17,7 @@ class LocalDataSource {
         );
         print("Task being saved: ${task.toJson()}");
       } catch (e) {
-        print("Failed to save task: ${task.taskHeader}, Error: $e");
+        print("Failed to save task: ${task.title}, Error: $e");
       }
     }
   }

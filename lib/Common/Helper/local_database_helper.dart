@@ -17,24 +17,33 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'tasks_database.db');
 
+
+    /* comment TEXT, -- Stored as a JSON string*/
+    /*  assignorId TEXT,*/
     _database = await openDatabase(
       path,
-      version: 2,
+      version: 4,
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE tasks (
             id INTEGER NOT NULL PRIMARY KEY,
-            taskHeader TEXT NOT NULL,
-            progression REAL NOT NULL,
-            images TEXT NOT NULL,
-            priority TEXT NOT NULL,
-            progress TEXT NOT NULL,
-            date TEXT NOT NULL,
-            commentCount INTEGER NOT NULL
+            title TEXT NOT NULL,
+            project TEXT,
+            startDate TEXT,
+            endDate TEXT,
+            estimateHours TEXT,
+            assignor INTEGER,
+            description TEXT,
+            comment TEXT,
+            priority TEXT,
+            status TEXT,
+            updatedAt TEXT,
+            assignedUsers TEXT -- Stored as a JSON string
           )
         ''');
       },
     );
+
     return _database!;
   }
 
@@ -46,7 +55,7 @@ class DatabaseHelper {
     List<Map<String, dynamic>> rows = await db.query('tasks');
 
     // Check for duplicates based on taskHeader
-    Set<String> seenHeaders = {};  // To track already seen taskHeaders
+    Set<String> seenHeaders = {}; // To track already seen taskHeaders
     for (var row in rows) {
       String taskHeader = row['taskHeader'];
 
@@ -75,7 +84,8 @@ class DatabaseHelper {
     }
 
     // Print table structure (columns)
-    List<Map<String, dynamic>> columns = await db.rawQuery('PRAGMA table_info(tasks)');
+    List<Map<String, dynamic>> columns =
+        await db.rawQuery('PRAGMA table_info(tasks)');
     print("Columns in 'tasks' table:");
     columns.forEach((column) {
       print('Column: ${column['name']}, Type: ${column['type']}');

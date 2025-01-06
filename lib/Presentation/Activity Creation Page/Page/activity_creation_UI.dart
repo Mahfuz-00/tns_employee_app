@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/Label_Text_Without_Asterisk.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/label_above_datafield.dart';
 import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart';
 import 'package:touch_and_solve_inventory_app/Presentation/Activity%20Dashboard%20Page/Page/activity_dashboard_UI.dart';
 
+import '../../../Common/Helper/dimmed_overlay.dart';
 import '../../../Common/Widgets/appbar_model.dart';
 import '../../../Common/Widgets/bottom_navigation_bar.dart';
 import '../../../Common/Widgets/drop_down.dart';
 import '../../../Common/Widgets/internet_connection_check.dart';
+import '../../../Core/Config/Dependency Injection/injection.dart';
 import '../../../Domain/Entities/activity_form_entities.dart';
 import '../Bloc/activity_form_bloc.dart';
 import '../Widget/date_picker.dart';
@@ -43,6 +46,8 @@ class _ActivityCreationState extends State<ActivityCreation> {
   DateTime? startDate;
   DateTime? endDate;
 
+  late ActivityFormBloc _activityFormBloc;
+
   void _validateForm() {
     print('Task Title: ${_tasktitlecontroller.text}');
     print('Task Description: ${_taskdescriptioncontroller.text}');
@@ -71,11 +76,14 @@ class _ActivityCreationState extends State<ActivityCreation> {
     });
   }
 
+  late final totalHours;
+
   void calculateEstimatedHours(String startDate, String endDate) {
     try {
-      // Parse the start and end dates
-      final start = DateTime.parse(startDate);
-      final end = DateTime.parse(endDate);
+      print('Start Date in function: $startDate');
+      print('End Date in function: $endDate'); // Parse the start and end dates
+      final start = DateFormat('dd-MM-yyyy').parse(startDate);
+      final end = DateFormat('dd-MM-yyyy').parse(endDate);
 
       if (start.isAfter(end)) {
         throw Exception("Start date cannot be after the end date.");
@@ -85,10 +93,10 @@ class _ActivityCreationState extends State<ActivityCreation> {
       final differenceInDays = end.difference(start).inDays + 1;
 
       // Calculate the total estimated hours
-      final totalHours = differenceInDays * 7;
+      totalHours = differenceInDays * 7;
 
       // Store the result in the external variable
-      _estimatedHourController.text = totalHours.toString();
+      _estimatedHourController.text = '${totalHours.toString()} Hours';
       print("Estimated hours: ${_estimatedHourController.text}");
     } catch (e) {
       print("Error calculating estimated hours: $e");
@@ -111,7 +119,7 @@ class _ActivityCreationState extends State<ActivityCreation> {
   @override
   void initState() {
     super.initState();
-
+    _activityFormBloc = getIt<ActivityFormBloc>();
     // Adding listeners to the controllers to detect changes
     _tasktitlecontroller.addListener(_validateForm);
     _taskdescriptioncontroller.addListener(_validateForm);
@@ -120,7 +128,12 @@ class _ActivityCreationState extends State<ActivityCreation> {
     _assigntoController.addListener(_validateForm);
     _priorityController.addListener(_validateForm);
     _statusController.addListener(_validateForm);
-    _estimatedHourController.addListener(() {
+    _startDateController.addListener(() {
+      calculateEstimatedHours(
+          _startDateController.text, _endDateController.text);
+    });
+
+    _endDateController.addListener(() {
       calculateEstimatedHours(
           _startDateController.text, _endDateController.text);
     });
@@ -152,10 +165,23 @@ class _ActivityCreationState extends State<ActivityCreation> {
         ),
         body: BlocListener<ActivityFormBloc, ActivityFormState>(
           listener: (context, state) {
-            if (state is ActivityFormSuccess) {
+            print('Current State: $state');
+            if (state is ActivityFormLoading) {
+              // Show loading indicator
+              print('ActivityFormLoading state received');
+              Center(child: OverlayLoader());
+            } else if (state is ActivityFormSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("Activity Created Successfully!")),
               );
+              // Add a delay to ensure SnackBar shows up before navigating
+              Future.delayed(Duration(milliseconds: 500), () {
+                Navigator.push(
+                  context,
+                  _customPageRoute(ActivityDashboard()),
+                );
+              });
+
             } else if (state is ActivityFormFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("Error: ${state.error}")),
@@ -286,6 +312,7 @@ class _ActivityCreationState extends State<ActivityCreation> {
                           LabelWidget(labelText: 'Estimated Time'),
                           TextFormField(
                             controller: _estimatedHourController,
+                            readOnly: true,
                             // Use the controller
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
@@ -400,7 +427,7 @@ class _ActivityCreationState extends State<ActivityCreation> {
                           Dropdown(
                             controller: _statusController,
                             label: 'Select Status',
-                            options: ['Pending', 'In Progress', 'Done'],
+                            options: ['Pending', 'In Progress', 'Complete'],
                             // List of options
                             selectedValue: _selectedStatus,
                             onChanged: (value) {
@@ -441,6 +468,11 @@ class _ActivityCreationState extends State<ActivityCreation> {
                   child: ElevatedButton(
                     onPressed: isButtonEnabled
                         ? () {
+                            print("Button pressed!");
+                            final statusKey =
+                                convertStatus(_statusController.text);
+                            print(
+                                statusKey); // Outputs the corresponding key or empty string for invalid inputs
                             _validateForm();
                             if (_formKey.currentState!.validate()) {
                               final activity = ActivityFromEntity(
@@ -448,21 +480,25 @@ class _ActivityCreationState extends State<ActivityCreation> {
                                 project: _projectController.text,
                                 startDate: _startDateController.text,
                                 endDate: _endDateController.text,
-                                estimatedHour:
-                                    int.parse(_estimatedHourController.text),
-                                projectUser: _selectedAssignTo,
+                                estimatedHour: totalHours,
+                                AssignedEmployee: _selectedAssignTo,
                                 description: _taskdescriptioncontroller.text,
                                 priority: _priorityController.text,
-                                status: _statusController.text,
+                                status: statusKey,
                               );
-                              context
-                                  .read<ActivityFormBloc>()
-                                  .add(SubmitActivityEvent(activity));
+                              print('SubmitActivityEvent added');
+                              try {
+                                final activityFormBloc =
+                                    BlocProvider.of<ActivityFormBloc>(context);
+                                print('ActivityFormBloc retrieved');
+                                activityFormBloc
+                                    .add(SubmitActivityEvent(activity));
+                                print('SubmitActivityEvent added');
+                              } catch (e) {
+                                print('Error adding SubmitActivityEvent: $e');
+                              }
+                              print('SubmitActivityEvent added 2');
                             }
-                            Navigator.push(
-                              context,
-                              _customPageRoute(ActivityCreation()),
-                            );
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
@@ -499,6 +535,19 @@ class _ActivityCreationState extends State<ActivityCreation> {
         ),
       ),
     );
+  }
+
+  String convertStatus(String statusText) {
+    switch (statusText) {
+      case 'In Progress':
+        return 'in_progress';
+      case 'Complete':
+        return 'complete';
+      case 'Pending':
+        return 'pending';
+      default:
+        return ''; // Return an empty string for invalid inputs
+    }
   }
 
   // Define your custom page route with slide transition

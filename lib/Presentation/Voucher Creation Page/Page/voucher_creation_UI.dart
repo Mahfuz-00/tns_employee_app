@@ -13,6 +13,7 @@ import '../../../Common/Widgets/internet_connection_check.dart';
 import '../../../Core/Config/Assets/app_images.dart';
 import '../../Activity Creation Page/Widget/date_picker.dart';
 import '../Widget/custom_border_painter.dart';
+import '../Widget/head_of_accounts_and_expense_amount_set.dart';
 import '../Widget/single_date_picker.dart';
 
 class VoucherCreation extends StatefulWidget {
@@ -28,31 +29,42 @@ class _VoucherCreationState extends State<VoucherCreation> {
       new TextEditingController();
   final TextEditingController _expensedescriptioncontroller =
       new TextEditingController();
-  final TextEditingController _transactionDateController =
-      TextEditingController();
-  final TextEditingController _expensivecategoryController =
-      TextEditingController();
-  String _selectedExpenseCategory = '';
+  final TextEditingController _voucherDateController = TextEditingController();
+  final TextEditingController _projectController = TextEditingController();
+  String _selectedProject = '';
   bool isButtonEnabled = false;
 
   DateTime? tansactionDate;
 
   // Form validation function to enable/disable button
   void _validateForm() {
-    print('Task Title: ${_expenseamountcontroller.text}');
-    print('Task Description: ${_expensedescriptioncontroller.text}');
-    print('Start Date: ${_transactionDateController.text}');
-    print('Assigned To: ${_expensivecategoryController.text}');
+    print('Expense Date: ${_voucherDateController.text}');
+    print('Project: ${_projectController.text}');
+    print('Expense Data: ${_expenseData}');
+    // print('Task Title: ${_expenseamountcontroller.text}');
+    print('Voucher Description: ${_expensedescriptioncontroller.text}');
     print('Button enabled: $isButtonEnabled');
 
     // Check if any of the fields are empty
-    bool areFieldsFilled = _expenseamountcontroller.text.isNotEmpty &&
-        _expensedescriptioncontroller.text.isNotEmpty &&
-        _transactionDateController.text.isNotEmpty &&
-        _expensivecategoryController.text.isNotEmpty;
+    bool areFieldsFilled = /*_expenseamountcontroller.text.isNotEmpty &&*/
+        _expenseData != null &&
+            _expensedescriptioncontroller.text.isNotEmpty &&
+            _voucherDateController.text.isNotEmpty &&
+            _projectController.text.isNotEmpty;
 
     setState(() {
       isButtonEnabled = areFieldsFilled;
+    });
+  }
+
+  // List to store the expenses data
+  List<Map<String, String>> _expenseData = [];
+
+  // Callback function to handle the data from ExpenseListWidget
+  void _handleExpenseData(List<Map<String, String>> expenseList) {
+    setState(() {
+      _expenseData = expenseList;
+      print('Expense Data: ${_expenseData}');
     });
   }
 
@@ -100,8 +112,8 @@ class _VoucherCreationState extends State<VoucherCreation> {
     // Adding listeners to the controllers to detect changes
     _expenseamountcontroller.addListener(_validateForm);
     _expensedescriptioncontroller.addListener(_validateForm);
-    _transactionDateController.addListener(_validateForm);
-    _expensivecategoryController.addListener(_validateForm);
+    _voucherDateController.addListener(_validateForm);
+    _projectController.addListener(_validateForm);
   }
 
   @override
@@ -109,8 +121,8 @@ class _VoucherCreationState extends State<VoucherCreation> {
     // Dispose of controllers to avoid memory leaks
     _expenseamountcontroller.dispose();
     _expensedescriptioncontroller.dispose();
-    _transactionDateController.dispose();
-    _expensivecategoryController.dispose();
+    _voucherDateController.dispose();
+    _projectController.dispose();
     super.dispose();
   }
 
@@ -162,40 +174,43 @@ class _VoucherCreationState extends State<VoucherCreation> {
                         SizedBox(
                           height: 20,
                         ),
-                        LabelWidget(labelText: 'Expense Category'),
-                        Dropdown(
-                          controller: _expensivecategoryController,
-                          label: 'Select Expense Category',
-                          options: ['Sajjad', 'Shihab', 'Munna'],
-                          // List of options
-                          selectedValue: _selectedExpenseCategory,
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedExpenseCategory = value!;
-                              _expensivecategoryController.text = value ?? '';
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please select a expense category';
-                            }
-                            return null;
-                          },
-                          hinttext: 'Select Expense Category',
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        LabelWidget(labelText: 'Transaction Date'),
+                        LabelWidget(labelText: 'Voucher Date'),
                         SingleDatePicker(
-                          controller: _transactionDateController,
-                          label: 'Transaction Date',
+                          controller: _voucherDateController,
+                          label: 'Voucher Date',
                           onDateSelected: _onTransactionDateSelected,
                         ),
                         SizedBox(
                           height: 16,
                         ),
-                        LabelWidget(labelText: 'Expense Amount'),
+                        LabelWidget(labelText: 'Project'),
+                        Dropdown(
+                          controller: _projectController,
+                          label: 'Select Project',
+                          options: ['ASSET', 'Inventory Software', '5 Apps'],
+                          // List of options
+                          selectedValue: _selectedProject,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedProject = value!;
+                              _projectController.text = value ?? '';
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select a project';
+                            }
+                            return null;
+                          },
+                          hinttext: 'Select Project',
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        ExpenseListWidget(
+                          onExpenseAdded: _handleExpenseData,
+                        ),
+                        /*       LabelWidget(labelText: 'Expense Amount'),
                         TextFormField(
                           controller: _expenseamountcontroller,
                           // Use the controller
@@ -237,7 +252,7 @@ class _VoucherCreationState extends State<VoucherCreation> {
                         ),
                         SizedBox(
                           height: 16,
-                        ),
+                        ),*/
                         LabelWidget(labelText: 'Expense Description'),
                         TextFormField(
                           controller: _expensedescriptioncontroller,

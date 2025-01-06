@@ -1,21 +1,101 @@
 class ActivityEntity {
-  final int id;
-  final String taskHeader;
-  final double progression;
-  final List<String> images;
-  final String priority;
-  final String progress;
-  final String date;
-  final String commentCount;
+  final int? id;
+  final String? title;
+  final String? project;
+  final String? startDate;
+  final String? endDate;
+  final String? estimateHours;
+  final int? assignor;
+/*  final String? assignorId;*/
+  final String? description;
+  final String? comment;
+  final String? priority;
+  final String? status;
+  final DateTime? updatedAt;
+  final List<AssignedUserEntity>? assignedUsers;
 
   ActivityEntity({
-    required this.id,
-    required this.taskHeader,
-    required this.progression,
-    required this.images,
-    required this.priority,
-    required this.progress,
-    required this.date,
-    required this.commentCount,
+    this.id,
+    this.title,
+    this.project,
+    this.startDate,
+    this.endDate,
+    this.estimateHours,
+    this.assignor,
+/*    this.assignorId,*/
+    this.description,
+    this.comment,
+    this.priority,
+    this.status,
+    this.updatedAt,
+    this.assignedUsers,
   });
+
+  factory ActivityEntity.fromJson(Map<String, dynamic> json) {
+    return ActivityEntity(
+      id: json['id'],
+      title: json['title'],
+      project: json['project'],
+      startDate: json['start_date'],
+      endDate: json['end_date'],
+      estimateHours: json['estimate_hours'],
+      assignor: json['assignor'],
+  /*    assignorId: json['user_assign_id'],*/
+      description: json['description'],
+      comment: json['comment'],
+      priority: json['priority'],
+      status: json['status'],
+      updatedAt: DateTime.parse(json['updated_at']),
+      assignedUsers: (json['assigned_users'] as List?)
+          ?.map((user) => AssignedUserEntity.fromJson(user))
+          .toList(),
+    );
+  }
+
+  // Convert ActivityEntity to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'project': project,
+      'start_date': startDate,
+      'end_date': endDate,
+      'estimate_hours': estimateHours,
+      'assignor' : assignor,
+/*      'user_assign_id' : assignorId,*/
+      'description': description,
+      'status': status,
+      'updated_at': updatedAt,
+      'assigned_users': assignedUsers?.map((user) => user.toJson()).toList(),
+    };
+  }
+}
+
+class AssignedUserEntity {
+  final int? id;
+  final String? name;
+  final String? profilePhotoPath;
+
+  AssignedUserEntity({
+    this.id,
+    this.name,
+    this.profilePhotoPath,
+  });
+
+  factory AssignedUserEntity.fromJson(Map<String, dynamic> json) {
+    return AssignedUserEntity(
+      id: json['id'],
+      name: json['name'],
+      profilePhotoPath: json['profile_photo_path'],
+    );
+  }
+
+  // Convert AssignedUserEntity to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'profile_photo_path': profilePhotoPath,
+    };
+  }
 }
