@@ -14,6 +14,14 @@ class AppImages {
   static const String HomeFilledIcon = '${BasePath}Home Icon Filled.png';
   static const String ActivityIcon = '${BasePath}Activity Icon.png';
   static const String ActivityFilledIcon = '${BasePath}Activity Icon Filled.png';
+  static const String AttendanceIcon = '${BasePath}Attendance Icon.png';
+  static const String AttendanceClockIcon = '${BasePath}Attendance Clock Icon.png';
+  static const String AttendanceRemarkIcon = '${BasePath}Attendance Remark Icon.png';
+  static const String AttendanceLocationIcon = '${BasePath}Attendance Location Icon.png';
+  static const String AttendanceProjectIcon = '${BasePath}Attendance Project Icon.png';
+  static const String AttendanceImage = '${BasePath}Attendance Image.png';
+  static const String AttendanceConatinerIcon = '${BasePath}Attendance Container Icon.png';
+  static const String AttendanceFilledIcon = '${BasePath}Attendance Icon Filled.png';
   static const String LeaveIcon = '${BasePath}Leave Icon.png';
   static const String LeaveIcon2 = '${BasePath}Leave Icon 2.png';
   static const String LeaveImage = '${BasePath}Leave Image.png';

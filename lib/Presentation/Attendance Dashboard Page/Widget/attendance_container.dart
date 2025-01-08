@@ -3,21 +3,27 @@ import 'package:touch_and_solve_inventory_app/Core/Config/Assets/app_images.dart
 
 import '../../../Core/Config/Theme/app_colors.dart';
 
-class VoucherContainers extends StatelessWidget {
-  final String submitDate;
-  final String project;
-  final String expense;
-  final String approvedBy;
-  final String approvalDate;
-  final String approvedImage;
+class AttendenceContainers extends StatelessWidget {
+  final String date;
+  final String projectName;
+  final String location;
+  final String duration;
+  final String clockIn;
+  final String clockOut;
+  final String approvedDate;
+  final String approvedby;
+  final String approverImage;
 
-  const VoucherContainers({
-    required this.submitDate,
-    required this.project,
-    required this.expense,
-    required this.approvedBy,
-    required this.approvalDate,
-    required this.approvedImage,
+  const AttendenceContainers({
+    required this.date,
+    required this.projectName,
+    required this.location,
+    required this.duration,
+    required this.clockIn,
+    required this.clockOut,
+    required this.approvedby,
+    required this.approvedDate,
+    required this.approverImage,
     Key? key,
   }) : super(key: key);
 
@@ -47,14 +53,14 @@ class VoucherContainers extends StatelessWidget {
           Row(
             children: [
               Image.asset(
-                AppImages.LeavePageImage,
-                width: 30,
-                height: 30,
+                AppImages.AttendanceConatinerIcon,
+                width: 20,
+                height: 20,
                 fit: BoxFit.cover,
               ),
               SizedBox(width: 8),
               Text(
-                submitDate,
+                date,
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   fontSize: 14.0,
@@ -86,7 +92,7 @@ class VoucherContainers extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Type',
+                      'Project Name',
                       style: TextStyle(
                         fontFamily: 'Roboto',
                         fontSize: 12.0,
@@ -96,7 +102,7 @@ class VoucherContainers extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      project,
+                      projectName,
                       style: TextStyle(
                         fontFamily: 'Roboto',
                         fontSize: 14.0,
@@ -110,7 +116,7 @@ class VoucherContainers extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Total Expense',
+                      'Location',
                       style: TextStyle(
                         fontFamily: 'Roboto',
                         fontSize: 12.0,
@@ -120,7 +126,7 @@ class VoucherContainers extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      expense,
+                      location,
                       style: TextStyle(
                         fontFamily: 'Roboto',
                         fontSize: 14.0,
@@ -133,6 +139,75 @@ class VoucherContainers extends StatelessWidget {
               ],
             ),
           ),
+
+          SizedBox(height: 12),
+
+          Container(
+            //margin: EdgeInsets.only(top: 8),
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                width: 1, // Specify the border width
+                color: AppColors
+                    .containerBackgroundGrey300, // Specify the border color
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Total Hours',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.textBlack,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      duration,
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textBlack,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Clock In & Out',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.textBlack,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      '$clockIn - $clockOut',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textBlack,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
           SizedBox(height: 12),
           // Space between inner container and approval section
 
@@ -148,7 +223,7 @@ class VoucherContainers extends StatelessWidget {
                   ),
                   SizedBox(width: 4,),
                   Text(
-                    'Approved at $approvalDate',
+                    'Approved at $approvedDate',
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 12.0,
@@ -171,11 +246,11 @@ class VoucherContainers extends StatelessWidget {
               SizedBox(width: 8),
               CircleAvatar(
                 radius: 12,
-                backgroundImage: AssetImage(approvedImage),
+                backgroundImage: AssetImage(approverImage),
               ),
               SizedBox(width: 8),
               Text(
-                approvedBy,
+                approvedby,
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   fontSize: 12.0,

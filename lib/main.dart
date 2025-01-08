@@ -16,6 +16,7 @@ import 'Domain/Usecases/sign_in_usercases.dart';
 import 'Presentation/Activity Creation Page/Bloc/activity_form_bloc.dart';
 import 'Presentation/Activity Dashboard Page/Bloc/activity_bloc.dart';
 import 'Presentation/Activity Dashboard Page/Bloc/activity_event.dart';
+import 'Presentation/Attendance Dashboard Page/Bloc/attendance_form_bloc.dart';
 import 'Presentation/Dashboard Page/Page/dashboard_UI.dart';
 import 'package:touch_and_solve_inventory_app/Core/Config/Dependency Injection/injection.dart'
     as di;
@@ -109,6 +110,9 @@ class MyApp extends StatelessWidget {
               ),
               BlocProvider<LeaveFormBloc>(
                 create: (context) => getIt<LeaveFormBloc>(),
+              ),
+              BlocProvider(
+                create: (context) => getIt<AttendanceFormBloc>(),
               ),
             ],
             child: snapshot.data!,

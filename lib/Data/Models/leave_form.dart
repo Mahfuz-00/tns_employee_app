@@ -5,12 +5,14 @@ class LeaveFormModel extends LeaveFormEntity {
     dynamic? leaveType,
     dynamic? startDate,
     dynamic? endDate,
+    dynamic? totaldays,
     dynamic? responsiblePersonId,
     dynamic? reason,
   }) : super(
     leaveType: leaveType,
     startDate: startDate,
     endDate: endDate,
+    totaldays: totaldays,
     responsiblePersonId: responsiblePersonId,
     reason: reason,
   );
@@ -20,6 +22,7 @@ class LeaveFormModel extends LeaveFormEntity {
       leaveType: json['leave_type'] as String?,
       startDate: json['start_date'] as String?,
       endDate: json['end_date'] as String?,
+      totaldays: json['total_day'] as int?,
       responsiblePersonId: json['responsible_person_id'] as int?,
       reason: json['reason'] as String?,
     );
@@ -30,6 +33,7 @@ class LeaveFormModel extends LeaveFormEntity {
       'leave_type': leaveType,
       'start_date': startDate,
       'end_date': endDate,
+      'total_day': totaldays,
       'responsible_person_id': responsiblePersonId,
       'reason': reason,
     };

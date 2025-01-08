@@ -1,15 +1,15 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:touch_and_solve_inventory_app/Core/Config/Constants/app_urls.dart';
-import '../Models/leave_form.dart';
 
-class LeaveFormRemoteSource {
+import 'package:http/http.dart' as http;
+import '../../Core/Config/Constants/app_urls.dart';
+import '../Models/attendance_form.dart';
+
+class AttendanceFormRemoteDataSource {
   final http.Client client;
 
-  LeaveFormRemoteSource(this.client);
+  AttendanceFormRemoteDataSource(this.client);
 
-  // Submit leave form
-  Future<void> submitLeaveForm(LeaveFormModel leaveForm) async {
+  Future<void> createAttendance(AttendanceFormModel attendance) async {
     AppURLS appURLs = AppURLS();
 
     // Fetch the token using the AppURLS class
@@ -21,12 +21,15 @@ class LeaveFormRemoteSource {
       print('Token is not available.');
     }
 
-    print(leaveForm.toJson());
+    print(attendance.toJson());
 
     final response = await client.post(
-      Uri.parse('${AppURLS().Basepath}/api/leave/application/store'),
-      headers: {'Content-Type': 'application/json',  'Authorization': 'Bearer $authToken',},
-      body: jsonEncode(leaveForm.toJson()),
+      Uri.parse('${AppURLS().Basepath}/api/attendance/request/store'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $authToken',
+      },
+      body: attendance.toJson(),
     );
 
     print('Response Status Code: ${response.statusCode}');

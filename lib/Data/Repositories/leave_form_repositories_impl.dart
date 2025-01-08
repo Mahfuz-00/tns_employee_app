@@ -17,6 +17,7 @@ class LeaveFormRepositoryImpl implements LeaveFormRepository {
       leaveType: leaveForm.leaveType,
       startDate: leaveForm.startDate,
       endDate: leaveForm.endDate,
+      totaldays: leaveForm.totaldays,
       responsiblePersonId: leaveForm.responsiblePersonId,
       reason: leaveForm.reason,
     );

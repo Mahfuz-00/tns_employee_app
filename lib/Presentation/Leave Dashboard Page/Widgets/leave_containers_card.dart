@@ -139,14 +139,24 @@ class LeaveContainers extends StatelessWidget {
           // Approval Section moved to be part of the outer container
           Row(
             children: [
-              Text(
-                'Approved at $approvalDate',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.primary,
-                ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.check_circle,
+                    color: AppColors.primary,
+                    size: 14,
+                  ),
+                  SizedBox(width: 4,),
+                  Text(
+                    'Approved at $approvalDate',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ],
               ),
               Spacer(),
               Text(

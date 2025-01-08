@@ -9,6 +9,7 @@ import '../../../Common/Widgets/appbar_model.dart';
 import '../../../Common/Widgets/bottom_navigation_bar.dart';
 import '../../../Common/Widgets/bottom_navigation_bar_with_swipe.dart';
 import '../../../Common/Widgets/drop_down.dart';
+import '../../../Common/Widgets/dropdown_object.dart';
 import '../../../Common/Widgets/internet_connection_check.dart';
 import '../../../Domain/Entities/leave_form_entities.dart';
 import '../../Leave Dashboard Page/Page/leave_dashboard_UI.dart';
@@ -48,6 +49,12 @@ class _LeaveCreationState extends State<LeaveCreation> {
   String? leavestartday;
   String? leaveendday;
 
+  List<Map<String, String>> assignToOptions = [
+    {'name': 'Sajjad', 'id': '1'},
+    {'name': 'Shihab', 'id': '2'},
+    {'name': 'Munna', 'id': '3'},
+  ];
+
   // Form validation function to enable/disable button
   void _validateForm() {
     print('Leave Category: ${_leavetypecontroller.text}');
@@ -64,6 +71,7 @@ class _LeaveCreationState extends State<LeaveCreation> {
         /*_taskdelegationcontroller.text.isNotEmpty &&*/
         _leavereasoncontroller.text.isNotEmpty &&
         _leavedaysController.text.isNotEmpty &&
+        totalDays > 0 &&
         /* _relationController.text.isNotEmpty &&
         _phoneController.text.isNotEmpty &&*/
         _assigntoController.text.isNotEmpty;
@@ -72,6 +80,8 @@ class _LeaveCreationState extends State<LeaveCreation> {
       isButtonEnabled = areFieldsFilled;
     });
   }
+
+  int totalDays = 0;
 
   // Handle date selection for start and end dates
   void _onLeaveDurationSelected(DateTime startDate, DateTime endDate) {
@@ -83,7 +93,7 @@ class _LeaveCreationState extends State<LeaveCreation> {
       leavestartday = leaveDurationStart?.toIso8601String();
 
       // Calculate the difference in days
-      int totalDays = endDate.difference(startDate).inDays + 1;
+      totalDays = endDate.difference(startDate).inDays + 1;
 
       // Update the text controller
       _leavedaysController.text = '${totalDays.toString()} days';
@@ -292,16 +302,18 @@ class _LeaveCreationState extends State<LeaveCreation> {
                           height: 16,
                         ),*/
                           LabelWidget(labelText: 'In Absence task assigned to'),
-                          Dropdown(
+                          DropdownWithObject(
                             controller: _assigntoController,
                             label: 'Select Assign Person',
-                            options: ['Sajjad', 'Shihab', 'Munna'],
-                            // List of options
-                            selectedValue: _selectedAssignTo,
+                            hinttext: 'Select Assign Person',
+                            options: assignToOptions,
+                            selectedValue: _selectedAssignTo,  // The ID of the selected option
                             onChanged: (value) {
                               setState(() {
                                 _selectedAssignTo = value!;
-                                _assigntoController.text = value ?? '';
+                                // Find the name corresponding to the selected ID and update the text
+                                final selectedOption = assignToOptions.firstWhere((option) => option['id'] == value);
+                                _assigntoController.text = selectedOption['name']!; // Update the controller text
                               });
                             },
                             validator: (value) {
@@ -310,7 +322,6 @@ class _LeaveCreationState extends State<LeaveCreation> {
                               }
                               return null;
                             },
-                            hinttext: 'Select Assign Person',
                           ),
                           SizedBox(
                             height: 16,
@@ -399,31 +410,34 @@ class _LeaveCreationState extends State<LeaveCreation> {
                   child: ElevatedButton(
                     onPressed: isButtonEnabled
                         ? () {
-                      print("Button pressed!");
+                            print("Button pressed!");
 
-                      _validateForm();
-                      if (_formKey.currentState!.validate()) {
-                        // Create LeaveFormEntity with data from the form
-                        final leaveForm = LeaveFormEntity(
-                          leaveType: _leavetypecontroller.text,
-                          startDate: leavestartday,
-                          endDate: leaveendday,
-                          responsiblePersonId: _assigntoController.text,
-                          reason: _leavereasoncontroller.text,
-                        );
+                            _validateForm();
+                            if (_formKey.currentState!.validate()) {
+                              // Create LeaveFormEntity with data from the form
+                              final leaveForm = LeaveFormEntity(
+                                leaveType: _leavetypecontroller.text,
+                                startDate: leavestartday,
+                                endDate: leaveendday,
+                                totaldays: totalDays,
+                                responsiblePersonId: _selectedAssignTo,
+                                reason: _leavereasoncontroller.text,
+                              );
 
-                        print('SubmitLeaveFormEvent added');
-                        try {
-                          final leaveFormBloc = BlocProvider.of<LeaveFormBloc>(context);
-                          print('LeaveFormBloc retrieved');
-                          leaveFormBloc.add(SubmitLeaveFormEvent(leaveForm));
-                          print('SubmitLeaveFormEvent added');
-                        } catch (e) {
-                          print('Error adding SubmitLeaveFormEvent: $e');
-                        }
-                        print('SubmitLeaveFormEvent added 2');
-                      }
-                    }
+                              print('SubmitLeaveFormEvent added');
+                              try {
+                                final leaveFormBloc =
+                                    BlocProvider.of<LeaveFormBloc>(context);
+                                print('LeaveFormBloc retrieved');
+                                leaveFormBloc
+                                    .add(SubmitLeaveFormEvent(leaveForm));
+                                print('SubmitLeaveFormEvent added');
+                              } catch (e) {
+                                print('Error adding SubmitLeaveFormEvent: $e');
+                              }
+                              print('SubmitLeaveFormEvent added 2');
+                            }
+                          }
                         : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: isButtonEnabled

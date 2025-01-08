@@ -5,6 +5,7 @@ import 'package:touch_and_solve_inventory_app/Presentation/Leave%20Dashboard%20P
 import 'package:touch_and_solve_inventory_app/Presentation/Voucher%20Dashboard%20Page/Page/voucher_dashboard_UI.dart';
 
 import '../../Core/Config/Theme/app_colors.dart';
+import '../../Presentation/Attendance Dashboard Page/Page/attendance_dashboard_UI.dart';
 import '../../Presentation/Dashboard Page/Page/dashboard_UI.dart';
 import '../Helper/navigation_transition.dart';
 
@@ -54,6 +55,13 @@ class BottomNavBar extends StatelessWidget {
           //_customPageRoute(ActivityDashboard()),
         );
         break;
+      case 'Attendance':
+        Navigator.push(
+          context,
+          customPageRoute(AttendanceDashboard()),
+          //_customPageRoute(AttendanceDashboard()),
+        );
+        break;
       case 'Leave':
         Navigator.push(
           context,
@@ -96,6 +104,12 @@ class BottomNavBar extends StatelessWidget {
                   ? AppImages.ActivityFilledIcon
                   : AppImages.ActivityIcon,
               'Activity'),
+          _buildNavButton(
+              context,
+              currentPage == 'Attendance'
+                  ? AppImages.AttendanceFilledIcon
+                  : AppImages.AttendanceIcon,
+              'Attendance'),
           _buildNavButton(
               context,
               currentPage == 'Leave'
