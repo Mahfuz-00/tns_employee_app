@@ -65,10 +65,15 @@ class _SignInPageState extends State<SignInPage> {
       );
     } else {
       // If no token, check if "Remember Me" is checked in SharedPreferences
-      bool? isChecked = await SharedPreferences.getInstance()
-          .then((prefs) => prefs.getBool('rememberMe') ?? false);
+      isChecked = await SharedPreferences.getInstance()
+          .then((prefs) => prefs.getString('rememberMe') == 'true');
+
+      print("Remember Me: $isChecked");
 
       if (isChecked == true) {
+        setState(() {
+          isChecked == true;
+        });
         // If "Remember Me" is checked, retrieve saved email and password
         String? savedEmail = await SharedPreferences.getInstance()
             .then((prefs) => prefs.getString('savedEmail'));
@@ -100,6 +105,7 @@ class _SignInPageState extends State<SignInPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.error)),
               );
+              print('Sign In Error: ${state.error}');
             } else if (state is SignInSuccess) {
               // Handle success (e.g., navigate to Dashboard)
               Navigator.pushReplacementNamed(context, '/Home');

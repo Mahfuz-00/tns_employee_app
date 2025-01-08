@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../Common/Widgets/dropdown_object.dart';
 import '../../../Common/Widgets/label_above_datafield.dart';
 import '../../../Core/Config/Theme/app_colors.dart';
 
@@ -19,6 +20,13 @@ class _ExpenseListWidgetState extends State<ExpenseListWidget> {
       TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   bool isButtonEnabled = false;
+  String _selectedAssignTo = '';
+
+  List<Map<String, String>> assignToOptions = [
+    {'name': 'Sajjad', 'id': '1'},
+    {'name': 'Shihab', 'id': '2'},
+    {'name': 'Munna', 'id': '3'},
+  ];
 
   // Add a new entry to the list
   void _addExpense() {
@@ -32,9 +40,14 @@ class _ExpenseListWidgetState extends State<ExpenseListWidget> {
       // Send data to parent widget using the callback
       widget.onExpenseAdded(_expenseList);
 
-      // Clear the controllers for the next entry
-      _headOfAccountController.clear();
-      _amountController.clear();
+      setState(() {
+        // Clear the controllers for the next entry
+        _headOfAccountController.clear();
+        _amountController.clear();
+        _selectedAssignTo = '';
+        print(_headOfAccountController.text);
+        print(_amountController.text);
+      });
     });
   }
 
@@ -84,9 +97,36 @@ class _ExpenseListWidgetState extends State<ExpenseListWidget> {
 
         // Form fields for adding a new pair
         LabelWidget(labelText: 'Head of Account'),
-        TextFormField(
+        DropdownWithObject(
           controller: _headOfAccountController,
-          onChanged: (_) => _checkFields(),
+          label: 'Select Head of Account',
+          hinttext: 'Select Head of Account',
+          options: assignToOptions,
+          selectedValue: _selectedAssignTo,  // The ID of the selected option
+          onChanged: (value) {
+            setState(() {
+              _selectedAssignTo = value!;
+              // Find the name corresponding to the selected ID and update the text
+              final selectedOption = assignToOptions.firstWhere((option) => option['id'] == value);
+              _headOfAccountController.text = selectedOption['name']!; // Update the controller text
+            });
+          },
+          validator: (value) {
+            // Ignore validation if the expense list is not empty
+            if (_expenseList.isNotEmpty) {
+              return null; // Skip validation
+            }
+
+            // Otherwise, perform validation
+            if (value == null || value.isEmpty) {
+              return 'Please select a head of account';
+            }
+            return null;
+          },
+        ),
+       /* TextFormField(
+          controller: _headOfAccountController,
+
           decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4),
@@ -118,7 +158,7 @@ class _ExpenseListWidgetState extends State<ExpenseListWidget> {
             }
             return null;
           },
-        ),
+        ),*/
         SizedBox(height: 16),
         LabelWidget(labelText: 'Amount'),
         TextFormField(
@@ -155,6 +195,12 @@ class _ExpenseListWidgetState extends State<ExpenseListWidget> {
             fontFamily: 'Roboto',
           ),
           validator: (value) {
+            // Ignore validation if the expense list is not empty
+            if (_expenseList.isNotEmpty) {
+              return null; // Skip validation
+            }
+
+            // Otherwise, perform validation
             if (value == null || value.isEmpty) {
               return 'Please enter your expense amount';
             }

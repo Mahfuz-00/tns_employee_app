@@ -1,17 +1,26 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/Label_Text_Without_Asterisk.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/label_above_datafield.dart';
 import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart';
 import 'package:touch_and_solve_inventory_app/Presentation/Activity%20Dashboard%20Page/Page/activity_dashboard_UI.dart';
 
+import '../../../Common/Helper/dimmed_overlay.dart';
 import '../../../Common/Widgets/appbar_model.dart';
 import '../../../Common/Widgets/bottom_navigation_bar.dart';
 import '../../../Common/Widgets/bottom_navigation_bar_with_swipe.dart';
 import '../../../Common/Widgets/drop_down.dart';
+import '../../../Common/Widgets/dropdown_object.dart';
 import '../../../Common/Widgets/internet_connection_check.dart';
 import '../../../Core/Config/Assets/app_images.dart';
+import '../../../Domain/Entities/voucher_form_entities.dart';
 import '../../Activity Creation Page/Widget/date_picker.dart';
+import '../../Voucher Dashboard Page/Page/voucher_dashboard_UI.dart';
+import '../Bloc/voucher_form_bloc.dart';
 import '../Widget/custom_border_painter.dart';
 import '../Widget/head_of_accounts_and_expense_amount_set.dart';
 import '../Widget/single_date_picker.dart';
@@ -33,8 +42,10 @@ class _VoucherCreationState extends State<VoucherCreation> {
   final TextEditingController _projectController = TextEditingController();
   String _selectedProject = '';
   bool isButtonEnabled = false;
+  String? _file = null;
+  String? projectId = '0';
 
-  DateTime? tansactionDate;
+  DateTime? transactionDate;
 
   // Form validation function to enable/disable button
   void _validateForm() {
@@ -60,18 +71,47 @@ class _VoucherCreationState extends State<VoucherCreation> {
   // List to store the expenses data
   List<Map<String, String>> _expenseData = [];
 
+  // Variables to hold the extracted account IDs and amounts
+  List<String> _accountIds = [];
+  List<double> _amounts = [];
+
   // Callback function to handle the data from ExpenseListWidget
   void _handleExpenseData(List<Map<String, String>> expenseList) {
     setState(() {
       _expenseData = expenseList;
       print('Expense Data: ${_expenseData}');
+
+      // Extract account IDs and amounts
+      _accountIds = _expenseData
+          .map((expense) => expense['headOfAccount'] ?? '')
+          .toList();
+      // Extract amounts as double
+      _amounts = _expenseData
+          .map((expense) {
+        // Extract the numeric part by removing 'TK' and trim any extra spaces
+        String amountStr = expense['amount']?.replaceAll('TK', '').trim() ?? '0';
+
+        // Try to parse the amount into a double
+        return double.tryParse(amountStr) ?? 0.0;
+      })
+          .toList();
+
+      print('Account IDs: $_accountIds');
+      print('Amounts: $_amounts');
     });
   }
 
   // Handle date selection for start and end dates
   void _onTransactionDateSelected(DateTime selectedDate) {
     setState(() {
-      tansactionDate = selectedDate;
+      // Format the selectedDate to a string in the desired format
+      String formattedDate = DateFormat("dd-MM-yyyy").format(selectedDate);
+
+      // Now parse the formatted string back into a DateTime object
+      transactionDate = DateFormat("dd-MM-yyyy").parse(formattedDate);
+
+      // Print the DateTime object after parsing
+      print("Transaction Date (DateTime): $transactionDate");
     });
   }
 
@@ -79,7 +119,16 @@ class _VoucherCreationState extends State<VoucherCreation> {
     // Trigger the file picker dialog
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf', 'jpeg', 'png'], // Allowed file extensions
+      allowedExtensions: [
+        'pdf',
+        'jpeg',
+        'png',
+        'jpg',
+        'doc',
+        'docx',
+        'xls',
+        'xlsx'
+      ], // Allowed file extensions
     );
 
     // Check if a file was picked
@@ -89,6 +138,7 @@ class _VoucherCreationState extends State<VoucherCreation> {
 
       if (filePath != null) {
         // File picked successfully, you can now upload the file
+        _file = filePath;
         print("File selected: $filePath");
         // Implement your file upload logic here (e.g., upload to a server)
       } else {
@@ -135,82 +185,116 @@ class _VoucherCreationState extends State<VoucherCreation> {
         appBar: AppBarModel(
           title: 'Submit Expense',
         ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.all(16),
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.backgroundWhite,
-                    borderRadius: BorderRadius.all(Radius.circular(4)),
-                  ),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      //mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Fill Claim Infromation',
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textBlack,
-                              fontFamily: 'Roboto'),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'Information about claim details',
-                          style: TextStyle(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.labelGrey,
-                              fontFamily: 'Roboto'),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        LabelWidget(labelText: 'Voucher Date'),
-                        SingleDatePicker(
-                          controller: _voucherDateController,
-                          label: 'Voucher Date',
-                          onDateSelected: _onTransactionDateSelected,
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        LabelWidget(labelText: 'Project'),
-                        Dropdown(
-                          controller: _projectController,
-                          label: 'Select Project',
-                          options: ['ASSET', 'Inventory Software', '5 Apps'],
-                          // List of options
-                          selectedValue: _selectedProject,
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedProject = value!;
-                              _projectController.text = value ?? '';
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please select a project';
-                            }
-                            return null;
-                          },
-                          hinttext: 'Select Project',
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        ExpenseListWidget(
-                          onExpenseAdded: _handleExpenseData,
-                        ),
-                        /*       LabelWidget(labelText: 'Expense Amount'),
+        body: BlocListener<VoucherFormBloc, VoucherFormState>(
+          listener: (context, state) {
+            print('Current State: $state');
+            if (state is VoucherFormLoading) {
+              // Show loading indicator
+              print('VoucherFormLoading state received');
+              Center(child: OverlayLoader());
+            } else if (state is VoucherFormSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Voucher Created Successfully!")),
+              );
+              // Add a delay to ensure SnackBar shows up before navigating
+              Future.delayed(Duration(milliseconds: 500), () {
+                Navigator.push(
+                  context,
+                  _customPageRoute(VoucherDashboard()),
+                );
+              });
+            } else if (state is VoucherFormFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Error: ${state.error}")),
+              );
+            }
+          },
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.backgroundWhite,
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
+                    ),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        //mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Fill Claim Infromation',
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textBlack,
+                                fontFamily: 'Roboto'),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            'Information about claim details',
+                            style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.labelGrey,
+                                fontFamily: 'Roboto'),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          LabelWidget(labelText: 'Voucher Date'),
+                          SingleDatePicker(
+                            controller: _voucherDateController,
+                            label: 'Voucher Date',
+                            onDateSelected: _onTransactionDateSelected,
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          LabelWidget(labelText: 'Project'),
+                          DropdownWithObject(
+                            controller: _projectController,
+                            label: 'Select Project',
+                            hinttext: 'Select Project',
+                            options: [
+                              {'id': '1', 'name': 'ASSET'},
+                              {'id': '2', 'name': 'Inventory Software'},
+                              {'id': '3', 'name': '5 Apps'}
+                            ],  // List of options as objects
+                            selectedValue: _selectedProject,  // The ID of the selected option
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedProject = value!;
+                                // Find the name corresponding to the selected ID and update the text
+                                final selectedOption = [
+                                  {'id': '1', 'name': 'ASSET'},
+                                  {'id': '2', 'name': 'Inventory Software'},
+                                  {'id': '3', 'name': '5 Apps'}
+                                ].firstWhere((option) => option['id'] == value);
+                                _projectController.text = selectedOption['name']!; // Update the controller text
+                                projectId = selectedOption['id']!;
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select a project';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          ExpenseListWidget(
+                            onExpenseAdded: _handleExpenseData,
+                          ),
+                          /*       LabelWidget(labelText: 'Expense Amount'),
                         TextFormField(
                           controller: _expenseamountcontroller,
                           // Use the controller
@@ -253,108 +337,110 @@ class _VoucherCreationState extends State<VoucherCreation> {
                         SizedBox(
                           height: 16,
                         ),*/
-                        LabelWidget(labelText: 'Expense Description'),
-                        TextFormField(
-                          controller: _expensedescriptioncontroller,
-                          // Use the controller
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            hintText: 'Enter Expense Description',
-                            labelText: 'Expense Description',
-                            alignLabelWithHint: true,
-                            // Ensure label stays at the top
-                            labelStyle: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.labelGrey,
-                              fontFamily: 'Roboto',
-                            ),
-                            hintStyle: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.labelGrey,
-                              fontFamily: 'Roboto',
-                            ),
-                          ),
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.labelGrey,
-                            fontFamily: 'Roboto',
-                          ),
-                          maxLines: 3,
-                          // Make the field larger by increasing maxLines
-                          minLines: 3,
-                          // Set the minimum number of lines to display
-                          // floatingLabelBehavior: FloatingLabelBehavior.always, // Ensure the label stays at the top
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a expense description';
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Center(
-                          child: GestureDetector(
-                            onTap: _pickFile,
-                            child: Container(
-                              height: 120,
-                              width: screenWidth * 0.9,
-                              decoration: BoxDecoration(
-                                color: AppColors.containerBackgroundPurple,
-                                //border: Border.all(color: Colors.grey),
+                          LabelWidget(labelText: 'Expense Description'),
+                          TextFormField(
+                            controller: _expensedescriptioncontroller,
+                            // Use the controller
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(4),
                               ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(4),
-                                child: CustomPaint(
-                                  painter: DashedBorderPainter(),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        AppImages.VoucherFileUploadIcon,
-                                        height: 30,
-                                        width: 30,
-                                      ),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        "Upload Claim Document",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.primary,
-                                          fontFamily: 'Roboto',
+                              hintText: 'Enter Expense Description',
+                              labelText: 'Expense Description',
+                              alignLabelWithHint: true,
+                              // Ensure label stays at the top
+                              labelStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.labelGrey,
+                                fontFamily: 'Roboto',
+                              ),
+                              hintStyle: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.labelGrey,
+                                fontFamily: 'Roboto',
+                              ),
+                            ),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.labelGrey,
+                              fontFamily: 'Roboto',
+                            ),
+                            maxLines: 3,
+                            // Make the field larger by increasing maxLines
+                            minLines: 3,
+                            // Set the minimum number of lines to display
+                            // floatingLabelBehavior: FloatingLabelBehavior.always, // Ensure the label stays at the top
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a expense description';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Center(
+                            child: GestureDetector(
+                              onTap: _pickFile,
+                              child: Container(
+                                height: 120,
+                                width: screenWidth * 0.9,
+                                decoration: BoxDecoration(
+                                  color: AppColors.containerBackgroundPurple,
+                                  //border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(4),
+                                  child: CustomPaint(
+                                    painter: DashedBorderPainter(),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          AppImages.VoucherFileUploadIcon,
+                                          height: 30,
+                                          width: 30,
                                         ),
-                                      ),
-                                      SizedBox(height: 4),
-                                      Text(
-                                        "Format should be in .pdf, .jpeg, .png less than 5 MB",
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.labelGrey,
-                                          fontFamily: 'Roboto',
+                                        SizedBox(height: 8),
+                                        Text(
+                                          "Upload Claim Document",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.primary,
+                                            fontFamily: 'Roboto',
+                                          ),
                                         ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
+                                        SizedBox(height: 4),
+                                        Text(
+                                          "Format should be in .pdf, .jpeg, .png less than 5 MB",
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.labelGrey,
+                                            fontFamily: 'Roboto',
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -373,11 +459,33 @@ class _VoucherCreationState extends State<VoucherCreation> {
                   child: ElevatedButton(
                     onPressed: isButtonEnabled
                         ? () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ActivityDashboard()),
-                            );
+                            if (_formKey.currentState!.validate()) {
+                              final voucherFormEntity = VoucherFormEntity(
+                                date: transactionDate,
+                                costCenterId: projectId,
+                                description: _expensedescriptioncontroller.text,
+                                accountIds: _accountIds,
+                                // This should be a list of selected account IDs
+                                amounts: _amounts,
+                                // This should be a list of amounts
+                                attachment: _file,
+                                paidStatus: 'pending',
+                              );
+
+                              print('SubmitVoucherFormEvent added');
+                              try {
+                                final voucherFormBloc =
+                                    BlocProvider.of<VoucherFormBloc>(context);
+                                print('VoucherFormBloc retrieved');
+                                voucherFormBloc.add(
+                                    SubmitVoucherFormEvent(voucherFormEntity));
+                                print('SubmitVoucherFormEvent added');
+                              } catch (e) {
+                                print(
+                                    'Error adding SubmitVoucherFormEvent: $e');
+                              }
+                              print('SubmitVoucherFormEvent added 2');
+                            }
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
@@ -413,6 +521,27 @@ class _VoucherCreationState extends State<VoucherCreation> {
           ),
         ),
       ),
+    );
+  }
+
+  // Define your custom page route with slide transition
+  PageRouteBuilder _customPageRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        // Define the slide animation from the left
+        const begin = Offset(1.0, 0.0); // Start off-screen on the left
+        const end = Offset.zero; // End at the screen center
+        const curve = Curves.easeInOut; // Smooth curve
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+      transitionDuration:
+          Duration(milliseconds: 500), // Duration of the transition
     );
   }
 }

@@ -17,7 +17,7 @@ class ActivityFormRepositoryImpl implements ActivityFormRepository {
       startDate: activity.startDate,
       endDate: activity.endDate,
       estimatedHour: activity.estimatedHour,
-      projectUser: activity.AssignedEmployee,
+      AssignedEmployee: activity.AssignedEmployee,
       description: activity.description,
       priority: activity.priority,
       status: activity.status,

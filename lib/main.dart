@@ -5,6 +5,8 @@ import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart'
 import 'package:touch_and_solve_inventory_app/Presentation/Onboarding%20Page/Page/Onboarding_UI.dart';
 
 import 'Common/Bloc/bottom_navigation_with_swipe_cubit.dart';
+import 'Common/Bloc/profile_bloc.dart';
+import 'Common/Bloc/signout_bloc.dart';
 import 'Common/Helper/local_database_helper.dart';
 import 'Core/Config/Dependency Injection/injection.dart';
 import 'Data/Repositories/activity_repositories_impl.dart';
@@ -23,6 +25,7 @@ import 'package:touch_and_solve_inventory_app/Core/Config/Dependency Injection/i
 
 import 'Presentation/Leave Creation Page/Bloc/leave_form_bloc.dart';
 import 'Presentation/Sign In Page/Bloc/sign_in_bloc.dart';
+import 'Presentation/Voucher Creation Page/Bloc/voucher_form_bloc.dart';
 
 
 Future<void> main() async {
@@ -113,6 +116,15 @@ class MyApp extends StatelessWidget {
               ),
               BlocProvider(
                 create: (context) => getIt<AttendanceFormBloc>(),
+              ),
+              BlocProvider(
+                create: (context) => getIt<VoucherFormBloc>(),
+              ),
+              BlocProvider(
+                create: (context) => getIt<ProfileBloc>(),
+              ),
+              BlocProvider<SignOutBloc>(
+                create: (context) => getIt<SignOutBloc>(),
               ),
             ],
             child: snapshot.data!,

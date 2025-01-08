@@ -20,7 +20,7 @@ class AttendanceFormModel extends AttendanceFormEntities {
 
   Map<String, dynamic> toJson() {
     return {
-      'in_time': DateTime.parse(entryTime),
+      'in_time': entryTime,
       'cost_center_id': project,
       'description': remark,
     };

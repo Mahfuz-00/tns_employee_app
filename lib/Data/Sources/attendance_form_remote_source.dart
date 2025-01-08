@@ -29,7 +29,7 @@ class AttendanceFormRemoteDataSource {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $authToken',
       },
-      body: attendance.toJson(),
+      body: json.encode(attendance.toJson()),
     );
 
     print('Response Status Code: ${response.statusCode}');
@@ -38,7 +38,7 @@ class AttendanceFormRemoteDataSource {
     if (response.statusCode == 200) {
       print('Response Body: ${response.body}');
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-      print('Leave data sent successfully');
+      print('Attendance data sent successfully');
       print(jsonResponse);
       //return jsonResponse;
     } else {
@@ -46,8 +46,8 @@ class AttendanceFormRemoteDataSource {
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
       print('Missing Data :$jsonResponse');
       print(
-          'Failed to send leave data. Status code: ${response.statusCode}');
-      throw Exception('Failed to create activity: ${response.body}');
+          'Failed to send attendance data. Status code: ${response.statusCode}');
+      throw Exception('Failed to create Attendance: ${response.body}');
     }
   }
 }

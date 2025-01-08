@@ -6,26 +6,40 @@ import 'package:sqflite/sqflite.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../Common/Bloc/profile_bloc.dart';
+import '../../../Common/Bloc/signout_bloc.dart';
 import '../../../Common/Helper/local_database_helper.dart';
 import '../../../Data/Repositories/activity_form_repositories_impl.dart';
 import '../../../Data/Repositories/attendance_form_repositories_impl.dart';
 import '../../../Data/Repositories/leave_form_repositories_impl.dart';
+import '../../../Data/Repositories/profile_repositories_impl.dart';
 import '../../../Data/Repositories/sign_in_repositories_impl.dart';
+import '../../../Data/Repositories/signout_repositories_impl.dart';
+import '../../../Data/Repositories/voucher_form_repositories_impl.dart';
 import '../../../Data/Sources/activity_form_remote_source.dart';
 import '../../../Data/Sources/attendance_form_remote_source.dart';
 import '../../../Data/Sources/leave_form_remote_source.dart';
+import '../../../Data/Sources/profile_remote_source.dart';
+import '../../../Data/Sources/voucher_form_remote_source.dart';
 import '../../../Domain/Repositories/activity_form_repositories.dart';
 import '../../../Domain/Repositories/attendance_form_repositories.dart';
 import '../../../Domain/Repositories/leave_form_repositories.dart';
+import '../../../Domain/Repositories/profile_repositories.dart';
 import '../../../Domain/Repositories/sign_in_repositories.dart';
 import '../../../Domain/Repositories/activity_repositories.dart';
+import '../../../Domain/Repositories/signout_repositories.dart';
+import '../../../Domain/Repositories/voucher_form_repositories.dart';
 import '../../../Domain/Usecases/activity_form_usercase.dart';
 import '../../../Domain/Usecases/attendance_form_usecase.dart';
 import '../../../Domain/Usecases/leave_form_usecase.dart';
+import '../../../Domain/Usecases/profile_usecase.dart';
 import '../../../Domain/Usecases/sign_in_usercases.dart';
+import '../../../Domain/Usecases/signout_usecase.dart';
+import '../../../Domain/Usecases/voucher_form_usecase.dart';
 import '../../../Presentation/Activity Creation Page/Bloc/activity_form_bloc.dart';
 import '../../../Presentation/Attendance Dashboard Page/Bloc/attendance_form_bloc.dart';
 import '../../../Presentation/Leave Creation Page/Bloc/leave_form_bloc.dart';
+import '../../../Presentation/Voucher Creation Page/Bloc/voucher_form_bloc.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -131,5 +145,39 @@ Future<void> init() async {
 
   // Register AttendanceBloc with the use case
   getIt.registerFactory(() => AttendanceFormBloc(attendanceFormUseCase: getIt()));
+
+
+  //Voucher Form Submission
+
+  // Register Remote Data Source
+  getIt.registerLazySingleton(() => VoucherFormRemoteDataSource(getIt()));
+
+  // Register Repository
+  getIt.registerLazySingleton<VoucherFormRepository>(
+          () => VoucherFormRepositoryImpl(getIt()));
+
+  // Register Use Case
+  getIt.registerLazySingleton(() => SubmitVoucherFormUseCase(getIt()));
+
+  // Register VoucherFormBloc with the use case
+  getIt.registerFactory(() => VoucherFormBloc(submitVoucherFormUseCase: getIt<SubmitVoucherFormUseCase>()));
+
+  //Profile
+  getIt.registerLazySingleton<ProfileRemoteSource>(() => ProfileRemoteSourceImpl(client: getIt()));
+  getIt.registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl(remoteSource: getIt()));
+  getIt.registerLazySingleton<GetProfileUseCase>(() => GetProfileUseCase(repository: getIt()));
+  getIt.registerFactory<ProfileBloc>(() => ProfileBloc(getProfileUseCase: getIt()));
+
+
+
+  //Logout
+  // Register SignOutRepository
+  getIt.registerLazySingleton<SignOutRepository>(() => SignOutRepositoryImpl());
+
+  // Register SignOutUseCase
+  getIt.registerLazySingleton<SignOutUseCase>(() => SignOutUseCase(signOutRepository: getIt<SignOutRepository>()));
+
+  // Register SignOutBloc
+  getIt.registerFactory<SignOutBloc>(() => SignOutBloc(signoutUseCase: getIt<SignOutUseCase>()));
 
 }

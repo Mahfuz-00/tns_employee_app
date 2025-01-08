@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:touch_and_solve_inventory_app/Core/Config/Constants/app_urls.dart';
-import '../Models/leave_form.dart';
 
-class LeaveFormRemoteSource {
+import '../../Core/Config/Constants/app_urls.dart';
+
+class VoucherFormRemoteDataSource {
   final http.Client client;
 
-  LeaveFormRemoteSource(this.client);
+  VoucherFormRemoteDataSource(this.client);
 
-  // Submit leave form
-  Future<void> submitLeaveForm(LeaveFormModel leaveForm) async {
+  Future<void> submitVoucherForm(Map<String, dynamic> voucher) async {
+
     AppURLS appURLs = AppURLS();
 
     // Fetch the token using the AppURLS class
@@ -21,12 +21,18 @@ class LeaveFormRemoteSource {
       print('Token is not available.');
     }
 
-    print(leaveForm.toJson());
+    print(voucher);
+
+    final url = '${AppURLS().Basepath}/api/voucher/store';
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $authToken',
+    };
 
     final response = await client.post(
-      Uri.parse('${AppURLS().Basepath}/api/leave/application/store'),
-      headers: {'Content-Type': 'application/json',  'Authorization': 'Bearer $authToken',},
-      body: jsonEncode(leaveForm.toJson()),
+      Uri.parse(url),
+      headers: headers,
+      body: json.encode(voucher),
     );
 
     print('Response Status Code: ${response.statusCode}');
@@ -35,7 +41,7 @@ class LeaveFormRemoteSource {
     if (response.statusCode == 200) {
       print('Response Body: ${response.body}');
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-      print('Leave data sent successfully');
+      print('Voucher data sent successfully');
       print(jsonResponse);
       //return jsonResponse;
     } else {
@@ -43,8 +49,8 @@ class LeaveFormRemoteSource {
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
       print('Missing Data :$jsonResponse');
       print(
-          'Failed to send leave data. Status code: ${response.statusCode}');
-      throw Exception('Failed to create Leave: ${response.body}');
+          'Failed to send voucher data. Status code: ${response.statusCode}');
+      throw Exception('Failed to create Voucher: ${response.body}');
     }
   }
 }
