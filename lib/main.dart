@@ -5,7 +5,9 @@ import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart'
 import 'package:touch_and_solve_inventory_app/Presentation/Onboarding%20Page/Page/Onboarding_UI.dart';
 
 import 'Common/Bloc/bottom_navigation_with_swipe_cubit.dart';
+import 'Common/Bloc/employee_bloc.dart';
 import 'Common/Bloc/profile_bloc.dart';
+import 'Common/Bloc/project_bloc.dart';
 import 'Common/Bloc/signout_bloc.dart';
 import 'Common/Helper/local_database_helper.dart';
 import 'Core/Config/Dependency Injection/injection.dart';
@@ -18,6 +20,7 @@ import 'Domain/Usecases/sign_in_usercases.dart';
 import 'Presentation/Activity Creation Page/Bloc/activity_form_bloc.dart';
 import 'Presentation/Activity Dashboard Page/Bloc/activity_bloc.dart';
 import 'Presentation/Activity Dashboard Page/Bloc/activity_event.dart';
+import 'Presentation/Attendance Dashboard Page/Bloc/attendance_bloc.dart';
 import 'Presentation/Attendance Dashboard Page/Bloc/attendance_form_bloc.dart';
 import 'Presentation/Dashboard Page/Page/dashboard_UI.dart';
 import 'package:touch_and_solve_inventory_app/Core/Config/Dependency Injection/injection.dart'
@@ -25,8 +28,8 @@ import 'package:touch_and_solve_inventory_app/Core/Config/Dependency Injection/i
 
 import 'Presentation/Leave Creation Page/Bloc/leave_form_bloc.dart';
 import 'Presentation/Sign In Page/Bloc/sign_in_bloc.dart';
+import 'Presentation/Voucher Creation Page/Bloc/headofaccounts_bloc.dart';
 import 'Presentation/Voucher Creation Page/Bloc/voucher_form_bloc.dart';
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -125,6 +128,19 @@ class MyApp extends StatelessWidget {
               ),
               BlocProvider<SignOutBloc>(
                 create: (context) => getIt<SignOutBloc>(),
+              ),
+              BlocProvider(
+                create: (context) =>
+                    getIt<EmployeeBloc>()..add(FetchEmployeesEvent()),
+              ),
+              BlocProvider(
+                create: (context) => getIt<ProjectBloc>(),
+              ),
+              BlocProvider(create: (_) => getIt<ExpenseHeadBloc>()),
+              BlocProvider(
+                create: (_) => AttendanceBloc(
+                  getAttendanceRequestsUseCase: getIt(),
+                ),
               ),
             ],
             child: snapshot.data!,

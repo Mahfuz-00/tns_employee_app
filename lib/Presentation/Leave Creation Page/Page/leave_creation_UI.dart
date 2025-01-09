@@ -4,6 +4,7 @@ import 'package:touch_and_solve_inventory_app/Common/Widgets/label_above_datafie
 import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart';
 import 'package:touch_and_solve_inventory_app/Presentation/Activity%20Dashboard%20Page/Page/activity_dashboard_UI.dart';
 
+import '../../../Common/Bloc/employee_bloc.dart';
 import '../../../Common/Helper/dimmed_overlay.dart';
 import '../../../Common/Widgets/appbar_model.dart';
 import '../../../Common/Widgets/bottom_navigation_bar.dart';
@@ -49,11 +50,7 @@ class _LeaveCreationState extends State<LeaveCreation> {
   String? leavestartday;
   String? leaveendday;
 
-  List<Map<String, String>> assignToOptions = [
-    {'name': 'Sajjad', 'id': '1'},
-    {'name': 'Shihab', 'id': '2'},
-    {'name': 'Munna', 'id': '3'},
-  ];
+  List<Map<String, String>> assignToOptions = [];
 
   // Form validation function to enable/disable button
   void _validateForm() {
@@ -103,7 +100,7 @@ class _LeaveCreationState extends State<LeaveCreation> {
   @override
   void initState() {
     super.initState();
-
+    context.read<EmployeeBloc>().add(FetchEmployeesEvent());
     // Adding listeners to the controllers to detect changes
     _leavetypecontroller.addListener(_validateForm);
     _taskdelegationcontroller.addListener(_validateForm);
@@ -302,26 +299,70 @@ class _LeaveCreationState extends State<LeaveCreation> {
                           height: 16,
                         ),*/
                           LabelWidget(labelText: 'In Absence task assigned to'),
-                          DropdownWithObject(
-                            controller: _assigntoController,
-                            label: 'Select Assign Person',
-                            hinttext: 'Select Assign Person',
-                            options: assignToOptions,
-                            selectedValue: _selectedAssignTo,  // The ID of the selected option
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedAssignTo = value!;
-                                // Find the name corresponding to the selected ID and update the text
-                                final selectedOption = assignToOptions.firstWhere((option) => option['id'] == value);
-                                _assigntoController.text = selectedOption['name']!; // Update the controller text
-                              });
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please select a person';
+                          BlocListener<EmployeeBloc, EmployeeState>(
+                            listener: (context, state) {
+                              if (state is EmployeeLoaded) {
+                                setState(() {
+                                  // Map the employees into dropdown options
+                                  assignToOptions = state.employees
+                                      .map((e) => {
+                                            'id': e.id.toString(),
+                                            'name': e.name.toString(),
+                                          })
+                                      .toList();
+                                });
+                              } else if (state is EmployeeError) {
+                                print(
+                                    'Failed to load employee: ${state.error}');
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Failed to load employees: ${state.error}')),
+                                );
                               }
-                              return null;
                             },
+                            child: BlocBuilder<EmployeeBloc, EmployeeState>(
+                              builder: (context, state) {
+                                // Show loading indicator until employees are loaded
+                                return Stack(
+                                  children: [
+                                    // Dropdown widget with pre-fetched data from the bloc
+                                    DropdownWithObject(
+                                      controller: _assigntoController,
+                                      label: 'Select Assign Person',
+                                      hinttext: 'Select Assign Person',
+                                      options: assignToOptions,
+                                      selectedValue: _selectedAssignTo,
+                                      // The ID of the selected option
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedAssignTo = value!;
+                                          final selectedOption = assignToOptions
+                                              .firstWhere((option) =>
+                                                  option['id'] == value);
+                                          _assigntoController.text =
+                                              selectedOption['name']!;
+                                        });
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please select a person';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    // If loading, show the circular progress indicator on top of the dropdown
+                                    if (state is EmployeeLoading)
+                                      Positioned.fill(
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
+                            ),
                           ),
                           SizedBox(
                             height: 16,
@@ -407,56 +448,81 @@ class _LeaveCreationState extends State<LeaveCreation> {
                   color: Colors.white,
                 ),
                 child: Center(
-                  child: ElevatedButton(
-                    onPressed: isButtonEnabled
-                        ? () {
-                            print("Button pressed!");
+                  child: BlocListener<LeaveFormBloc, LeaveFormState>(
+                    listener: (context, state) {
+                      if (state is LeaveFormLoading) {
+                        // Show loading indicator
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                        );
+                      } else if (state is LeaveFormSuccess) {
+                        Navigator.of(context).pop(); // Close loading dialog
+                        // Handle success state (e.g., navigate or show success message)
+                      } else if (state is LeaveFormFailure) {
+                        Navigator.of(context).pop(); // Close loading dialog
+                        // Handle error state (e.g., show error message)
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(state.error)));
+                      }
+                    },
+                    child: ElevatedButton(
+                      onPressed: isButtonEnabled
+                          ? () {
+                              print("Button pressed!");
 
-                            _validateForm();
-                            if (_formKey.currentState!.validate()) {
-                              // Create LeaveFormEntity with data from the form
-                              final leaveForm = LeaveFormEntity(
-                                leaveType: _leavetypecontroller.text,
-                                startDate: leavestartday,
-                                endDate: leaveendday,
-                                totaldays: totalDays,
-                                responsiblePersonId: _selectedAssignTo,
-                                reason: _leavereasoncontroller.text,
-                              );
+                              _validateForm();
+                              if (_formKey.currentState!.validate()) {
+                                // Create LeaveFormEntity with data from the form
+                                final leaveForm = LeaveFormEntity(
+                                  leaveType: _leavetypecontroller.text,
+                                  startDate: leavestartday,
+                                  endDate: leaveendday,
+                                  totaldays: totalDays,
+                                  responsiblePersonId: _selectedAssignTo,
+                                  reason: _leavereasoncontroller.text,
+                                );
 
-                              print('SubmitLeaveFormEvent added');
-                              try {
-                                final leaveFormBloc =
-                                    BlocProvider.of<LeaveFormBloc>(context);
-                                print('LeaveFormBloc retrieved');
-                                leaveFormBloc
-                                    .add(SubmitLeaveFormEvent(leaveForm));
                                 print('SubmitLeaveFormEvent added');
-                              } catch (e) {
-                                print('Error adding SubmitLeaveFormEvent: $e');
+                                try {
+                                  final leaveFormBloc =
+                                      BlocProvider.of<LeaveFormBloc>(context);
+                                  print('LeaveFormBloc retrieved');
+                                  leaveFormBloc
+                                      .add(SubmitLeaveFormEvent(leaveForm));
+                                  print('SubmitLeaveFormEvent added');
+                                } catch (e) {
+                                  print(
+                                      'Error adding SubmitLeaveFormEvent: $e');
+                                }
+                                print('SubmitLeaveFormEvent added 2');
                               }
-                              print('SubmitLeaveFormEvent added 2');
                             }
-                          }
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isButtonEnabled
-                          ? AppColors.primary
-                          : AppColors.labelGrey,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
-                      fixedSize: Size(screenWidth * 0.9, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isButtonEnabled
+                            ? AppColors.primary
+                            : AppColors.labelGrey,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                        fixedSize: Size(screenWidth * 0.9, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
-                    ),
-                    child: const Text(
-                      'Create Task',
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textWhite,
+                      child: const Text(
+                        'Create Task',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textWhite,
+                        ),
                       ),
                     ),
                   ),

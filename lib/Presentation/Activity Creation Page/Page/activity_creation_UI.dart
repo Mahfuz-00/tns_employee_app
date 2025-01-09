@@ -6,10 +6,12 @@ import 'package:touch_and_solve_inventory_app/Common/Widgets/label_above_datafie
 import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart';
 import 'package:touch_and_solve_inventory_app/Presentation/Activity%20Dashboard%20Page/Page/activity_dashboard_UI.dart';
 
+import '../../../Common/Bloc/project_bloc.dart';
 import '../../../Common/Helper/dimmed_overlay.dart';
 import '../../../Common/Widgets/appbar_model.dart';
 import '../../../Common/Widgets/bottom_navigation_bar.dart';
 import '../../../Common/Widgets/drop_down.dart';
+import '../../../Common/Widgets/dropdown_object.dart';
 import '../../../Common/Widgets/internet_connection_check.dart';
 import '../../../Core/Config/Dependency Injection/injection.dart';
 import '../../../Domain/Entities/activity_form_entities.dart';
@@ -46,6 +48,8 @@ class _ActivityCreationState extends State<ActivityCreation> {
   DateTime? startDate;
   DateTime? endDate;
 
+  List<Map<String, String>> projectOptions = [];
+
   late ActivityFormBloc _activityFormBloc;
 
   void _validateForm() {
@@ -65,7 +69,7 @@ class _ActivityCreationState extends State<ActivityCreation> {
         _taskdescriptioncontroller.text.isNotEmpty &&
         _startDateController.text.isNotEmpty &&
         _endDateController.text.isNotEmpty &&
-        _assigntoController.text.isNotEmpty &&
+        /* _assigntoController.text.isNotEmpty &&*/
         _priorityController.text.isNotEmpty &&
         _projectController.text.isNotEmpty &&
         _estimatedHourController.text.isNotEmpty &&
@@ -120,6 +124,7 @@ class _ActivityCreationState extends State<ActivityCreation> {
   void initState() {
     super.initState();
     _activityFormBloc = getIt<ActivityFormBloc>();
+    context.read<ProjectBloc>().add(LoadProjects());
     // Adding listeners to the controllers to detect changes
     _tasktitlecontroller.addListener(_validateForm);
     _taskdescriptioncontroller.addListener(_validateForm);
@@ -181,7 +186,6 @@ class _ActivityCreationState extends State<ActivityCreation> {
                   _customPageRoute(ActivityDashboard()),
                 );
               });
-
             } else if (state is ActivityFormFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text("Error: ${state.error}")),
@@ -352,30 +356,71 @@ class _ActivityCreationState extends State<ActivityCreation> {
                           LabelWidget(
                             labelText: 'Project Name',
                           ),
-                          Dropdown(
-                            controller: _projectController,
-                            label: 'Select Project',
-                            options: ['ASSET', 'Inventory Software', '5 Apps'],
-                            // List of options
-                            selectedValue: _selectedProject,
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedProject = value!;
-                                _projectController.text = value ?? '';
-                              });
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please select a project';
+                          BlocListener<ProjectBloc, ProjectState>(
+                            listener: (context, state) {
+                              if (state is ProjectLoaded) {
+                                setState(() {
+                                  // Map the projects into dropdown options
+                                  projectOptions = state.projects
+                                      .map((e) => {
+                                            'id': e.id.toString(),
+                                            'name': e.name.toString(),
+                                          })
+                                      .toList();
+                                });
+                              } else if (state is ProjectError) {
+                                print('Failed to load project: ${state.error}');
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Failed to load projects: ${state.error}')),
+                                );
                               }
-                              return null;
                             },
-                            hinttext: 'Select Project',
+                            child: BlocBuilder<ProjectBloc, ProjectState>(
+                              builder: (context, state) {
+                                // Show loading indicator until projects are loaded
+                                return Stack(
+                                  children: [
+                                    // Dropdown widget with pre-fetched data from the bloc
+                                    DropdownWithObject(
+                                      controller: _projectController,
+                                      label: 'Select Project',
+                                      hinttext: 'Select Project',
+                                      options: projectOptions,
+                                      // Options will be fetched from the bloc
+                                      selectedValue: _selectedProject,
+                                      // The ID of the selected option
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedProject = value!;
+                                          _projectController.text = value ?? '';
+                                        });
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please select a project';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    // If loading, show the circular progress indicator on top of the dropdown
+                                    if (state is ProjectLoading)
+                                      Positioned.fill(
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
+                            ),
                           ),
                           SizedBox(
                             height: 16,
                           ),
-                          LabelWidget(labelText: 'Assign To'),
+                          /*         LabelWidget(labelText: 'Assign To'),
                           Dropdown(
                             controller: _assigntoController,
                             label: 'Select Assign Person',
@@ -398,7 +443,7 @@ class _ActivityCreationState extends State<ActivityCreation> {
                           ),
                           SizedBox(
                             height: 16,
-                          ),
+                          ),*/
                           LabelWidget(labelText: 'Priority'),
                           Dropdown(
                             controller: _priorityController,
@@ -465,60 +510,85 @@ class _ActivityCreationState extends State<ActivityCreation> {
                   color: Colors.white,
                 ),
                 child: Center(
-                  child: ElevatedButton(
-                    onPressed: isButtonEnabled
-                        ? () {
-                            print("Button pressed!");
-                            final statusKey =
-                                convertStatus(_statusController.text);
-                            print(
-                                statusKey); // Outputs the corresponding key or empty string for invalid inputs
-                            _validateForm();
-                            if (_formKey.currentState!.validate()) {
-                              final activity = ActivityFromEntity(
-                                title: _tasktitlecontroller.text,
-                                project: _projectController.text,
-                                startDate: _startDateController.text,
-                                endDate: _endDateController.text,
-                                estimatedHour: totalHours,
-                                AssignedEmployee: _selectedAssignTo,
-                                description: _taskdescriptioncontroller.text,
-                                priority: _priorityController.text,
-                                status: statusKey,
-                              );
-                              print('SubmitActivityEvent added');
-                              try {
-                                final activityFormBloc =
-                                    BlocProvider.of<ActivityFormBloc>(context);
-                                print('ActivityFormBloc retrieved');
-                                activityFormBloc
-                                    .add(SubmitActivityEvent(activity));
+                  child: BlocListener<ActivityFormBloc, ActivityFormState>(
+                    listener: (context, state) {
+                      if (state is ActivityFormLoading) {
+                        // Show loading indicator
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                        );
+                      } else if (state is ActivityFormSuccess) {
+                        Navigator.of(context).pop(); // Close loading dialog
+                        // Handle success state (e.g., navigate or show success message)
+                      } else if (state is ActivityFormFailure) {
+                        Navigator.of(context).pop(); // Close loading dialog
+                        // Handle error state (e.g., show error message)
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(state.error)));
+                      }
+                    },
+                    child: ElevatedButton(
+                      onPressed: isButtonEnabled
+                          ? () {
+                              print("Button pressed!");
+                              final statusKey =
+                                  convertStatus(_statusController.text);
+                              print(
+                                  statusKey); // Outputs the corresponding key or empty string for invalid inputs
+                              _validateForm();
+                              if (_formKey.currentState!.validate()) {
+                                final activity = ActivityFromEntity(
+                                  title: _tasktitlecontroller.text,
+                                  project: _projectController.text,
+                                  startDate: _startDateController.text,
+                                  endDate: _endDateController.text,
+                                  estimatedHour: totalHours,
+                                  /* AssignedEmployee: _selectedAssignTo,*/
+                                  description: _taskdescriptioncontroller.text,
+                                  priority: _priorityController.text,
+                                  status: statusKey,
+                                );
                                 print('SubmitActivityEvent added');
-                              } catch (e) {
-                                print('Error adding SubmitActivityEvent: $e');
+                                try {
+                                  final activityFormBloc =
+                                      BlocProvider.of<ActivityFormBloc>(
+                                          context);
+                                  print('ActivityFormBloc retrieved');
+                                  activityFormBloc
+                                      .add(SubmitActivityEvent(activity));
+                                  print('SubmitActivityEvent added');
+                                } catch (e) {
+                                  print('Error adding SubmitActivityEvent: $e');
+                                }
+                                print('SubmitActivityEvent added 2');
                               }
-                              print('SubmitActivityEvent added 2');
                             }
-                          }
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isButtonEnabled
-                          ? AppColors.primary
-                          : AppColors.labelGrey,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
-                      fixedSize: Size(screenWidth * 0.9, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isButtonEnabled
+                            ? AppColors.primary
+                            : AppColors.labelGrey,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                        fixedSize: Size(screenWidth * 0.9, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
-                    ),
-                    child: const Text(
-                      'Create Task',
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textWhite,
+                      child: const Text(
+                        'Create Task',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textWhite,
+                        ),
                       ),
                     ),
                   ),

@@ -4,7 +4,7 @@ class ActivityFormModel {
   final String startDate;
   final String endDate;
   final int estimatedHour;
-  final String AssignedEmployee;
+ /* final String assignedEmployee;*/
   final String description;
   final String priority;
   final String status;
@@ -15,7 +15,7 @@ class ActivityFormModel {
     required this.startDate,
     required this.endDate,
     required this.estimatedHour,
-    required this.AssignedEmployee,
+  /*  required this.assignedEmployee,*/
     required this.description,
     required this.priority,
     required this.status,
@@ -29,7 +29,7 @@ class ActivityFormModel {
       'actvStartDate': startDate,
       'actvEndDate': endDate,
       'actvEstimatedHour': estimatedHour,
-      'actvProjectUser': AssignedEmployee,
+     /* 'actvProjectUser': assignedEmployee,*/
       'actvDescription': description,
       'priority': priority,
       'status': status,

@@ -9,6 +9,7 @@ import 'package:touch_and_solve_inventory_app/Common/Widgets/label_above_datafie
 import 'package:touch_and_solve_inventory_app/Core/Config/Theme/app_colors.dart';
 import 'package:touch_and_solve_inventory_app/Presentation/Activity%20Dashboard%20Page/Page/activity_dashboard_UI.dart';
 
+import '../../../Common/Bloc/project_bloc.dart';
 import '../../../Common/Helper/dimmed_overlay.dart';
 import '../../../Common/Widgets/appbar_model.dart';
 import '../../../Common/Widgets/bottom_navigation_bar.dart';
@@ -42,10 +43,12 @@ class _VoucherCreationState extends State<VoucherCreation> {
   final TextEditingController _projectController = TextEditingController();
   String _selectedProject = '';
   bool isButtonEnabled = false;
-  String? _file = null;
+  File? _file = null;
   String? projectId = '0';
 
   DateTime? transactionDate;
+
+  List<Map<String, String>> projectOptions = [];
 
   // Form validation function to enable/disable button
   void _validateForm() {
@@ -83,18 +86,17 @@ class _VoucherCreationState extends State<VoucherCreation> {
 
       // Extract account IDs and amounts
       _accountIds = _expenseData
-          .map((expense) => expense['headOfAccount'] ?? '')
+          .map((expense) => expense['headOfAccountId'] ?? '')
           .toList();
       // Extract amounts as double
-      _amounts = _expenseData
-          .map((expense) {
+      _amounts = _expenseData.map((expense) {
         // Extract the numeric part by removing 'TK' and trim any extra spaces
-        String amountStr = expense['amount']?.replaceAll('TK', '').trim() ?? '0';
+        String amountStr =
+            expense['amount']?.replaceAll('TK', '').trim() ?? '0';
 
         // Try to parse the amount into a double
         return double.tryParse(amountStr) ?? 0.0;
-      })
-          .toList();
+      }).toList();
 
       print('Account IDs: $_accountIds');
       print('Amounts: $_amounts');
@@ -115,7 +117,13 @@ class _VoucherCreationState extends State<VoucherCreation> {
     });
   }
 
+  bool _isLoading = false; // To track loading state
+
   Future<void> _pickFile() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
+
     // Trigger the file picker dialog
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -131,19 +139,30 @@ class _VoucherCreationState extends State<VoucherCreation> {
       ], // Allowed file extensions
     );
 
+    setState(() {
+      _isLoading = false; // Hide loading indicator after file is picked
+    });
+
     // Check if a file was picked
     if (result != null) {
-      // Get the file path
+      // Get the file path and file size
       String? filePath = result.files.single.path;
+      int? fileSize = result.files.single.size;
 
-      if (filePath != null) {
-        // File picked successfully, you can now upload the file
-        _file = filePath;
+      if (filePath != null && fileSize != null && fileSize <= 5 * 1024 * 1024) {
+        // Check if file size is <= 5 MB
+        // File picked successfully and size is valid
+        _file = File(filePath); // Convert the file path to a File object
+        // No need for setState here, file is already picked and _file is updated
         print("File selected: $filePath");
         // Implement your file upload logic here (e.g., upload to a server)
       } else {
-        // If no file is selected
-        print("No file selected");
+        // If the file size exceeds 5 MB
+        const snackBar = SnackBar(
+          content: Text('File size exceeds 5 MB'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        print("File size exceeds 5 MB");
       }
     } else {
       const snackBar = SnackBar(
@@ -158,7 +177,7 @@ class _VoucherCreationState extends State<VoucherCreation> {
   @override
   void initState() {
     super.initState();
-
+    context.read<ProjectBloc>().add(LoadProjects());
     // Adding listeners to the controllers to detect changes
     _expenseamountcontroller.addListener(_validateForm);
     _expensedescriptioncontroller.addListener(_validateForm);
@@ -258,35 +277,81 @@ class _VoucherCreationState extends State<VoucherCreation> {
                             height: 16,
                           ),
                           LabelWidget(labelText: 'Project'),
-                          DropdownWithObject(
-                            controller: _projectController,
-                            label: 'Select Project',
-                            hinttext: 'Select Project',
-                            options: [
-                              {'id': '1', 'name': 'ASSET'},
-                              {'id': '2', 'name': 'Inventory Software'},
-                              {'id': '3', 'name': '5 Apps'}
-                            ],  // List of options as objects
-                            selectedValue: _selectedProject,  // The ID of the selected option
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedProject = value!;
-                                // Find the name corresponding to the selected ID and update the text
-                                final selectedOption = [
-                                  {'id': '1', 'name': 'ASSET'},
-                                  {'id': '2', 'name': 'Inventory Software'},
-                                  {'id': '3', 'name': '5 Apps'}
-                                ].firstWhere((option) => option['id'] == value);
-                                _projectController.text = selectedOption['name']!; // Update the controller text
-                                projectId = selectedOption['id']!;
-                              });
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please select a project';
+                          BlocListener<ProjectBloc, ProjectState>(
+                            listener: (context, state) {
+                              if (state is ProjectLoaded) {
+                                setState(() {
+                                  // Map the projects into dropdown options
+                                  projectOptions = state.projects
+                                      .map((e) => {
+                                            'id': e.id.toString(),
+                                            'name': e.name.toString(),
+                                          })
+                                      .toList();
+                                });
+                              } else if (state is ProjectError) {
+                                print('Failed to load project: ${state.error}');
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Failed to load projects: ${state.error}')),
+                                );
                               }
-                              return null;
                             },
+                            child: BlocBuilder<ProjectBloc, ProjectState>(
+                              builder: (context, state) {
+                                // Show loading indicator until projects are loaded
+                                return Stack(
+                                  children: [
+                                    // Dropdown widget with pre-fetched data from the bloc
+                                    DropdownWithObject(
+                                      controller: _projectController,
+                                      label: 'Select Project',
+                                      hinttext: 'Select Project',
+                                      options: projectOptions,
+                                      // Options will be fetched from the bloc
+                                      selectedValue: _selectedProject,
+                                      // The ID of the selected option
+                                      prefixicon: Container(
+                                        padding: EdgeInsets.only(
+                                            left: 16,
+                                            right: 8,
+                                            top: 14,
+                                            bottom: 14),
+                                        child: Image.asset(
+                                          AppImages.AttendanceProjectIcon,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                      prefixconstraint: BoxConstraints(
+                                        maxWidth: 48,
+                                        maxHeight: 48,
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedProject = value!;
+                                          _projectController.text = value ?? '';
+                                        });
+                                      },
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please select a project';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    // If loading, show the circular progress indicator on top of the dropdown
+                                    if (state is ProjectLoading)
+                                      Positioned.fill(
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
+                            ),
                           ),
                           SizedBox(
                             height: 16,
@@ -390,8 +455,10 @@ class _VoucherCreationState extends State<VoucherCreation> {
                                 height: 120,
                                 width: screenWidth * 0.9,
                                 decoration: BoxDecoration(
-                                  color: AppColors.containerBackgroundPurple,
-                                  //border: Border.all(color: Colors.grey),
+                                  color: _file != null
+                                      ? AppColors.primary
+                                      : AppColors.containerBackgroundPurple,
+                                  // Change color when file is selected
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: ClipRRect(
@@ -402,39 +469,59 @@ class _VoucherCreationState extends State<VoucherCreation> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Image.asset(
-                                          AppImages.VoucherFileUploadIcon,
-                                          height: 30,
-                                          width: 30,
-                                        ),
-                                        SizedBox(height: 8),
-                                        Text(
-                                          "Upload Claim Document",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.primary,
-                                            fontFamily: 'Roboto',
+                                        if (_isLoading != true) ...[
+                                          Image.asset(
+                                            AppImages.VoucherFileUploadIcon,
+                                            height: 30,
+                                            width: 30,
                                           ),
-                                        ),
-                                        SizedBox(height: 4),
-                                        Text(
-                                          "Format should be in .pdf, .jpeg, .png less than 5 MB",
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.labelGrey,
-                                            fontFamily: 'Roboto',
+                                          SizedBox(height: 8),
+                                          Text(
+                                            _file != null
+                                                ? "Claim Document Uploaded"
+                                                : "Upload Claim Document",
+                                            // Change text when file is selected
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color: _file != null
+                                                  ? AppColors
+                                                      .containerBackgroundPurple
+                                                  : AppColors.primary,
+                                              // Reverse text color
+                                              fontFamily: 'Roboto',
+                                            ),
                                           ),
-                                          textAlign: TextAlign.center,
-                                        ),
+                                          SizedBox(height: 4),
+                                          if (_file == null) ...[
+                                            Text(
+                                              "Format should be in .pdf, .jpeg, .png less than 5 MB",
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.labelGrey,
+                                                // Reverse text color
+                                                fontFamily: 'Roboto',
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ] else if (_isLoading == true) ...[
+                                          Positioned.fill(
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child:
+                                                  CircularProgressIndicator(), // The loading spinner
+                                            ),
+                                          ),
+                                        ],
                                       ],
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
@@ -456,56 +543,80 @@ class _VoucherCreationState extends State<VoucherCreation> {
                   color: Colors.white,
                 ),
                 child: Center(
-                  child: ElevatedButton(
-                    onPressed: isButtonEnabled
-                        ? () {
-                            if (_formKey.currentState!.validate()) {
-                              final voucherFormEntity = VoucherFormEntity(
-                                date: transactionDate,
-                                costCenterId: projectId,
-                                description: _expensedescriptioncontroller.text,
-                                accountIds: _accountIds,
-                                // This should be a list of selected account IDs
-                                amounts: _amounts,
-                                // This should be a list of amounts
-                                attachment: _file,
-                                paidStatus: 'pending',
-                              );
+                  child: BlocListener<VoucherFormBloc, VoucherFormState>(
+                    listener: (context, state) {
+                      if (state is VoucherFormLoading) {
+                        // Trigger loading state logic, like showing a loading indicator
+                        // You can show a loading indicator here using a dialog or another method
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return OverlayLoader();
+                          },
+                        );
+                      } else if (state is VoucherFormSuccess) {
+                        Navigator.of(context).pop(); // Close the loading dialog
+                        // Handle success state
+                      } else if (state is VoucherFormFailure) {
+                        Navigator.of(context).pop(); // Close the loading dialog
+                        // Handle error state
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(state.error)));
+                      }
+                    },
+                    child: ElevatedButton(
+                      onPressed: isButtonEnabled
+                          ? () {
+                              if (_formKey.currentState!.validate()) {
+                                final voucherFormEntity = VoucherFormEntity(
+                                  date: transactionDate,
+                                  costCenterId: projectId,
+                                  description:
+                                      _expensedescriptioncontroller.text,
+                                  accountIds: _accountIds,
+                                  // This should be a list of selected account IDs
+                                  amounts: _amounts,
+                                  // This should be a list of amounts
+                                  attachment: _file,
+                                  paidStatus: 'pending',
+                                );
 
-                              print('SubmitVoucherFormEvent added');
-                              try {
-                                final voucherFormBloc =
-                                    BlocProvider.of<VoucherFormBloc>(context);
-                                print('VoucherFormBloc retrieved');
-                                voucherFormBloc.add(
-                                    SubmitVoucherFormEvent(voucherFormEntity));
                                 print('SubmitVoucherFormEvent added');
-                              } catch (e) {
-                                print(
-                                    'Error adding SubmitVoucherFormEvent: $e');
+                                try {
+                                  final voucherFormBloc =
+                                      BlocProvider.of<VoucherFormBloc>(context);
+                                  print('VoucherFormBloc retrieved');
+                                  voucherFormBloc.add(SubmitVoucherFormEvent(
+                                      voucherFormEntity));
+                                  print('SubmitVoucherFormEvent added');
+                                } catch (e) {
+                                  print(
+                                      'Error adding SubmitVoucherFormEvent: $e');
+                                }
+                                print('SubmitVoucherFormEvent added 2');
                               }
-                              print('SubmitVoucherFormEvent added 2');
                             }
-                          }
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isButtonEnabled
-                          ? AppColors.primary
-                          : AppColors.labelGrey,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
-                      fixedSize: Size(screenWidth * 0.9, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isButtonEnabled
+                            ? AppColors.primary
+                            : AppColors.labelGrey,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 12),
+                        fixedSize: Size(screenWidth * 0.9, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
-                    ),
-                    child: const Text(
-                      'Submit Expense',
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textWhite,
+                      child: const Text(
+                        'Submit Expense',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textWhite,
+                        ),
                       ),
                     ),
                   ),

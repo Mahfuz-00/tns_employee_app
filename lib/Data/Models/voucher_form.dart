@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../Domain/Entities/voucher_form_entities.dart';
 
 class VoucherFormModel extends VoucherFormEntity {
@@ -8,7 +10,7 @@ class VoucherFormModel extends VoucherFormEntity {
     required dynamic paidStatus,
     required List<String> accountIds,
     required List<double> amounts,
-    dynamic attachment,
+    File? attachment,  // Change attachment to File type
   }) : super(
     date: date,
     costCenterId: costCenterId,
@@ -27,7 +29,7 @@ class VoucherFormModel extends VoucherFormEntity {
       paidStatus: json['paid_status'],
       accountIds: List<String>.from(json['account_ids']),
       amounts: List<double>.from(json['amounts']),
-      attachment: json['attachment'],
+      attachment: json['attachment'] != null ? File(json['attachment']) : null,  // Assuming attachment is a file path or base64 string
     );
   }
 
@@ -39,7 +41,7 @@ class VoucherFormModel extends VoucherFormEntity {
       'paid_status': paidStatus,
       'account_ids': accountIds,
       'amounts': amounts,
-      'attachment': attachment,
+      'attachment': attachment != null ? attachment!.path : null,  // Use file path or convert to base64 if necessary
     };
   }
 
@@ -63,7 +65,7 @@ class VoucherFormModel extends VoucherFormEntity {
       paidStatus: entity.paidStatus,
       accountIds: entity.accountIds,
       amounts: entity.amounts,
-      attachment: entity.attachment,
+      attachment: entity.attachment as File?,  // Ensure the attachment is passed correctly
     );
   }
 }

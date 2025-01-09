@@ -1,4 +1,4 @@
-class Profile {
+class ProfileModel {
   final dynamic name;
   final dynamic designation;
   final dynamic photoUrl;
@@ -7,7 +7,7 @@ class Profile {
   final dynamic employeeID;
   final dynamic department;
 
-  Profile({
+  ProfileModel({
     required this.name,
     required this.designation,
     required this.photoUrl,
@@ -31,8 +31,8 @@ class Profile {
   }
 
   // FromJson method for decoding
-  factory Profile.fromJson(Map<String, dynamic> json) {
-    return Profile(
+  factory ProfileModel.fromJson(Map<String, dynamic> json) {
+    return ProfileModel(
       name: json['name'] as String?,
       designation: json['designation'] as String?,
       photoUrl: json['profile_photo_url'] as String?,

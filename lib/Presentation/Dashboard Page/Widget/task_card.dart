@@ -44,18 +44,26 @@ class _TaskCardState extends State<TaskCard> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    // Inside _TaskCardState class
     String _formatDate(String date) {
       try {
-        // Parse the input date string to DateTime
-        DateTime parsedDate = DateTime.parse(date); // Ensure `widget.date` is in ISO 8601 format (yyyy-MM-dd)
-        // Format to "MMM dd" using intl
-        return DateFormat('MMM dd').format(parsedDate);
+        print(date);
+
+        // First try parsing the date as ISO 8601 (yyyy-MM-dd)
+        DateTime parsedDate = DateTime.parse(date); // yyyy-MM-dd or yyyy-MM-ddTHH:mm:ss format
+        return DateFormat('MMM dd').format(parsedDate); // Format to "MMM dd"
+
       } catch (e) {
-        // Fallback to the original string if parsing fails
-        return date;
+        // If that fails, try parsing the date with custom format (MM-dd-yyyy)
+        try {
+          DateTime parsedDate = DateFormat('dd-MM-yyyy').parse(date);
+          return DateFormat('MMM dd').format(parsedDate); // Format to "MMM dd"
+        } catch (e) {
+          // If both parsing attempts fail, return the original string
+          return date;
+        }
       }
     }
+
 
     return Container(
       margin: EdgeInsets.zero,

@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:touch_and_solve_inventory_app/Core/Config/Assets/app_images.dart';
 
+import '../../../Common/Bloc/project_bloc.dart';
 import '../../../Common/Helper/dimmed_overlay.dart';
 import '../../../Common/Widgets/drop_down.dart';
+import '../../../Common/Widgets/dropdown_object.dart';
 import '../../../Common/Widgets/label_above_datafield.dart';
 import '../../../Core/Config/Theme/app_colors.dart';
 import '../../../Domain/Entities/attendance_form_entities.dart';
@@ -49,6 +51,8 @@ class _BottomSliderState extends State<BottomSlider>
       false; // Flag to check if the size is already retrieved
   // Calculate height for Overlay 3 as 0.2 of screenHeight or overlay2Height
   double overlay3Height = 0.0;
+
+  List<Map<String, String>> projectOptions = [];
 
   void _validateForm() {
     print('Entry Time: ${widget.entrytimeController.text}');
@@ -128,7 +132,7 @@ class _BottomSliderState extends State<BottomSlider>
   @override
   void initState() {
     super.initState();
-
+    context.read<ProjectBloc>().add(LoadProjects());
     widget.projectController.addListener(_validateForm);
     widget.entrytimeController.addListener(_validateForm);
     widget.remarkController.addListener(_validateForm);
@@ -361,41 +365,83 @@ class _BottomSliderState extends State<BottomSlider>
                               height: 16,
                             ),
                             LabelWidget(labelText: 'Project'),
-                            Dropdown(
-                              controller: widget.projectController,
-                              label: 'Select Project',
-                              options: [
-                                'ASSET',
-                                'Inventory Software',
-                                '5 Apps'
-                              ],
-                              // List of options
-                              selectedValue: _selectedProject,
-                              prefixicon: Container(
-                                padding: EdgeInsets.only(
-                                    left: 16, right: 8, top: 14, bottom: 14),
-                                child: Image.asset(
-                                  AppImages.AttendanceProjectIcon,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                              prefixconstraint: BoxConstraints(
-                                maxWidth: 48,
-                                maxHeight: 48,
-                              ),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedProject = value!;
-                                  widget.projectController.text = value ?? '';
-                                });
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please select a project';
+                            BlocListener<ProjectBloc, ProjectState>(
+                              listener: (context, state) {
+                                if (state is ProjectLoaded) {
+                                  setState(() {
+                                    // Map the projects into dropdown options
+                                    projectOptions = state.projects
+                                        .map((e) => {
+                                              'id': e.id.toString(),
+                                              'name': e.name.toString(),
+                                            })
+                                        .toList();
+                                  });
+                                } else if (state is ProjectError) {
+                                  print(
+                                      'Failed to load project: ${state.error}');
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Failed to load projects: ${state.error}')),
+                                  );
                                 }
-                                return null;
                               },
-                              hinttext: 'Select Project',
+                              child: BlocBuilder<ProjectBloc, ProjectState>(
+                                builder: (context, state) {
+                                  // Show loading indicator until projects are loaded
+                                  return Stack(
+                                    children: [
+                                      // Dropdown widget with pre-fetched data from the bloc
+                                      DropdownWithObject(
+                                        controller: widget.projectController,
+                                        label: 'Select Project',
+                                        hinttext: 'Select Project',
+                                        options: projectOptions,
+                                        // Options will be fetched from the bloc
+                                        selectedValue: _selectedProject,
+                                        // The ID of the selected option
+                                        prefixicon: Container(
+                                          padding: EdgeInsets.only(
+                                              left: 16,
+                                              right: 8,
+                                              top: 14,
+                                              bottom: 14),
+                                          child: Image.asset(
+                                            AppImages.AttendanceProjectIcon,
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                        prefixconstraint: BoxConstraints(
+                                          maxWidth: 48,
+                                          maxHeight: 48,
+                                        ),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _selectedProject = value!;
+                                            widget.projectController.text =
+                                                value ?? '';
+                                          });
+                                        },
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Please select a project';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                      // If loading, show the circular progress indicator on top of the dropdown
+                                      if (state is ProjectLoading)
+                                        Positioned.fill(
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                },
+                              ),
                             ),
                             SizedBox(
                               height: 16,
@@ -529,59 +575,101 @@ class _BottomSliderState extends State<BottomSlider>
                               height: 32,
                             ),
                             Center(
-                              child: ElevatedButton(
-                                onPressed: isButtonEnabled
-                                    ? () {
-                                        print("Button pressed!");
+                              child: BlocListener<AttendanceFormBloc,
+                                  AttendanceFormState>(
+                                listener: (context, state) {
+                                  if (state is AttendanceFormLoading) {
+                                    // Show loading indicator
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      },
+                                    );
+                                  } else if (state is AttendanceSubmitted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              "Attendance Submitted Successfully!")),
+                                    );
+                                    // Add a delay to ensure SnackBar shows up before navigating
+                                    Future.delayed(Duration(milliseconds: 500),
+                                        () {
+                                      Navigator.push(
+                                        context,
+                                        _customPageRoute(AttendanceDashboard()),
+                                      );
+                                    });
+                                  } else if (state is AttendanceFormFailure) {
+                                    Navigator.of(context)
+                                        .pop(); // Close loading dialog
+                                    // Handle error state (e.g., show error message)
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(state.error)));
+                                  }
+                                },
+                                child: ElevatedButton(
+                                  onPressed: isButtonEnabled
+                                      ? () {
+                                          print("Button pressed!");
 
-                                        _validateForm();
+                                          _validateForm();
 
-                                        if (_formKey.currentState!.validate()) {
-                                          // Create AttendanceEntity with data from the form
-                                          final attendanceForm = AttendanceFormEntities(
-                                              entryTime: widget
-                                                  .entrytimeController.text,
-                                              project:
-                                                  widget.projectController.text,
-                                              remark:
-                                                  widget.remarkController.text);
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            // Create AttendanceEntity with data from the form
+                                            final attendanceForm =
+                                                AttendanceFormEntities(
+                                                    entryTime: widget
+                                                        .entrytimeController
+                                                        .text,
+                                                    project: widget
+                                                        .projectController.text,
+                                                    remark: widget
+                                                        .remarkController.text);
 
-                                          print('CreateAttendanceEvent added');
-                                          try {
-                                            final attendanceBloc =
-                                                BlocProvider.of<AttendanceFormBloc>(
-                                                    context);
-                                            print('AttendanceBloc retrieved');
-                                            attendanceBloc.add(
-                                                CreateAttendanceEvent(
-                                                    attendanceForm)); // Dispatching the event
                                             print(
                                                 'CreateAttendanceEvent added');
-                                          } catch (e) {
+                                            try {
+                                              final attendanceBloc =
+                                                  BlocProvider.of<
+                                                          AttendanceFormBloc>(
+                                                      context);
+                                              print('AttendanceBloc retrieved');
+                                              attendanceBloc.add(
+                                                  CreateAttendanceEvent(
+                                                      attendanceForm)); // Dispatching the event
+                                              print(
+                                                  'CreateAttendanceEvent added');
+                                            } catch (e) {
+                                              print(
+                                                  'Error adding CreateAttendanceEvent: $e');
+                                            }
                                             print(
-                                                'Error adding CreateAttendanceEvent: $e');
+                                                'CreateAttendanceEvent added 2');
                                           }
-                                          print(
-                                              'CreateAttendanceEvent added 2');
                                         }
-                                      }
-                                    : null,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.primary,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 24, vertical: 12),
-                                  fixedSize: Size(screenWidth * 0.85, 50),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4),
+                                      : null,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primary,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24, vertical: 12),
+                                    fixedSize: Size(screenWidth * 0.85, 50),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
                                   ),
-                                ),
-                                child: const Text(
-                                  'Check In',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.textWhite,
+                                  child: const Text(
+                                    'Check In',
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.textWhite,
+                                    ),
                                   ),
                                 ),
                               ),

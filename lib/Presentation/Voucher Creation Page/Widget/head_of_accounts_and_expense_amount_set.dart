@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../Common/Widgets/dropdown_object.dart';
 import '../../../Common/Widgets/label_above_datafield.dart';
 import '../../../Core/Config/Theme/app_colors.dart';
+import '../Bloc/headofaccounts_bloc.dart';
 
 class ExpenseListWidget extends StatefulWidget {
   // Add a callback to pass the data to the parent widget
@@ -22,17 +24,14 @@ class _ExpenseListWidgetState extends State<ExpenseListWidget> {
   bool isButtonEnabled = false;
   String _selectedAssignTo = '';
 
-  List<Map<String, String>> assignToOptions = [
-    {'name': 'Sajjad', 'id': '1'},
-    {'name': 'Shihab', 'id': '2'},
-    {'name': 'Munna', 'id': '3'},
-  ];
+  List<Map<String, String>> headOfAccountsOptions = [];
 
   // Add a new entry to the list
   void _addExpense() {
     setState(() {
       if (_amountController.text == '') _amountController.text = '0';
       _expenseList.add({
+        'headOfAccountId': _selectedAssignTo,
         'headOfAccount': _headOfAccountController.text,
         'amount': '${_amountController.text} TK',
       });
@@ -66,7 +65,7 @@ class _ExpenseListWidgetState extends State<ExpenseListWidget> {
   @override
   void initState() {
     super.initState();
-
+    context.read<ExpenseHeadBloc>().add(FetchExpenseHeadsEvent());
     // Add listeners to both controllers
     _headOfAccountController.addListener(_checkFields);
     _amountController.addListener(_checkFields);
@@ -97,34 +96,67 @@ class _ExpenseListWidgetState extends State<ExpenseListWidget> {
 
         // Form fields for adding a new pair
         LabelWidget(labelText: 'Head of Account'),
-        DropdownWithObject(
-          controller: _headOfAccountController,
-          label: 'Select Head of Account',
-          hinttext: 'Select Head of Account',
-          options: assignToOptions,
-          selectedValue: _selectedAssignTo,  // The ID of the selected option
-          onChanged: (value) {
-            setState(() {
-              _selectedAssignTo = value!;
-              // Find the name corresponding to the selected ID and update the text
-              final selectedOption = assignToOptions.firstWhere((option) => option['id'] == value);
-              _headOfAccountController.text = selectedOption['name']!; // Update the controller text
-            });
-          },
-          validator: (value) {
-            // Ignore validation if the expense list is not empty
-            if (_expenseList.isNotEmpty) {
-              return null; // Skip validation
+        BlocListener<ExpenseHeadBloc, ExpenseHeadState>(
+          listener: (context, state) {
+            if (state is ExpenseHeadError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.error)),
+              );
             }
+          },
+          child: BlocBuilder<ExpenseHeadBloc, ExpenseHeadState>(
+            builder: (context, state) {
+              final assignToOptions = state is ExpenseHeadLoaded
+                  ? state.expenseHeads
+                      .map<Map<String, Object>>((expenseHead) => {
+                            'id': expenseHead.id
+                                as Object, // Explicitly cast as Object
+                            'name': expenseHead.name
+                                as Object, // Explicitly cast as Object
+                          })
+                      .toList()
+                  : <Map<String, Object>>[];
 
-            // Otherwise, perform validation
-            if (value == null || value.isEmpty) {
-              return 'Please select a head of account';
-            }
-            return null;
-          },
+              return Stack(
+                children: [
+                  // Dropdown Widget
+                  DropdownWithObject(
+                    controller: _headOfAccountController,
+                    label: 'Select Head of Account',
+                    hinttext: 'Select Head of Account',
+                    options: assignToOptions,
+                    selectedValue: _selectedAssignTo,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedAssignTo = value!;
+                        final selectedOption = assignToOptions.firstWhere(
+                          (option) => option['id'] == value,
+                        );
+                        _headOfAccountController.text =
+                            selectedOption['name']! as String;
+                      });
+                    },
+                    validator: (value) {
+                      if (_expenseList.isNotEmpty) return null;
+                      if (value == null || value.isEmpty) {
+                        return 'Please select a head of account';
+                      }
+                      return null;
+                    },
+                  ),
+                  // CircularProgressIndicator
+                  if (state is ExpenseHeadLoading)
+                    Positioned.fill(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
         ),
-       /* TextFormField(
+        /* TextFormField(
           controller: _headOfAccountController,
 
           decoration: InputDecoration(
@@ -294,23 +326,24 @@ class AccountAmountRow extends StatelessWidget {
                 TextFormField(
                   controller: amountController,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      hintText: 'Enter expense amount',
-                      labelText: 'Expense Amount',
-                      labelStyle: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.labelGrey,
-                        fontFamily: 'Roboto',
-                      ),
-                      hintStyle: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.labelGrey,
-                        fontFamily: 'Roboto',
-                      ),),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    hintText: 'Enter expense amount',
+                    labelText: 'Expense Amount',
+                    labelStyle: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.labelGrey,
+                      fontFamily: 'Roboto',
+                    ),
+                    hintStyle: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.labelGrey,
+                      fontFamily: 'Roboto',
+                    ),
+                  ),
                 ),
               ],
             ),

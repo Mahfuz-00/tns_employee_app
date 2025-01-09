@@ -16,6 +16,7 @@ import '../Bloc/activity_event.dart';
 import '../Bloc/activity_state.dart';
 import '../Widget/section_tile.dart';
 import '../Widget/status_container_template.dart';
+import 'activity_page_details.dart';
 
 class ActivityDashboard extends StatefulWidget {
   const ActivityDashboard({super.key});
@@ -269,16 +270,27 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
 
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                      child: TaskCard(
-                                        taskHeader: task.title ?? 'N/A',
-                                        date: task.startDate ?? 'N/A',
-                                        priority: task.priority ?? 'N/A',
-                                        progress: Status ?? 'N/A',
-                                     /*   progression: task.progression,*/
-                                        images: task.assignedUsers != null
-                                            ? task.assignedUsers!.map((user) => user.name ?? 'Unknown').toList()
-                                            : [],
-                                        commentCount: totalComments,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          // Navigate to the new page and pass task data
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => TaskDetailPage(tasks: filteredTasks, initialIndex: index,),
+                                            ),
+                                          );
+                                        },
+                                        child: TaskCard(
+                                          taskHeader: task.title ?? 'N/A',
+                                          date: task.startDate ?? 'N/A',
+                                          priority: task.priority ?? 'N/A',
+                                          progress: Status ?? 'N/A',
+                                                                             /*   progression: task.progression,*/
+                                          images: task.assignedUsers != null
+                                              ? task.assignedUsers!.map((user) => user.name ?? 'Unknown').toList()
+                                              : [],
+                                          commentCount: totalComments,
+                                        ),
                                       ),
                                     );
                                   },

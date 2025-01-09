@@ -4,7 +4,7 @@ class ActivityFromEntity {
   final String startDate;
   final String endDate;
   final int estimatedHour;
-  final String AssignedEmployee;
+/*  final String AssignedEmployee;*/
   final String description;
   final String priority;
   final String status;
@@ -15,7 +15,7 @@ class ActivityFromEntity {
     required this.startDate,
     required this.endDate,
     required this.estimatedHour,
-    required this.AssignedEmployee,
+   /* required this.AssignedEmployee,*/
     required this.description,
     required this.priority,
     required this.status,

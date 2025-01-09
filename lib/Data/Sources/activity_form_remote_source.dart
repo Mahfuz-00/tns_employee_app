@@ -34,7 +34,7 @@ class ActivityFormRemoteDataSource {
         'actvStartDate': activity.startDate,
         'actvEndDate': activity.endDate,
         'actvEstimatedHour': activity.estimatedHour,
-        'actvProjectUser': activity.AssignedEmployee,
+     /*   'actvProjectUser': activity.assignedEmployee,*/
         'actvDescription': activity.description,
         'priority': activity.priority,
         'status': activity.status,

@@ -53,6 +53,8 @@ dependencies:
   http:
   sqflite_sqlcipher:
   cached_network_image:
+  mime:
+  http_parser:
 
 dev_dependencies:
   flutter_test:

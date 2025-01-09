@@ -20,7 +20,7 @@ class ProfileEntity {
   });
 
   // ToEntities method for converting from Model to Entity
-  static ProfileEntity fromModel(Profile profile) {
+  static ProfileEntity fromModel(ProfileModel profile) {
     return ProfileEntity(
       name: profile.name,
       designation: profile.designation,

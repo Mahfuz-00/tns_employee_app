@@ -1,4 +1,5 @@
 part of 'project_bloc.dart';
 
-@immutable
-sealed class ProjectEvent {}
+abstract class ProjectEvent {}
+
+class LoadProjects extends ProjectEvent {}

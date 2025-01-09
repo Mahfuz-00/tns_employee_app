@@ -49,7 +49,7 @@ class ProfileRemoteSourceImpl implements ProfileRemoteSource {
         print('Profile Data: $data');
 
         // Create Profile instance using the data inside the 'data' field
-        final profile = Profile.fromJson(data);
+        final profile = ProfileModel.fromJson(data);
         print('Profile Name: ${profile.name}'); // Debugging the profile name
 
         // Return ProfileEntity created from the Profile model
