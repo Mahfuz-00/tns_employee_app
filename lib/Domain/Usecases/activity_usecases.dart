@@ -22,22 +22,41 @@ class ActivityUseCase {
       print(remoteTasks);
 
       // Step 3: Combine tasks from both sources
-      // Ensure that tasks from remote are not duplicated with tasks from local storage
+      // In the ActivityUseCase class, modify the task handling to check for null values:
       final allTasks = [...localTasks];
 
-      // Add remote tasks that do not already exist in local tasks
+// Add remote tasks that do not already exist in local tasks
       remoteTasks.forEach((remoteTask) {
+        // Check if the task title is null or missing
         if (!localTasks.any((localTask) => localTask.title == remoteTask.title)) {
           allTasks.add(remoteTask);
         }
       });
 
-      print('Combined tasks (local + remote):');
-      print(allTasks);
+// Ensure non-null values for each task field (you can replace `null` with default values if necessary)
+      final cleanedTasks = allTasks.map((task) {
+        return ActivityEntity(
+          id: task.id,
+          title: task.title ?? 'Untitled Task',  // Replace null title with a default string
+          project: task.project,
+          startDate: task.startDate,
+          endDate: task.endDate,
+          estimateHours: task.estimateHours,
+          assignor: task.assignor,
+          description: task.description ?? 'No description',  // Replace null description with default text
+          priority: task.priority,
+          status: task.status ?? 'Unknown',  // Replace null status with default text
+          updatedAt: task.updatedAt,
+          assignedUsers: task.assignedUsers ?? [],
+        );
+      }).toList();
 
-      // Step 4: Save any new tasks to local storage (remote tasks that were not previously saved)
-      await repository.saveTasksToLocal(allTasks);
-      print('Combined tasks saved to local storage -- UseCase');
+      print('Cleaned tasks:');
+      print(cleanedTasks);
+
+      // Step 4: Save the cleaned tasks to local storage
+      await repository.saveTasksToLocal(cleanedTasks);
+      print('Cleaned tasks saved to local storage -- UseCase');
 
       // Step 6: Fetch the tasks from local storage after saving and delete old tasks
       final updatedLocalTasks = await repository.getLocalTasks();

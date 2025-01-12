@@ -27,6 +27,7 @@ import 'package:touch_and_solve_inventory_app/Core/Config/Dependency Injection/i
     as di;
 
 import 'Presentation/Leave Creation Page/Bloc/leave_form_bloc.dart';
+import 'Presentation/Leave Dashboard Page/Bloc/leave_bloc.dart';
 import 'Presentation/Sign In Page/Bloc/sign_in_bloc.dart';
 import 'Presentation/Voucher Creation Page/Bloc/headofaccounts_bloc.dart';
 import 'Presentation/Voucher Creation Page/Bloc/voucher_form_bloc.dart';
@@ -141,6 +142,9 @@ class MyApp extends StatelessWidget {
                 create: (_) => AttendanceBloc(
                   getAttendanceRequestsUseCase: getIt(),
                 ),
+              ),
+              BlocProvider(
+                create: (_) => getIt<LeaveBloc>(),
               ),
             ],
             child: snapshot.data!,

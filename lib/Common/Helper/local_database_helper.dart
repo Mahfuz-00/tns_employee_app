@@ -22,25 +22,25 @@ class DatabaseHelper {
     /*  assignorId TEXT,*/
     _database = await openDatabase(
       path,
-      version: 4,
+      version: 5,
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE tasks (
             id INTEGER NOT NULL PRIMARY KEY,
             title TEXT NOT NULL,
             project TEXT,
-            startDate TEXT,
-            endDate TEXT,
-            estimateHours TEXT,
+            start_date TEXT,   -- Changed from startDate to start_date
+            end_date TEXT,     -- Changed from endDate to end_date
+            estimate_hours TEXT, -- Changed from estimateHours to estimate_hours
             assignor INTEGER,
             description TEXT,
             comment TEXT,
             priority TEXT,
             status TEXT,
-            updatedAt TEXT,
-            assignedUsers TEXT -- Stored as a JSON string
+            updated_at TEXT,    -- Changed from updatedAt to updated_at
+            assigned_users TEXT -- Stored as a JSON string
           )
-        ''');
+      ''');
       },
     );
 
@@ -57,13 +57,13 @@ class DatabaseHelper {
     // Check for duplicates based on taskHeader
     Set<String> seenHeaders = {}; // To track already seen taskHeaders
     for (var row in rows) {
-      String taskHeader = row['taskHeader'];
+      String taskHeader = row['title'];
 
       if (seenHeaders.contains(taskHeader)) {
         // Duplicate found, delete the task
         await db.delete(
           'tasks',
-          where: 'taskHeader = ?',
+          where: 'title = ?',
           whereArgs: [taskHeader],
         );
         print('Deleted duplicate task with taskHeader: $taskHeader');

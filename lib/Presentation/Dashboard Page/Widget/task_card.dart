@@ -64,6 +64,8 @@ class _TaskCardState extends State<TaskCard> {
       }
     }
 
+    print('Images :: ${widget.images}');
+
 
     return Container(
       margin: EdgeInsets.zero,
@@ -212,18 +214,19 @@ class _TaskCardState extends State<TaskCard> {
                                 return Positioned(
                                   left: index * 20.0,
                                   // Adjust the overlap by modifying the multiplier
-                                    child: CircleAvatar(
-                                      radius: 15,
-                                      backgroundImage: Image.asset(
-                                        widget.images[index],
-                                        errorBuilder: (context, error, stackTrace) {
-                                          print('Error Image');
-                                          // Provide a default image when loading fails
-                                          return Image.asset('assets/default_image.png');
-                                        },
-                                      ).image,
-                                    )
-
+                                  child: CircleAvatar(
+                                    radius: 15,
+                                    backgroundImage: widget.images[index].isEmpty
+                                        ? Image.asset(AppImages.HRImage).image // Show default image if the URL is empty
+                                        : Image.network(
+                                      widget.images[index],
+                                      errorBuilder: (context, error, stackTrace) {
+                                        print('Error loading image');
+                                        // Return default image if the URL fails to load
+                                        return Image.asset(AppImages.HRImage);
+                                      },
+                                    ).image,
+                                  ),
                                 );
                               },
                             ),

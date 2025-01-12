@@ -14,69 +14,56 @@ class ActivityRepositoryImpl implements ActivityRepository {
 
   ActivityRepositoryImpl(this.remoteDataSource, this.localDataSource);
 
+  void logTasks(String title, List<dynamic> tasks) {
+    print('--------------------------------');
+    print('$title:');
+    for (var task in tasks) {
+      print('\tTask ID: ${task.id}');
+      print('\tTitle: ${task.title}');
+      print('\tPriority: ${task.priority}');
+      print('\tStart Date: ${task.startDate}');
+      print('\tEnd Date: ${task.endDate}');
+      print(''); // Adds a blank line between tasks for better readability
+    }
+    print('--------------------------------');
+  }
+
+
   @override
   Future<List<ActivityEntity>> fetchTasks() async {
     try {
-      // Step 1: Fetch tasks from the local data source first (for faster loading)
       final List<ActivityEntity> localTasks = await getLocalTasks();
-      print('--------------------------------');
-      print('Local activities:');
-      localTasks.forEach((task) {
-        print('activity Header: ${task.title}, Task Name: ${task.title}, Task Priority: ${task.priority}, Task Date : ${task.startDate}');
-      });
-      print('--------------------------------');
+      logTasks('Local Activities', localTasks);
 
-      // Step 2: Fetch tasks from the remote data source (API) asynchronously
-      final List<ActivityModel> taskModels = await remoteDataSource.getTasks();
-      print('--------------------------------');
-      print('Remote activities:');
-      taskModels.forEach((task) {
-        print('activity Header: ${task.title}, Task Name: ${task.title}, Task Priority: ${task.priority}, Task Date : ${task.startDate}');
-      });
-      print('--------------------------------');
+      final List<ActivityModel> remoteTasks = await remoteDataSource.getTasks();
+      logTasks('Remote Activities', remoteTasks.map((e) => e.toEntity()).toList());
 
-      // Step 3: Check for new tasks from the remote API that are not in the local database
-      final List<ActivityModel> newTaskModels = taskModels.where((remoteTask) {
-        return !localTasks.any((localTask) =>
-        localTask.title?.trim().toLowerCase() == remoteTask.title?.trim().toLowerCase() &&
-            localTask.priority == remoteTask.priority &&
-            localTask.startDate == remoteTask.startDate);
+      final localTaskKeys = localTasks.map((task) =>
+      '${task.title?.toLowerCase()}-${task.priority}-${task.startDate}'
+      ).toSet();
+
+      final newTasks = remoteTasks.where((remoteTask) {
+        final remoteKey = '${remoteTask.title?.toLowerCase()}-${remoteTask.priority}-${remoteTask.startDate}';
+        return !localTaskKeys.contains(remoteKey);
       }).toList();
 
-
-      print('--------------------------------');
-      print('New activities from remote that are not in local:');
-      print('Converting activityModel to activityEntity:');
-      newTaskModels.forEach((task) {
-        print('activity Header: ${task.title}, Task Name: ${task.title}, Task Priority: ${task.priority}, Task Date : ${task.startDate}, Task Assignor : ${task.assignor}');
-      });
-      print('--------------------------------');
-
-      // Step 4: Save new tasks to the local database
-      if (newTaskModels.isNotEmpty) {
-        final List<ActivityEntity> activityEntities =
-        newTaskModels.map((task) => task.toEntity()).toList();
-        await saveTasksToLocal(activityEntities); // Call method to save new tasks to local database
-        print('New activities saved to local database');
+      if (newTasks.isNotEmpty) {
+        final newEntities = newTasks.map((task) => task.toEntity()).toList();
+        await saveTasksToLocal(newEntities);
+        print('New tasks saved to local database.');
       }
 
-      // Step 5: Return the combined list of local tasks and new tasks (remote data)
-      final allTasks = [
-        ...localTasks,
-        ...newTaskModels.map((taskModel) => taskModel.toEntity()).toList()
-      ];
-      print('Returning combined activities (local + new):');
-      allTasks.forEach((task) {
-        print('activity Header: ${task.title}, Task Name: ${task.title}, Task Priority: ${task.priority}, Task Date : ${task.startDate}');
-      });
+      final allTasks = [...localTasks, ...newTasks.map((task) => task.toEntity()).toList()];
+      logTasks('Combined Tasks (Local + New)', allTasks);
 
       return allTasks;
-    } catch (e) {
-      // Handle errors (e.g., network error, parsing error)
+    } catch (e, stackTrace) {
       print('Error fetching tasks: $e');
-      throw Exception('Failed to fetch tasks: $e');
+      print(stackTrace);
+      rethrow;
     }
   }
+
 
   @override
   Future<void> saveTasksToLocal(List<ActivityEntity> tasks) async {
@@ -130,15 +117,27 @@ class ActivityRepositoryImpl implements ActivityRepository {
     }
   }
 
-
-
-
-
   @override
   Future<List<ActivityEntity>> getLocalTasks() async {
     try {
       // Fetch tasks from local data source (database or shared preferences)
       final List<ActivityModel> taskModels = await localDataSource.getTasks();
+      // Iterate through each task and print field-specific null checks
+      taskModels.forEach((task) {
+        print('activity Header: ${task.title ?? 'null'}');
+        print('Task Name: ${task.title ?? 'null'}');
+        print('Task Priority: ${task.priority ?? 'null'}');
+        print('Task Date: ${task.startDate ?? 'null'}');
+        print('Task End Date: ${task.endDate ?? 'null'}');
+        print('Estimate Hours: ${task.estimateHours ?? 'null'}');
+        print('Assignor: ${task.assignor ?? 'null'}');
+        print('Description: ${task.description ?? 'null'}');
+        print('Comment: ${task.comment ?? 'null'}');
+        print('Status: ${task.status ?? 'null'}');
+        print('UpdatedAt: ${task.updatedAt ?? 'null'}');
+        print('Assigned Users: ${task.assignedUsers?.map((user) => user.name ?? 'null') ?? 'null'}');
+      });
+
       print('Local activities retrieved from local data source:');
       taskModels.forEach((task) {
         print('activity Header: ${task.title}, Task Name: ${task.title}, Task Priority: ${task.priority}, Task Date : ${task.startDate}');
@@ -148,7 +147,40 @@ class ActivityRepositoryImpl implements ActivityRepository {
       return taskModels.map((taskModel) => taskModel.toEntity()).toList();
     } catch (e) {
       // Handle errors (e.g., database errors)
-      print('Error fetching activities from local storage: $e');
+      print('Error fetching activities from local storage:');
+
+      final List<ActivityModel> taskModels = await localDataSource.getTasks();
+
+      // Try to print the null field causing the issue
+      try {
+        if (taskModels.isEmpty) {
+          print('No tasks found in local storage.');
+        } else {
+          // Check if any task has a null value and print it
+          for (var task in taskModels) {
+            print('Checking task: ${task.title}');
+            if (task.title == null) print('Task title is null');
+            if (task.priority == null) print('Task priority is null');
+            if (task.startDate == null) print('Task startDate is null');
+            if (task.endDate == null) print('Task endDate is null');
+            if (task.estimateHours == null) print('Task estimateHours is null');
+            if (task.assignor == null) print('Task assignor is null');
+            if (task.description == null) print('Task description is null');
+            if (task.comment == null) print('Task comment is null');
+            if (task.status == null) print('Task status is null');
+            if (task.updatedAt == null) print('Task updatedAt is null');
+            if (task.assignedUsers == null) print('Assigned users are null');
+            else {
+              task.assignedUsers!.forEach((user) {
+                if (user.name == null) print('Assigned user name is null');
+                if (user.profilePhotoPath == null) print('Assigned user profilePhotoPath is null');
+              });
+            }
+          }
+        }
+      } catch (innerError) {
+        print('Error while checking task data for null fields: $innerError');
+      }
       throw Exception('Failed to fetch activities from local storage: $e');
     }
   }

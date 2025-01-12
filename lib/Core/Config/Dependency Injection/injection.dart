@@ -17,6 +17,7 @@ import '../../../Data/Repositories/attendance_repositories_impl.dart';
 import '../../../Data/Repositories/employee_repositories_impl.dart';
 import '../../../Data/Repositories/head_of_accounts_repositories_impl.dart';
 import '../../../Data/Repositories/leave_form_repositories_impl.dart';
+import '../../../Data/Repositories/leave_repositories_impl.dart';
 import '../../../Data/Repositories/profile_repositories_impl.dart';
 import '../../../Data/Repositories/project_repositories_impl.dart';
 import '../../../Data/Repositories/sign_in_repositories_impl.dart';
@@ -28,6 +29,7 @@ import '../../../Data/Sources/attendance_remote_source.dart';
 import '../../../Data/Sources/employee_remote_source.dart';
 import '../../../Data/Sources/head_of_accounts_remote_source.dart';
 import '../../../Data/Sources/leave_form_remote_source.dart';
+import '../../../Data/Sources/leave_remote_source.dart';
 import '../../../Data/Sources/profile_remote_source.dart';
 import '../../../Data/Sources/project_remote_source.dart';
 import '../../../Data/Sources/voucher_form_remote_source.dart';
@@ -37,6 +39,7 @@ import '../../../Domain/Repositories/attendance_repositories.dart';
 import '../../../Domain/Repositories/employee_repositories.dart';
 import '../../../Domain/Repositories/head_of_accounts_repositories.dart';
 import '../../../Domain/Repositories/leave_form_repositories.dart';
+import '../../../Domain/Repositories/leave_repositories.dart';
 import '../../../Domain/Repositories/profile_repositories.dart';
 import '../../../Domain/Repositories/project_repositories.dart';
 import '../../../Domain/Repositories/sign_in_repositories.dart';
@@ -49,6 +52,7 @@ import '../../../Domain/Usecases/attendance_usecase.dart';
 import '../../../Domain/Usecases/employee_usecase.dart';
 import '../../../Domain/Usecases/head_of_accounts_usecase.dart';
 import '../../../Domain/Usecases/leave_form_usecase.dart';
+import '../../../Domain/Usecases/leave_usecase.dart';
 import '../../../Domain/Usecases/profile_usecase.dart';
 import '../../../Domain/Usecases/project_usecase.dart';
 import '../../../Domain/Usecases/sign_in_usercases.dart';
@@ -57,6 +61,7 @@ import '../../../Domain/Usecases/voucher_form_usecase.dart';
 import '../../../Presentation/Activity Creation Page/Bloc/activity_form_bloc.dart';
 import '../../../Presentation/Attendance Dashboard Page/Bloc/attendance_form_bloc.dart';
 import '../../../Presentation/Leave Creation Page/Bloc/leave_form_bloc.dart';
+import '../../../Presentation/Leave Dashboard Page/Bloc/leave_bloc.dart';
 import '../../../Presentation/Voucher Creation Page/Bloc/headofaccounts_bloc.dart';
 import '../../../Presentation/Voucher Creation Page/Bloc/voucher_form_bloc.dart';
 
@@ -257,5 +262,20 @@ Future<void> init() async {
         () => GetAttendanceRequestsUseCase(repository: getIt()),
   );
 
+
+  //Leave Dashboard
+  // Registering the remote source
+  getIt.registerLazySingleton(() => LeaveRemoteSource(client: getIt()));
+
+  // Repository
+  getIt.registerLazySingleton<LeaveRepository>(
+        () => LeaveRepositoryImpl(remoteSource: getIt()),
+  );
+
+  // UseCase
+  getIt.registerLazySingleton(() => GetLeaveUseCase(repository: getIt()));
+
+  // Bloc
+  getIt.registerFactory(() => LeaveBloc(getLeaveApplicationsUseCase: getIt()));
 
 }

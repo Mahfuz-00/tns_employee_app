@@ -213,14 +213,18 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                                     }
                                   }).length,
                                   itemBuilder: (context, index) {
-                                    // Calculate the total number of comments for all tasks
-                                    final totalComments = state.tasks.fold<int>(
-                                      0,
-                                          (sum, task) {
-                                        final commentCount = (task.comment?.split(',').length ?? 0);
-                                        return sum + commentCount;
-                                      },
-                                    );
+                                    // Get the task at the current index
+                                    final taskComment = state.tasks[index];
+
+                                    // Calculate the number of comments for this specific task
+                                    final commentCount = (taskComment.comment?.isNotEmpty ?? false)
+                                        ? taskComment.comment!.split(',').length
+                                        : 0; // If comment is empty, count is 0
+
+                                    // Print the comment count for the specific task
+                                    print('Task: ${taskComment.title}, Comment Count: $commentCount');
+
+
 
                                     // Create the filtered list of tasks
                                     final filteredTasks = state.tasks.where((task) {
@@ -287,9 +291,9 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                                           progress: Status ?? 'N/A',
                                                                              /*   progression: task.progression,*/
                                           images: task.assignedUsers != null
-                                              ? task.assignedUsers!.map((user) => user.name ?? 'Unknown').toList()
+                                              ? task.assignedUsers!.map((user) => user.profilePhotoPath ?? 'Unknown').toList()
                                               : [],
-                                          commentCount: totalComments,
+                                          commentCount: commentCount,
                                         ),
                                       ),
                                     );

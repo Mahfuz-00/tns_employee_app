@@ -6,7 +6,6 @@ class ActivityEntity {
   final String? endDate;
   final String? estimateHours;
   final int? assignor;
-/*  final String? assignorId;*/
   final String? description;
   final String? comment;
   final String? priority;
@@ -22,7 +21,6 @@ class ActivityEntity {
     this.endDate,
     this.estimateHours,
     this.assignor,
-/*    this.assignorId,*/
     this.description,
     this.comment,
     this.priority,
@@ -33,26 +31,24 @@ class ActivityEntity {
 
   factory ActivityEntity.fromJson(Map<String, dynamic> json) {
     return ActivityEntity(
-      id: json['id'],
-      title: json['title'],
-      project: json['project'],
-      startDate: json['start_date'],
-      endDate: json['end_date'],
-      estimateHours: json['estimate_hours'],
-      assignor: json['assignor'],
-  /*    assignorId: json['user_assign_id'],*/
-      description: json['description'],
-      comment: json['comment'],
-      priority: json['priority'],
-      status: json['status'],
-      updatedAt: DateTime.parse(json['updated_at']),
+      id: json['id'] ?? 0,
+      title: json['title'] ?? '',
+      project: json['project'] ?? '',
+      startDate: json['start_date'] ?? '',
+      endDate: json['end_date'] ?? '',
+      estimateHours: json['estimate_hours'] ?? '',
+      assignor: json['assignor'] ?? 0,
+      description: json['description'] ?? '',
+      comment: json['comment'] ?? '',
+      priority: json['priority'] ?? '',
+      status: json['status'] ?? '',
+      updatedAt: DateTime.parse(json['updated_at']) ?? DateTime(1970),
       assignedUsers: (json['assigned_users'] as List?)
           ?.map((user) => AssignedUserEntity.fromJson(user))
           .toList(),
     );
   }
 
-  // Convert ActivityEntity to JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -61,16 +57,16 @@ class ActivityEntity {
       'start_date': startDate,
       'end_date': endDate,
       'estimate_hours': estimateHours,
-      'assignor' : assignor,
-/*      'user_assign_id' : assignorId,*/
+      'assignor': assignor,
       'description': description,
       'status': status,
-      'updated_at': updatedAt,
+      'updated_at': updatedAt?.toIso8601String(),
       'assigned_users': assignedUsers?.map((user) => user.toJson()).toList(),
     };
   }
 }
 
+// AssignedUserEntity
 class AssignedUserEntity {
   final int? id;
   final String? name;
@@ -84,18 +80,25 @@ class AssignedUserEntity {
 
   factory AssignedUserEntity.fromJson(Map<String, dynamic> json) {
     return AssignedUserEntity(
-      id: json['id'],
-      name: json['name'],
-      profilePhotoPath: json['profile_photo_path'],
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      profilePhotoPath: json['profile_photo_path'] ?? '',
     );
   }
 
-  // Convert AssignedUserEntity to JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
       'profile_photo_path': profilePhotoPath,
     };
+  }
+
+  AssignedUserEntity toEntity() {
+    return AssignedUserEntity(
+      id: id,
+      name: name,
+      profilePhotoPath: profilePhotoPath,
+    );
   }
 }

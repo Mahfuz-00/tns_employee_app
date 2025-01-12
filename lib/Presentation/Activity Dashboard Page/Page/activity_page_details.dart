@@ -9,7 +9,7 @@ import '../../../Domain/Entities/activity_entities.dart';
 
 class TaskDetailPage extends StatefulWidget {
   List<ActivityEntity> tasks;
-   int initialIndex;
+  int initialIndex;
 
   TaskDetailPage({required this.tasks, required this.initialIndex});
 
@@ -23,14 +23,15 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       print(date);
 
       // First try parsing the date as ISO 8601 (yyyy-MM-dd)
-      DateTime parsedDate = DateTime.parse(date!); // yyyy-MM-dd or yyyy-MM-ddTHH:mm:ss format
+      DateTime parsedDate =
+          DateTime.parse(date!); // yyyy-MM-dd or yyyy-MM-ddTHH:mm:ss format
       return DateFormat('dd MMM yyyy').format(parsedDate); // Format to "MMM dd"
-
     } catch (e) {
       // If that fails, try parsing the date with custom format (MM-dd-yyyy)
       try {
         DateTime parsedDate = DateFormat('dd-MM-yyyy').parse(date!);
-        return DateFormat('dd MMM yyyy').format(parsedDate); // Format to "MMM dd"
+        return DateFormat('dd MMM yyyy')
+            .format(parsedDate); // Format to "MMM dd"
       } catch (e) {
         // If both parsing attempts fail, return the original string
         return date;
@@ -45,6 +46,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
   String? startdate;
   String? enddate;
+  String? visibleName;
+  int? tappedIndex;
+  String? showName;
 
   @override
   void initState() {
@@ -65,8 +69,38 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     enddate = _formatDate(task.endDate);
 
     List<String> Images = task.assignedUsers != null
-        ? task.assignedUsers!.map((user) => user.name ?? 'Unknown').toList()
+        ? task.assignedUsers!
+            .map((user) => user.profilePhotoPath ?? 'Unknown')
+            .toList()
         : [];
+
+    List<String> name = task.assignedUsers != null
+        ? task.assignedUsers!.map((user) => user.name ?? 'N/A').toList()
+        : [];
+
+    List<int> id = task.assignedUsers != null
+        ? task.assignedUsers!.map((user) => user.id ?? 0).toList()
+        : [];
+
+    // Assuming task.assignor is the ID to search for
+    late final String AssignorEmployee;
+
+// Check if task.assignor is not null and assignedUsers is available
+    if (task.assignor != null && task.assignedUsers != null) {
+      // Find the user whose id matches task.assignor
+      final assignorUser = task.assignedUsers!.firstWhere(
+        (user) => user.id == task.assignor,
+        // Assuming task.assignor is a string
+        orElse: () => AssignedUserEntity(
+            id: 0,
+            name: 'N/A',
+            profilePhotoPath: 'Unknown'), // Default user in case of no match
+      );
+
+      // Assign the name to AssignorEmployee
+      AssignorEmployee =
+          assignorUser.name ?? 'N/A'; // Fallback to 'N/A' if name is null
+    }
 
     String Status = 'N/A';
     if (task.status == 'pending') {
@@ -107,6 +141,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,14 +169,15 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 textSize16Darker('Estimated Hours'),
                 textSize14Lighter('${task.estimateHours ?? 'N/A'} Hours'),
                 SizedBox(height: 10),
-                textSize16Darker('Assignor'),
-                textSize14Lighter('${task.assignor ?? 'N/A'}'),
+                textSize16Darker('Assignor Employee'),
+                textSize14Lighter('${AssignorEmployee ?? 'N/A'}'),
                 SizedBox(height: 10),
                 textSize16Darker('Description'),
                 textSize14Lighter('${task.description ?? 'N/A'}'),
                 SizedBox(height: 10),
                 textSize16Darker('Comment'),
-                textSize14Lighter('${task.comment ?? 'N/A'}'),
+                textSize14Lighter(
+                    '${task.comment == '' ? 'N/A' : task.comment}'),
                 SizedBox(height: 10),
                 textSize16Darker('Priority'),
                 textSize14Lighter('${Priority ?? 'N/A'}'),
@@ -151,30 +187,33 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 SizedBox(height: 10),
                 textSize16Darker('Assigned Employees'),
                 Container(
-                  /*width: screenWidth * 0.4,*/
                   height: 40,
                   padding: EdgeInsets.symmetric(vertical: 5),
                   child: Stack(
                     children: [
                       // Show up to 3 images, and the rest will show a "+" sign
                       ...List.generate(
-                      /*  Images.length > 3 ? 3 :*/ Images.length,
-                            (index) {
+                        /*  Images.length > 3 ? 3 :*/
+                        Images.length,
+                        (index) {
                           return Positioned(
-                              left: index * 20.0,
-                              // Adjust the overlap by modifying the multiplier
-                              child: CircleAvatar(
-                                radius: 15,
-                                backgroundImage: Image.asset(
-                                  Images[index],
-                                  errorBuilder: (context, error, stackTrace) {
-                                    print('Error Image');
-                                    // Provide a default image when loading fails
-                                    return Image.asset('assets/default_image.png');
-                                  },
-                                ).image,
-                              )
-
+                            left: index * 20.0,
+                            // Adjust the overlap by modifying the multiplier
+                            child: CircleAvatar(
+                              radius: 15,
+                              backgroundImage: Images[index].isEmpty
+                                  ? Image.asset(AppImages.HRImage)
+                                      .image // Show default image if the URL is empty
+                                  : Image.network(
+                                      Images[index],
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        print('Error loading image');
+                                        // Return default image if the URL fails to load
+                                        return Image.asset(AppImages.HRImage);
+                                      },
+                                    ).image,
+                            ),
                           );
                         },
                       ),
@@ -196,6 +235,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                             ),
                           ),
                         ),*/
+
                     ],
                   ),
                 ),
@@ -223,15 +263,16 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     ElevatedButton(
                       onPressed: currentIndex > 0
                           ? () {
-                        setState(() {
-                          currentIndex--;
-                        });
-                      }
+                              setState(() {
+                                currentIndex--;
+                              });
+                            }
                           : null, // Disable the button if at the first task
                       style: ElevatedButton.styleFrom(
                         backgroundColor: currentIndex > 0
                             ? AppColors.primary
-                            : AppColors.textGrey, // Grey out the button if no previous task
+                            : AppColors.textGrey,
+                        // Grey out the button if no previous task
                         padding: const EdgeInsets.symmetric(
                             horizontal: 24, vertical: 12),
                         fixedSize: Size(screenWidth * 0.42, 50),
@@ -253,15 +294,16 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     ElevatedButton(
                       onPressed: currentIndex < widget.tasks.length - 1
                           ? () {
-                        setState(() {
-                          currentIndex++;
-                        });
-                      }
+                              setState(() {
+                                currentIndex++;
+                              });
+                            }
                           : null, // Disable the button if at the last task
                       style: ElevatedButton.styleFrom(
                         backgroundColor: currentIndex < widget.tasks.length - 1
                             ? AppColors.primary
-                            : AppColors.textGrey, // Grey out the button if no next task
+                            : AppColors.textGrey,
+                        // Grey out the button if no next task
                         padding: const EdgeInsets.symmetric(
                             horizontal: 24, vertical: 12),
                         fixedSize: Size(screenWidth * 0.42, 50),
