@@ -4,12 +4,13 @@ import 'package:touch_and_solve_inventory_app/Core/Config/Assets/app_images.dart
 import '../../../Core/Config/Theme/app_colors.dart';
 
 class VoucherContainers extends StatelessWidget {
-  final String submitDate;
-  final String project;
-  final String expense;
-  final String approvedBy;
-  final String approvalDate;
-  final String approvedImage;
+  final dynamic submitDate;
+  final dynamic project;
+  final dynamic expense;
+  final dynamic approvedBy;
+  final dynamic approvalDate;
+
+/*  final String approvedImage;*/
 
   const VoucherContainers({
     required this.submitDate,
@@ -17,7 +18,7 @@ class VoucherContainers extends StatelessWidget {
     required this.expense,
     required this.approvedBy,
     required this.approvalDate,
-    required this.approvedImage,
+    /*  required this.approvedImage,*/
     Key? key,
   }) : super(key: key);
 
@@ -54,7 +55,7 @@ class VoucherContainers extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Text(
-                submitDate,
+                submitDate.toString(),
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   fontSize: 14.0,
@@ -96,7 +97,7 @@ class VoucherContainers extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      project,
+                      project.toString(),
                       style: TextStyle(
                         fontFamily: 'Roboto',
                         fontSize: 14.0,
@@ -120,7 +121,7 @@ class VoucherContainers extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      expense,
+                      'TK. ${expense.toString()}',
                       style: TextStyle(
                         fontFamily: 'Roboto',
                         fontSize: 14.0,
@@ -146,9 +147,11 @@ class VoucherContainers extends StatelessWidget {
                     color: AppColors.primary,
                     size: 14,
                   ),
-                  SizedBox(width: 4,),
+                  SizedBox(
+                    width: 4,
+                  ),
                   Text(
-                    'Approved at $approvalDate',
+                    'Approved at ${approvalDate.toString()}',
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 12.0,
@@ -168,14 +171,14 @@ class VoucherContainers extends StatelessWidget {
                   color: AppColors.textBlack,
                 ),
               ),
-              SizedBox(width: 8),
+              /*SizedBox(width: 8),
               CircleAvatar(
                 radius: 12,
                 backgroundImage: AssetImage(approvedImage),
-              ),
+              ),*/
               SizedBox(width: 8),
               Text(
-                approvedBy,
+                approvedBy.toString(),
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   fontSize: 12.0,

@@ -11,11 +11,13 @@ import '../../../Common/Widgets/bottom_navigation_bar_with_swipe.dart';
 import '../../../Common/Widgets/internet_connection_check.dart';
 import '../../../Core/Config/Assets/app_images.dart';
 import '../../../Core/Config/Theme/app_colors.dart';
+import '../../../Domain/Entities/leave_entities.dart';
 import '../../Activity Dashboard Page/Widget/status_container_template.dart';
 import '../../Dashboard Page/Widget/task_card.dart';
 import '../Bloc/leave_bloc.dart';
 import '../Widgets/leave_container.dart';
 import '../Widgets/section_tile.dart';
+import 'leave_page_details.dart';
 
 class LeaveDashboard extends StatefulWidget {
   const LeaveDashboard({super.key});
@@ -95,6 +97,31 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
 
                 final usedDays =
                     14 - int.parse(state.leaveApplications[0].remainingDays);
+
+                List<LeaveEntity> filteredLeaveApplications = state
+                    .leaveApplications
+                    .where((leave) => leave.leaveRecords.any((record) =>
+                        record.status.toLowerCase() ==
+                        selectedSection.toLowerCase()))
+                    .toList();
+
+                print(
+                    'Filtered Initial Leave Applications: ${filteredLeaveApplications}');
+
+                // Now filter the leaveRecords for each LeaveEntity
+                List<List<LeaveBodyEntity>> filteredLeaveRecords =
+                    filteredLeaveApplications.map((leave) {
+                  return leave.leaveRecords
+                      .where((record) =>
+                          record.status.toLowerCase() ==
+                          selectedSection.toLowerCase())
+                      .toList();
+                }).toList();
+
+                filteredLeaveRecords.forEach((records) {
+                  print('Filtered Leave Records: $records');
+                });
+
                 return SafeArea(
                   child: SingleChildScrollView(
                     child: Stack(
@@ -102,56 +129,7 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                         // First container (30% of the screen height)
                         Column(
                           children: [
-                            Container(
-                              height: screenHeight * 0.25,
-                              // First container occupies 30% of the screen height
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 32, vertical: 30),
-                              color: AppColors.primary,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Leave Summary',
-                                          style: TextStyle(
-                                              fontSize: 24.0,
-                                              fontWeight: FontWeight.w600,
-                                              color: AppColors.textWhite,
-                                              fontFamily: 'Roboto'),
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          'Submit Leave',
-                                          style: TextStyle(
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.w600,
-                                              color: AppColors.textWhite,
-                                              fontFamily: 'Roboto'),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Container(
-                                    alignment: Alignment.centerLeft,
-                                    padding:
-                                        const EdgeInsets.only(bottom: 60.0),
-                                    child: Image.asset(
-                                      AppImages.LeaveImage,
-                                      height: 100,
-                                      width: 100,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
+                            designContainer(screenHeight),
 
                             // Third container (Rest of the body content below Container 1)
                             Container(
@@ -162,159 +140,26 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                               child: Column(
                                 children: [
                                   // Second container with leave sections
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 16),
-                                    child: Container(
-                                      width: screenWidth,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.backgroundWhite,
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          SectionTile(
-                                            title: 'Pending',
-                                            count: _getLeaveCountByStatus(
-                                                    'pending')
-                                                .toString(),
-                                            selectedSection: selectedSection,
-                                            onTap: (section) {
-                                              setState(() {
-                                                selectedSection = section;
-                                              });
-                                            },
-                                          ),
-                                          SectionTile(
-                                            title: 'Approved',
-                                            count: _getLeaveCountByStatus(
-                                                    'approved')
-                                                .toString(),
-                                            selectedSection: selectedSection,
-                                            onTap: (section) {
-                                              setState(() {
-                                                selectedSection = section;
-                                              });
-                                            },
-                                          ),
-                                          SectionTile(
-                                            title: 'Rejected',
-                                            count: _getLeaveCountByStatus(
-                                                    'rejected')
-                                                .toString(),
-                                            selectedSection: selectedSection,
-                                            onTap: (section) {
-                                              setState(() {
-                                                selectedSection = section;
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                                  selectionBar(
+                                      screenWidth, _getLeaveCountByStatus),
                                   SizedBox(height: 20),
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount: state.leaveApplications.where((leave) {
-                                      return leave.leaveRecords.any((record) {
-                                        return record.status.toLowerCase() == selectedSection.toLowerCase();
-                                      });
-                                    }).length,
-                                    itemBuilder: (context, index) {
-                                      final leave = state.leaveApplications
-                                          .where((leave) => leave.leaveRecords.any((record) {
-                                        return record.status.toLowerCase() == selectedSection.toLowerCase();
-                                      }))
-                                          .toList()[index]; // Filtering and getting the correct item
-
-                                      // Prepare leave status
-                                      String leaveStatus = 'N/A';
-                                      for (var record in leave.leaveRecords) {
-                                        if (record.status.toLowerCase() == 'pending') {
-                                          leaveStatus = 'Pending';
-                                          break;
-                                        } else if (record.status.toLowerCase() == 'approved') {
-                                          leaveStatus = 'Approved';
-                                          break;
-                                        } else if (record.status.toLowerCase() == 'rejected') {
-                                          leaveStatus = 'Rejected';
-                                          break;
-                                        }
-                                      }
-                                      print('Leave Status 3 : $leaveStatus');
-
-                                      DateTime parsedstartDateTime =
-                                          DateTime.parse(
-                                              leave.leaveRecords[0].startDate);
-                                      DateTime parsedEndDateTime =
-                                          DateTime.parse(
-                                              leave.leaveRecords[0].endDate);
-                                      DateTime parsedCreatedDateTime =
-                                          DateTime.parse(
-                                              leave.leaveRecords[0].createdAt);
-                                      DateTime parsedUpdatedDateTime =
-                                          DateTime.parse(
-                                              leave.leaveRecords[0].updatedAt);
-
-                                      String StartDate =
-                                          DateFormat('dd MMM yyyy')
-                                              .format(parsedstartDateTime);
-                                      String EndDate = DateFormat('dd MMM yyyy')
-                                          .format(parsedEndDateTime);
-                                      String CreatedDate =
-                                          DateFormat('dd MMMM yyyy')
-                                              .format(parsedCreatedDateTime);
-                                      String UpdatedDate =
-                                          DateFormat('dd MMMM yyyy')
-                                              .format(parsedUpdatedDateTime);
-
-                                      print('Date: $StartDate');
-                                      print('Time: $EndDate');
-                                      print('Created: $CreatedDate');
-                                      print('Updated: $UpdatedDate');
-
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16.0),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            // Navigate to the new page and pass leave data
-                                            /* Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => LeaveDetailPage(
-                                                  leaveApplications: state.leaveApplications,
-                                                  initialIndex: index,
-                                                ),
+                                  filteredLeaveRecords.isEmpty
+                                      ? Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 50.0),
+                                          child: Center(
+                                            child: Text(
+                                              'No leaves available',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.textGrey,
+                                                fontFamily: 'Roboto',
                                               ),
-                                            );*/
-                                          },
-                                          child: LeaveContainers(
-                                            submitDate: CreatedDate ?? 'N/A',
-                                            // or any other relevant field
-                                            leaveDate:
-                                                '${StartDate} - ${EndDate}',
-                                            totalLeave:
-                                                '${leave.leaveRecords[0].totalDay} day(s)',
-                                            approvedBy: leave
-                                                    .leaveRecords[0].name
-                                                    .toString() ??
-                                                'N/A',
-                                            // assuming you have approverName
-                                            approvalDate: UpdatedDate ?? 'N/A',
-                                            // assuming you have updatedAt
-                                            approvedImage: leave.leaveRecords[0]
-                                                    .approverPhoto ??
-                                                'Unknown', // assuming approverPhoto is a URL or asset
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  ),
+                                        )
+                                      : listContainer(filteredLeaveRecords),
                                   SizedBox(height: 20),
                                 ],
                               ),
@@ -323,75 +168,8 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                         ),
 
                         // Second container (Stacked on top of Container 1 and Container 3)
-                        Positioned(
-                          top: screenHeight * 0.15,
-                          // Adjust to start over Container 1
-                          left: 0,
-                          right: 0,
-                          child: Container(
-                            height: screenHeight * 0.19,
-                            // Height of Container 2 (should cover part of Container 1)
-                            margin: EdgeInsets.symmetric(horizontal: 16),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 10,
-                                  offset: Offset(0, 5),
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Total Leave',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.textBlack,
-                                        fontFamily: 'Roboto'),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    paidPeriod,
-                                    style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.labelGrey,
-                                        fontFamily: 'Roboto'),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      LeaveStatusTemplate(
-                                        color: AppColors.darkGreen,
-                                        label: 'Available',
-                                        number: state
-                                            .leaveApplications[0].remainingDays,
-                                      ),
-                                      LeaveStatusTemplate(
-                                        color: AppColors.NavyBlue,
-                                        label: 'Leave Used',
-                                        number: usedDays.toString(),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                        SummaryContainer(
+                            screenHeight, paidPeriod, state, usedDays),
                       ],
                     ),
                   ),
@@ -450,6 +228,254 @@ class _LeaveDashboardState extends State<LeaveDashboard> {
                   currentPage: 'Leave',
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  ListView listContainer(List<List<LeaveBodyEntity>> filteredLeaveRecords) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: filteredLeaveRecords.length,
+      itemBuilder: (context, index) {
+        final leave = filteredLeaveRecords[index];
+        print(filteredLeaveRecords[index]);
+        print(leave);
+
+        // Filter all matching records in the leave's leaveRecords
+        List<LeaveBodyEntity> matchingRecords = leave
+            .where(
+              (record) =>
+                  record.status.toLowerCase() == selectedSection.toLowerCase(),
+            )
+            .toList();
+
+        // If there are no matching records, return an empty widget
+        if (matchingRecords.isEmpty) {
+          return SizedBox.shrink();
+        }
+
+        // Build a list of widgets for each matching record
+        return Column(
+          children: matchingRecords.map((matchingRecord) {
+            // Format Dates
+            DateTime parsedStartDate = DateTime.parse(matchingRecord.startDate);
+            DateTime parsedEndDate = DateTime.parse(matchingRecord.endDate);
+            DateTime parsedCreatedDate =
+                DateTime.parse(matchingRecord.createdAt);
+            DateTime parsedUpdatedDate =
+                DateTime.parse(matchingRecord.updatedAt);
+
+            String startDate =
+                DateFormat('dd MMM yyyy').format(parsedStartDate);
+            String endDate = DateFormat('dd MMM yyyy').format(parsedEndDate);
+            String createdDate =
+                DateFormat('dd MMMM yyyy').format(parsedCreatedDate);
+            String updatedDate =
+                DateFormat('dd MMMM yyyy').format(parsedUpdatedDate);
+
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      // Navigate to the new page and pass task data
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LeaveDetailPage(
+                            leaves: matchingRecords,
+                            initialIndex: index,
+                          ),
+                        ),
+                      );
+                    },
+                    child: LeaveContainers(
+                      submitDate: createdDate,
+                      leaveDate: '$startDate - $endDate',
+                      totalLeave: '${matchingRecord.totalDay} day(s)',
+                      approvedBy: matchingRecord.name ?? 'N/A',
+                      approvalDate: updatedDate,
+                      approvedImage: matchingRecord.approverPhoto ?? 'Unknown',
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+              ],
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+
+  Padding selectionBar(
+      double screenWidth, int _getLeaveCountByStatus(String status)) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        width: screenWidth,
+        decoration: BoxDecoration(
+          color: AppColors.backgroundWhite,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SectionTile(
+              title: 'Pending',
+              count: _getLeaveCountByStatus('pending').toString(),
+              selectedSection: selectedSection,
+              onTap: (section) {
+                setState(() {
+                  selectedSection = section;
+                });
+              },
+            ),
+            SectionTile(
+              title: 'Approved',
+              count: _getLeaveCountByStatus('approved').toString(),
+              selectedSection: selectedSection,
+              onTap: (section) {
+                setState(() {
+                  selectedSection = section;
+                });
+              },
+            ),
+            SectionTile(
+              title: 'Rejected',
+              count: _getLeaveCountByStatus('rejected').toString(),
+              selectedSection: selectedSection,
+              onTap: (section) {
+                setState(() {
+                  selectedSection = section;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Container designContainer(double screenHeight) {
+    return Container(
+      height: screenHeight * 0.25,
+      // First container occupies 30% of the screen height
+      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 30),
+      color: AppColors.primary,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Leave Summary',
+                  style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textWhite,
+                      fontFamily: 'Roboto'),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Submit Leave',
+                  style: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textWhite,
+                      fontFamily: 'Roboto'),
+                ),
+              ],
+            ),
+          ),
+          Spacer(),
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.only(bottom: 60.0),
+            child: Image.asset(
+              AppImages.LeaveImage,
+              height: 100,
+              width: 100,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Positioned SummaryContainer(double screenHeight, String paidPeriod,
+      LeaveApplicationLoaded state, int usedDays) {
+    return Positioned(
+      top: screenHeight * 0.15,
+      // Adjust to start over Container 1
+      left: 0,
+      right: 0,
+      child: Container(
+        height: screenHeight * 0.19,
+        // Height of Container 2 (should cover part of Container 1)
+        margin: EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(4),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Total Leave',
+                style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textBlack,
+                    fontFamily: 'Roboto'),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                paidPeriod,
+                style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.labelGrey,
+                    fontFamily: 'Roboto'),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  LeaveStatusTemplate(
+                    color: AppColors.darkGreen,
+                    label: 'Available',
+                    number: state.leaveApplications[0].remainingDays,
+                  ),
+                  LeaveStatusTemplate(
+                    color: AppColors.NavyBlue,
+                    label: 'Leave Used',
+                    number: usedDays.toString(),
+                  ),
+                ],
+              )
             ],
           ),
         ),

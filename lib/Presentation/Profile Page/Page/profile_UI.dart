@@ -5,6 +5,7 @@ import 'package:touch_and_solve_inventory_app/Core/Config/Assets/app_images.dart
 import 'package:touch_and_solve_inventory_app/Presentation/Onboarding%20Page/Page/Onboarding_UI.dart';
 import '../../../Common/Bloc/profile_bloc.dart';
 import '../../../Common/Bloc/signout_bloc.dart';
+import '../../../Common/Helper/dimmed_overlay.dart';
 import '../../../Common/Widgets/bottom_navigation_bar.dart';
 import '../../../Core/Config/Theme/app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -37,7 +38,7 @@ class _ProfileState extends State<Profile> {
       body: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
           if (state is ProfileLoading) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: OverlayLoader());
           } else if (state is ProfileLoaded) {
             final profile = state.profile;
 

@@ -198,13 +198,20 @@ class _LeaveCreationState extends State<LeaveCreation> {
                           Dropdown(
                             controller: _leavetypecontroller,
                             label: 'Leave Type',
-                            options: ['Personal', 'Sick', 'Official'],
+                            options: ['Casual', 'Sick', 'Medical'],
                             // List of options
                             selectedValue: _selectedLeaveType,
                             onChanged: (value) {
                               setState(() {
-                                _selectedLeaveType = value!;
-                                _leavetypecontroller.text = value ?? '';
+                                if (value == 'Casual') {
+                                  _selectedLeaveType = 'casual_leave';
+                                } else if (value == 'Sick') {
+                                  _selectedLeaveType = 'sick_leave';
+                                } else if (value == 'Medical') {
+                                  _selectedLeaveType = 'medical_leave';
+                                }
+
+                                _leavetypecontroller.text = _selectedLeaveType;
                               });
                             },
                             validator: (value) {

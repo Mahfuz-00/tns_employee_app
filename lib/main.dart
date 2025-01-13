@@ -31,6 +31,7 @@ import 'Presentation/Leave Dashboard Page/Bloc/leave_bloc.dart';
 import 'Presentation/Sign In Page/Bloc/sign_in_bloc.dart';
 import 'Presentation/Voucher Creation Page/Bloc/headofaccounts_bloc.dart';
 import 'Presentation/Voucher Creation Page/Bloc/voucher_form_bloc.dart';
+import 'Presentation/Voucher Dashboard Page/Bloc/voucher_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -145,6 +146,9 @@ class MyApp extends StatelessWidget {
               ),
               BlocProvider(
                 create: (_) => getIt<LeaveBloc>(),
+              ),
+              BlocProvider(
+                create: (_) => getIt<VoucherBloc>()..add(FetchVouchersEvent()),
               ),
             ],
             child: snapshot.data!,

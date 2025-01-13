@@ -5,7 +5,7 @@ import '../../../Core/Config/Theme/app_colors.dart';
 class VoucherStatusTemplate extends StatelessWidget {
   final String? imageAsset; // Nullable imageAsset to allow no image
   final String label;
-  final String number;
+  final num number;
   final Color? color; // Nullable color field
 
   const VoucherStatusTemplate({
@@ -76,7 +76,7 @@ class VoucherStatusTemplate extends StatelessWidget {
           ),
           SizedBox(height: 4), // Spacing between label and number
           Text(
-            number,
+            'TK. $number',
             style: TextStyle(
               fontSize: 16.0,
               fontWeight: FontWeight.w400,

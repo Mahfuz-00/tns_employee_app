@@ -53,6 +53,33 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
               // Show a loading spinner when the tasks are being loaded
               return Center(child: OverlayLoader());
             } else if (state is ActivityLoadedState) {
+              final filteredTasks = state.tasks.where((task) {
+                print('Selected 1: $selectedSection');
+                if (selectedSection == 'All') {
+                  return true;
+                } else {
+                  print('Selected: $selectedSection');
+                  String Status = 'N/A';
+                  if (task.status == 'pending') {
+                    Status = 'To Do';
+                  }
+
+                  // Change 'in_progress' to 'In Progress'
+                  if (task.status == 'in_progress') {
+                    Status = 'In Progress';
+                    print('Yay! You');
+                  }
+
+                  // Change 'complete' to 'Finished'
+                  if (task.status == 'complete') {
+                    Status = 'Finished';
+                  }
+
+                  print(Status);
+                  return selectedSection == Status;
+                }
+              }).toList();
+
               return SafeArea(
                 child: SingleChildScrollView(
                   child: Stack(
@@ -60,54 +87,7 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                       // First container (30% of the screen height)
                       Column(
                         children: [
-                          Container(
-                            height: screenHeight * 0.25,
-                            // First container occupies 30% of the screen height
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 30),
-                            color: AppColors.primary,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 10),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Challenges Awaiting',
-                                        style: TextStyle(
-                                            fontSize: 24.0,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.textWhite,
-                                            fontFamily: 'Roboto'),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        'Let\'s tackle your to-do list',
-                                        style: TextStyle(
-                                            fontSize: 14.0,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.textWhite,
-                                            fontFamily: 'Roboto'),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Spacer(),
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  padding: const EdgeInsets.only(bottom: 60.0),
-                                  child: Image.asset(
-                                    AppImages.TaskImage,
-                                    height: 100,
-                                    width: 100,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
+                          designContainer(screenHeight: screenHeight),
 
                           // Third container (Rest of the body content below Container 1)
                           Container(
@@ -118,236 +98,24 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                             child: Column(
                               children: [
                                 // Second container with task sections
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
-                                  child: Container(
-                                    //padding: const EdgeInsets.all(16.0),
-                                    width: screenWidth,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.backgroundWhite,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        SectionTile(
-                                          title: 'All',
-                                          count: state.taskCounts['All']
-                                                  ?.toString() ??
-                                              '0' /*blocBuilderForCount(
-
-                                            'All', AppColors.textBlack)*/
-                                          ,
-                                          selectedSection: selectedSection,
-                                          onTap: (section) {
-                                            setState(() {
-                                              selectedSection = section;
-                                            });
-                                          },
-                                        ),
-                                        SectionTile(
-                                          title: 'In Progress',
-                                          count: state.taskCounts['In Progress']
-                                                  ?.toString() ??
-                                              '0' /*blocBuilderForCount(
-                                            'In Progress', AppColors.textBlack)*/
-                                          ,
-                                          selectedSection: selectedSection,
-                                          onTap: (section) {
-                                            setState(() {
-                                              selectedSection = section;
-                                            });
-                                          },
-                                        ),
-                                        SectionTile(
-                                          title: 'Finished',
-                                          count: state.taskCounts['Finished']
-                                                  ?.toString() ??
-                                              '0' /*blocBuilderForCount(
-                                            'Finish', AppColors.textBlack)*/
-                                          ,
-                                          selectedSection: selectedSection,
-                                          onTap: (section) {
-                                            setState(() {
-                                              selectedSection = section;
-                                            });
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                selectionBar(screenWidth, state),
                                 SizedBox(
                                   height: 20,
                                 ),
-                                ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: state.tasks.where((task) {
-                                    // Filter tasks based on selectedSection
-                                    if (selectedSection == 'All') {
-                                      return true; // Show all tasks
-                                    } else {
-                                      print('Tasks selected: ${task.status}');
-                                      print('Selected: $selectedSection');
-                                      String Status = 'N/A';
-                                      if (task.status == 'pending') {
-                                          Status = 'To Do';
-                                      }
-
-                                      // Change 'in_progress' to 'In Progress'
-                                      if (task.status == 'in_progress') {
-                                          Status = 'In Progress';
-                                          print('Yay! You');
-                                      }
-
-                                      // Change 'complete' to 'Finished'
-                                      if (task.status == 'complete') {
-                                          Status = 'Finished';
-                                      }
-
-                                      print(Status);
-                                      return Status ==
-                                          selectedSection; // Show tasks with matching progress
-                                    }
-                                  }).length,
-                                  itemBuilder: (context, index) {
-                                    // Get the task at the current index
-                                    final taskComment = state.tasks[index];
-
-                                    // Calculate the number of comments for this specific task
-                                    final commentCount = (taskComment.comment?.isNotEmpty ?? false)
-                                        ? taskComment.comment!.split(',').length
-                                        : 0; // If comment is empty, count is 0
-
-                                    // Print the comment count for the specific task
-                                    print('Task: ${taskComment.title}, Comment Count: $commentCount');
-
-
-
-                                    // Create the filtered list of tasks
-                                    final filteredTasks = state.tasks.where((task) {
-                                      print('Selected 1: $selectedSection');
-                                      if (selectedSection == 'All') {
-                                        return true;
-                                      } else {
-                                        print('Selected: $selectedSection');
-                                        String Status = 'N/A';
-                                        if (task.status == 'pending') {
-                                            Status = 'To Do';
-                                        }
-
-                                        // Change 'in_progress' to 'In Progress'
-                                        if (task.status == 'in_progress') {
-                                            Status = 'In Progress';
-                                            print('Yay! You');
-                                        }
-
-                                        // Change 'complete' to 'Finished'
-                                        if (task.status == 'complete') {
-                                            Status = 'Finished';
-                                        }
-
-                                        print(Status);
-                                        return selectedSection == Status;
-                                      }
-                                    }).toList();
-
-                                    final task = filteredTasks[index];
-
-                                    String Status = 'N/A';
-                                    if (task.status == 'pending') {
-                                      Status = 'To Do';
-                                    }
-
-                                    // Change 'in_progress' to 'In Progress'
-                                    if (task.status == 'in_progress') {
-                                      Status = 'In Progress';
-                                    }
-
-                                    // Change 'complete' to 'Finished'
-                                    if (task.status == 'complete') {
-                                      Status = 'Finished';
-                                    }
-
-
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          // Navigate to the new page and pass task data
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => TaskDetailPage(tasks: filteredTasks, initialIndex: index,),
-                                            ),
-                                          );
-                                        },
-                                        child: TaskCard(
-                                          taskHeader: task.title ?? 'N/A',
-                                          date: task.startDate ?? 'N/A',
-                                          priority: task.priority ?? 'N/A',
-                                          progress: Status ?? 'N/A',
-                                                                             /*   progression: task.progression,*/
-                                          images: task.assignedUsers != null
-                                              ? task.assignedUsers!.map((user) => user.profilePhotoPath ?? 'Unknown').toList()
-                                              : [],
-                                          commentCount: commentCount,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                /*  BlocBuilder<TaskBloc, TaskState>(
-                                  builder: (context, state) {
-                                    if (state is TaskLoadingState) {
-                                      // Show a loading spinner when the tasks are being loaded
-                                      return Center(
-                                          child: CircularProgressIndicator());
-                                    } else if (state is TaskLoadedState) {
-                                      // Display the list of tasks when they are loaded
-                                      return ListView.builder(
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemCount: state.tasks.length,
-                                        itemBuilder: (context, index) {
-                                          final task = state.tasks[index];
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 16.0),
-                                            child: TaskCard(
-                                              taskHeader: task.taskHeader,
-                                              date: task.date,
-                                              priority: task.priority,
-                                              progress: task.progress,
-                                              progression: task.progression,
-                                              images: task.images,
-                                              commentCount: task.commentCount,
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    } else if (state is TaskErrorState) {
-                                      // Show an error message if there's an error while fetching tasks
-                                      return Center(
-                                        child:
-                                            Text('Error: ${state.errorMessage}'),
-                                      );
-                                    } else {
-                                      // Default state (TaskInitialState), when no data has been loaded yet
-                                      return Center(
+                                filteredTasks.isEmpty
+                                    ? Padding(
+                                        padding: EdgeInsets.only(top: 50.0),
+                                        // Add padding if no tasks
+                                        child: Center(
                                           child: Text(
-                                        'No tasks available.',
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.textBlack,
-                                            fontFamily: 'Roboto'),
-                                      ));
-                                    }
-                                  },
-                                ),*/
+                                            'No activity available',
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      )
+                                    : listContainer(filteredTasks, state),
                                 SizedBox(
                                   height: 20,
                                 )
@@ -527,6 +295,162 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
     );
   }
 
+  ListView listContainer(
+      List<ActivityEntity> filteredTasks, ActivityLoadedState state) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: filteredTasks.length,
+      itemBuilder: (context, index) {
+        // Get the task at the current index
+        final taskComment = state.tasks[index];
+
+        // Calculate the number of comments for this specific task
+        final commentCount = (taskComment.comment?.isNotEmpty ?? false)
+            ? taskComment.comment!.split(',').length
+            : 0; // If comment is empty, count is 0
+
+        // Print the comment count for the specific task
+        print('Task: ${taskComment.title}, Comment Count: $commentCount');
+
+        // Create the filtered list of tasks
+        final filteredTasks = state.tasks.where((task) {
+          print('Selected 1: $selectedSection');
+          if (selectedSection == 'All') {
+            return true;
+          } else {
+            print('Selected: $selectedSection');
+            String Status = 'N/A';
+            if (task.status == 'pending') {
+              Status = 'To Do';
+            }
+
+            // Change 'in_progress' to 'In Progress'
+            if (task.status == 'in_progress') {
+              Status = 'In Progress';
+              print('Yay! You');
+            }
+
+            // Change 'complete' to 'Finished'
+            if (task.status == 'complete') {
+              Status = 'Finished';
+            }
+
+            print(Status);
+            return selectedSection == Status;
+          }
+        }).toList();
+
+        final task = filteredTasks[index];
+
+        String Status = 'N/A';
+        if (task.status == 'pending') {
+          Status = 'To Do';
+        }
+
+        // Change 'in_progress' to 'In Progress'
+        if (task.status == 'in_progress') {
+          Status = 'In Progress';
+        }
+
+        // Change 'complete' to 'Finished'
+        if (task.status == 'complete') {
+          Status = 'Finished';
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: GestureDetector(
+            onTap: () {
+              // Navigate to the new page and pass task data
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TaskDetailPage(
+                    tasks: filteredTasks,
+                    initialIndex: index,
+                  ),
+                ),
+              );
+            },
+            child: TaskCard(
+              taskHeader: task.title ?? 'N/A',
+              date: task.startDate ?? 'N/A',
+              priority: task.priority ?? 'N/A',
+              progress: Status ?? 'N/A',
+              /*   progression: task.progression,*/
+              images: task.assignedUsers != null
+                  ? task.assignedUsers!
+                      .map((user) => user.profilePhotoPath ?? 'Unknown')
+                      .toList()
+                  : [],
+              commentCount: commentCount,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Padding selectionBar(double screenWidth, ActivityLoadedState state) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        //padding: const EdgeInsets.all(16.0),
+        width: screenWidth,
+        decoration: BoxDecoration(
+          color: AppColors.backgroundWhite,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SectionTile(
+              title: 'All',
+              count: state.taskCounts['All']?.toString() ??
+                  '0' /*blocBuilderForCount(
+
+                                          'All', AppColors.textBlack)*/
+              ,
+              selectedSection: selectedSection,
+              onTap: (section) {
+                setState(() {
+                  selectedSection = section;
+                });
+              },
+            ),
+            SectionTile(
+              title: 'In Progress',
+              count: state.taskCounts['In Progress']?.toString() ??
+                  '0' /*blocBuilderForCount(
+                                          'In Progress', AppColors.textBlack)*/
+              ,
+              selectedSection: selectedSection,
+              onTap: (section) {
+                setState(() {
+                  selectedSection = section;
+                });
+              },
+            ),
+            SectionTile(
+              title: 'Finished',
+              count: state.taskCounts['Finished']?.toString() ??
+                  '0' /*blocBuilderForCount(
+                                          'Finish', AppColors.textBlack)*/
+              ,
+              selectedSection: selectedSection,
+              onTap: (section) {
+                setState(() {
+                  selectedSection = section;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget blocBuilderForCount(String section, Color? color) {
     return BlocBuilder<ActivityBloc, ActivityState>(
       builder: (context, state) {
@@ -571,6 +495,66 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
           ); // Default fallback value
         }
       },
+    );
+  }
+}
+
+class designContainer extends StatelessWidget {
+  const designContainer({
+    super.key,
+    required this.screenHeight,
+  });
+
+  final double screenHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: screenHeight * 0.25,
+      // First container occupies 30% of the screen height
+      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 30),
+      color: AppColors.primary,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Challenges Awaiting',
+                  style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textWhite,
+                      fontFamily: 'Roboto'),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Let\'s tackle your to-do list',
+                  style: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textWhite,
+                      fontFamily: 'Roboto'),
+                ),
+              ],
+            ),
+          ),
+          Spacer(),
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.only(bottom: 60.0),
+            child: Image.asset(
+              AppImages.TaskImage,
+              height: 100,
+              width: 100,
+            ),
+          )
+        ],
+      ),
     );
   }
 }
