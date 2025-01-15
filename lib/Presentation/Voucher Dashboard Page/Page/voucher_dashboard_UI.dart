@@ -17,6 +17,7 @@ import '../Bloc/voucher_bloc.dart';
 import '../Widgets/section_tile.dart';
 import '../Widgets/voucher_container.dart';
 import '../Widgets/voucher_container_card.dart';
+import 'voucher_page_details.dart';
 
 class VoucherDashboard extends StatefulWidget {
   const VoucherDashboard({super.key});
@@ -299,12 +300,12 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
               child: GestureDetector(
                 onTap: () {
                   // Navigate to the detailed page (replace with your detail page)
-                  /*   Navigator.push(
+                     Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => VoucherDetailPage(voucher: voucher),
+                  builder: (context) => VoucherDetailPage(vouchers: filteredVouchers, initialIndex: index,),
                 ),
-              );*/
+              );
                 },
                 child: VoucherContainers(
                   submitDate: createdDate,

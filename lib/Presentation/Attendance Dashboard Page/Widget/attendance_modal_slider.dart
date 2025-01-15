@@ -272,7 +272,7 @@ class _BottomSliderState extends State<BottomSlider>
                               ),
                             ),
                           ),*/
-                            const SizedBox(height: 75.0),
+                            const SizedBox(height: 50.0),
                             Center(
                                 child: Text(
                               'Check In Time',
@@ -684,7 +684,7 @@ class _BottomSliderState extends State<BottomSlider>
 
               // Overlay 3 (Profile Icon Container)
               Positioned(
-                left: screenWidth / 2 - 75, // Centering overlay 3
+                left: screenWidth / 2 - 65, // Centering overlay 3
                 bottom: overlay3Height,
                 child: Material(
                   elevation: 10.0,
@@ -694,8 +694,8 @@ class _BottomSliderState extends State<BottomSlider>
                   shadowColor: Colors.black.withOpacity(0.5),
                   // Optional shadow color
                   child: Container(
-                    height: 150,
-                    width: 150, // Making it square
+                    height: 130,
+                    width: 130, // Making it square
                     decoration: BoxDecoration(
                       color: AppColors.primary, // Example color
                       borderRadius: BorderRadius.circular(

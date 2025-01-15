@@ -115,7 +115,7 @@ class _AttendanceDashboardState extends State<AttendanceDashboard> {
     return Container(
       width: screenWidth,
       color: AppColors.containerBackgroundGrey300,
-      padding: EdgeInsets.only(top: screenHeight * 0.09 + 50),
+      padding: EdgeInsets.only(top: screenHeight * 0.09 + 70),
       child: Builder(
         builder: (context) {
           final attendanceList = (BlocProvider.of<AttendanceBloc>(context).state
@@ -171,7 +171,7 @@ class _AttendanceDashboardState extends State<AttendanceDashboard> {
       left: 0,
       right: 0,
       child: Container(
-        height: screenHeight * 0.19 + 50,
+        height: screenHeight * 0.19 + 70,
         // Height of Container 2 (should cover part of Container 1)
         margin: EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
@@ -454,7 +454,7 @@ class _AttendanceDashboardState extends State<AttendanceDashboard> {
                       backgroundColor: AppColors.primary,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 24, vertical: 12),
-                      fixedSize: Size(screenWidth * 0.85, 50),
+                      fixedSize: Size(screenWidth * 0.85, 70),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),

@@ -5,64 +5,45 @@ import '../../../Common/Widgets/appbar_model.dart';
 import '../../../Common/Widgets/bottom_navigation_bar.dart';
 import '../../../Core/Config/Assets/app_images.dart';
 import '../../../Core/Config/Theme/app_colors.dart';
-import '../../../Domain/Entities/leave_entities.dart';
+import '../../../Domain/Entities/voucher_entites.dart';
 
-class LeaveDetailPage extends StatefulWidget {
-  List<LeaveBodyEntity> leaves;
+
+
+class VoucherDetailPage extends StatefulWidget {
+  List<VoucherEntity> vouchers;
   int initialIndex;
 
-  LeaveDetailPage({required this.leaves, required this.initialIndex});
+  VoucherDetailPage({required this.vouchers, required this.initialIndex});
 
   @override
-  State<LeaveDetailPage> createState() => _LeaveDetailPageState();
+  State<VoucherDetailPage> createState() => _VoucherDetailPageState();
 }
 
-class _LeaveDetailPageState extends State<LeaveDetailPage> {
-  String? _formatDate(String? date) {
-    try {
-      print(date);
-
-      // First try parsing the date as ISO 8601 (yyyy-MM-dd)
-      DateTime parsedDate =
-          DateTime.parse(date!); // yyyy-MM-dd or yyyy-MM-ddTHH:mm:ss format
-      return DateFormat('dd MMM yyyy').format(parsedDate); // Format to "MMM dd"
-    } catch (e) {
-      // If that fails, try parsing the date with custom format (MM-dd-yyyy)
-      try {
-        DateTime parsedDate = DateFormat('dd-MM-yyyy').parse(date!);
-        return DateFormat('dd MMM yyyy')
-            .format(parsedDate); // Format to "MMM dd"
-      } catch (e) {
-        // If both parsing attempts fail, return the original string
-        return date;
-      }
-    }
-  }
-
-  String convertLeaveTypeToName(String leaveType) {
-    switch (leaveType.toLowerCase()) {
-      case 'casual_leave':
-        return 'Casual';
-      case 'sick_leave':
-        return 'Sick';
-      case 'medical_leave':
-        return 'Medical';
-      default:
-        return 'Unknown';
-    }
-  }
-
-
-  List<LeaveBodyEntity> leaveList = [
-    // Add your tasks here
-  ];
+class _VoucherDetailPageState extends State<VoucherDetailPage> {
   int currentIndex = 0;
 
-  String? startdate;
-  String? enddate;
-  String? visibleName;
-  int? tappedIndex;
-  String? showName;
+  String? _formatDate(dynamic date) {
+    try {
+      DateTime parsedDate = DateTime.parse(date.toString());
+      return DateFormat('dd MMM yyyy').format(parsedDate);
+    } catch (e) {
+      return date?.toString();
+    }
+  }
+
+  String getDisplayStatus(String status) {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return 'Under Review'; // User-friendly name for 'pending'
+      case 'approved':
+        return 'Approved'; // User-friendly name for 'approved'
+      case 'rejected':
+        return 'Declined'; // User-friendly name for 'rejected'
+      default:
+        return 'Unknown Status'; // Default case for unexpected values
+    }
+  }
+
 
   @override
   void initState() {
@@ -75,31 +56,18 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    print(widget.leaves.length);
+    print(widget.vouchers.length);
 
-    final leave = widget.leaves[currentIndex];
+    final voucher = widget.vouchers[currentIndex];
 
-    startdate = _formatDate(leave.startDate);
-    enddate = _formatDate(leave.endDate);
-
-    String leaveTypeName = convertLeaveTypeToName(leave.leaveType);
-
-    String Status = 'N/A';
-    if (leave.status == 'pending') {
-      Status = 'Pending';
-    }
-
-    if (leave.status == 'approved') {
-      Status = 'Approved';
-    }
-
-    if (leave.status == 'rejected') {
-      Status = 'Rejected';
-    }
+    String? formattedDate = _formatDate(voucher.date);
+    String? createdAt = _formatDate(voucher.createdAt);
+    String? updatedAt = _formatDate(voucher.updatedAt);
+    String displayStatus = getDisplayStatus(voucher.status);
 
     return Scaffold(
       appBar: AppBarModel(
-        title: 'Leave Details',
+        title: 'Voucher Details',
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -115,63 +83,56 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      AppImages.AttendanceConatinerIcon,
-                      width: 20,
-                      height: 20,
-                      fit: BoxFit.cover,
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                        child: textSize16Darker('${leaveTypeName ?? 'N/A'} Leave')),
-                  ],
-                ),
-                SizedBox(height: 20),
-                textSize16Darker('Start Date'),
-                textSize14Lighter('${startdate ?? 'N/A'}'),
+                textSize16Darker('Voucher ID'),
+                textSize14Lighter('${voucher.id}'),
                 SizedBox(height: 10),
-                textSize16Darker('End Date'),
-                textSize14Lighter('${enddate ?? 'N/A'}'),
+                textSize16Darker('Date'),
+                textSize14Lighter('${formattedDate ?? 'N/A'}'),
                 SizedBox(height: 10),
-                textSize16Darker('Total Days'),
-                textSize14Lighter('${leave.totalDay ?? 'N/A'} Days'),
+                textSize16Darker('Project'),
+                textSize14Lighter('${voucher.costCenterId ?? 'N/A'}'),
                 SizedBox(height: 10),
-                textSize16Darker('Reason'),
-                textSize14Lighter('${leave.reason ?? 'N/A'}'),
+                textSize16Darker('Payee Type'),
+                textSize14Lighter('${voucher.payeeType ?? 'N/A'}'),
                 SizedBox(height: 10),
-                textSize16Darker('Responsible person while in leave'),
-                textSize14Lighter('${leave.responsiblePersonId ?? 'N/A'}'),
+                textSize16Darker('Payee Other Name'),
+                textSize14Lighter('${voucher.payeeOthersName ?? 'N/A'}'),
                 SizedBox(height: 10),
-                textSize16Darker('leave Submitted Date'),
-                textSize14Lighter('${leave.createdAt ?? 'N/A'}'),
+                textSize16Darker('Customer ID'),
+                textSize14Lighter('${voucher.customerId ?? 'N/A'}'),
+                SizedBox(height: 10),
+                textSize16Darker('Supplier ID'),
+                textSize14Lighter('${voucher.supplierId ?? 'N/A'}'),
+                SizedBox(height: 10),
+                textSize16Darker('Paid By ID'),
+                textSize14Lighter('${voucher.paidById ?? 'N/A'}'),
+                SizedBox(height: 10),
+                textSize16Darker('Description'),
+                textSize14Lighter('${voucher.description ?? 'N/A'}'),
+                SizedBox(height: 10),
+                textSize16Darker('Total Amount'),
+                textSize14Lighter('${voucher.totalAmount ?? 'N/A'} TK'),
+                SizedBox(height: 10),
+                textSize16Darker('Purchase ID'),
+                textSize14Lighter('${voucher.purchaseId ?? 'N/A'}'),
+                SizedBox(height: 10),
+                textSize16Darker('Sale ID'),
+                textSize14Lighter('${voucher.saleId ?? 'N/A'}'),
+                SizedBox(height: 10),
+                textSize16Darker('Attachment'),
+                textSize14Lighter('${voucher.attachment ?? 'N/A'}'),
+                SizedBox(height: 10),
+                textSize16Darker('Approver'),
+                textSize14Lighter('${voucher.approverId ?? 'N/A'}'),
                 SizedBox(height: 10),
                 textSize16Darker('Status'),
-                textSize14Lighter('${Status ?? 'N/A'}'),
+                textSize14Lighter(displayStatus),
                 SizedBox(height: 10),
-                textSize16Darker('Approved by'),
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 15,
-                      backgroundImage: leave.approverPhoto == null
-                          ? Image.asset(AppImages.HRImage)
-                              .image // Show default image if the URL is empty
-                          : Image.network(
-                              leave.approverPhoto!,
-                              errorBuilder: (context, error, stackTrace) {
-                                print('Error loading image');
-                                // Return default image if the URL fails to load
-                                return Image.asset(AppImages.HRImage);
-                              },
-                            ).image,
-                    ),
-                    SizedBox(width: 8),
-                    textSize14Lighter('${leave.approverId ?? 'N/A'}'),
-                  ],
-                ),
+                textSize16Darker('Created At'),
+                textSize14Lighter('${createdAt ?? 'N/A'}'),
+                SizedBox(height: 10),
+                textSize16Darker('Updated At'),
+                textSize14Lighter('${updatedAt ?? 'N/A'}'),
                 SizedBox(height: 10),
               ],
             ),
@@ -197,10 +158,10 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                     ElevatedButton(
                       onPressed: currentIndex > 0
                           ? () {
-                              setState(() {
-                                currentIndex--;
-                              });
-                            }
+                        setState(() {
+                          currentIndex--;
+                        });
+                      }
                           : null, // Disable the button if at the first task
                       style: ElevatedButton.styleFrom(
                         backgroundColor: currentIndex > 0
@@ -215,7 +176,7 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                         ),
                       ),
                       child: const Text(
-                        'Previous', // Change the text to "Previous"
+                        'Previous Voucher', // Change the text to "Previous"
                         style: TextStyle(
                           fontFamily: 'Roboto',
                           fontSize: 14.0,
@@ -226,15 +187,15 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                     ),
                     Spacer(),
                     ElevatedButton(
-                      onPressed: currentIndex < widget.leaves.length - 1
+                      onPressed: currentIndex < widget.vouchers.length - 1
                           ? () {
-                              setState(() {
-                                currentIndex++;
-                              });
-                            }
+                        setState(() {
+                          currentIndex++;
+                        });
+                      }
                           : null, // Disable the button if at the last task
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: currentIndex < widget.leaves.length - 1
+                        backgroundColor: currentIndex < widget.vouchers.length - 1
                             ? AppColors.primary
                             : AppColors.textGrey,
                         // Grey out the button if no next task
@@ -246,7 +207,7 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                         ),
                       ),
                       child: const Text(
-                        'Next',
+                        'Next Voucher',
                         style: TextStyle(
                           fontFamily: 'Roboto',
                           fontSize: 14.0,

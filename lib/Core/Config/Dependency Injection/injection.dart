@@ -14,6 +14,7 @@ import '../../../Common/Helper/local_database_helper.dart';
 import '../../../Data/Repositories/activity_form_repositories_impl.dart';
 import '../../../Data/Repositories/attendance_form_repositories_impl.dart';
 import '../../../Data/Repositories/attendance_repositories_impl.dart';
+import '../../../Data/Repositories/dashboard_repositories_impl.dart';
 import '../../../Data/Repositories/employee_repositories_impl.dart';
 import '../../../Data/Repositories/head_of_accounts_repositories_impl.dart';
 import '../../../Data/Repositories/leave_form_repositories_impl.dart';
@@ -27,6 +28,7 @@ import '../../../Data/Repositories/voucher_repositories_impl.dart';
 import '../../../Data/Sources/activity_form_remote_source.dart';
 import '../../../Data/Sources/attendance_form_remote_source.dart';
 import '../../../Data/Sources/attendance_remote_source.dart';
+import '../../../Data/Sources/dashboard_remote_source.dart';
 import '../../../Data/Sources/employee_remote_source.dart';
 import '../../../Data/Sources/head_of_accounts_remote_source.dart';
 import '../../../Data/Sources/leave_form_remote_source.dart';
@@ -38,6 +40,7 @@ import '../../../Data/Sources/voucher_remote_source.dart';
 import '../../../Domain/Repositories/activity_form_repositories.dart';
 import '../../../Domain/Repositories/attendance_form_repositories.dart';
 import '../../../Domain/Repositories/attendance_repositories.dart';
+import '../../../Domain/Repositories/dashboard_repositories.dart';
 import '../../../Domain/Repositories/employee_repositories.dart';
 import '../../../Domain/Repositories/head_of_accounts_repositories.dart';
 import '../../../Domain/Repositories/leave_form_repositories.dart';
@@ -52,6 +55,7 @@ import '../../../Domain/Repositories/voucher_repositories.dart';
 import '../../../Domain/Usecases/activity_form_usercase.dart';
 import '../../../Domain/Usecases/attendance_form_usecase.dart';
 import '../../../Domain/Usecases/attendance_usecase.dart';
+import '../../../Domain/Usecases/dashboard_usecase.dart';
 import '../../../Domain/Usecases/employee_usecase.dart';
 import '../../../Domain/Usecases/head_of_accounts_usecase.dart';
 import '../../../Domain/Usecases/leave_form_usecase.dart';
@@ -64,6 +68,7 @@ import '../../../Domain/Usecases/voucher_form_usecase.dart';
 import '../../../Domain/Usecases/voucher_usecase.dart';
 import '../../../Presentation/Activity Creation Page/Bloc/activity_form_bloc.dart';
 import '../../../Presentation/Attendance Dashboard Page/Bloc/attendance_form_bloc.dart';
+import '../../../Presentation/Dashboard Page/Bloc/dashboard_bloc.dart';
 import '../../../Presentation/Leave Creation Page/Bloc/leave_form_bloc.dart';
 import '../../../Presentation/Leave Dashboard Page/Bloc/leave_bloc.dart';
 import '../../../Presentation/Voucher Creation Page/Bloc/headofaccounts_bloc.dart';
@@ -295,4 +300,25 @@ Future<void> init() async {
       () => VoucherRepositoryImpl(remoteDataSource: getIt()));
   getIt.registerLazySingleton(() => GetVouchers(repository: getIt()));
   getIt.registerFactory(() => VoucherBloc(getVouchers: getIt()));
+
+
+  //Dashboard
+  getIt.registerLazySingleton<DashboardRemoteSource>(
+        () => DashboardRemoteSourceImpl(client: getIt()),
+  );
+
+  // Repositories
+  getIt.registerLazySingleton<DashboardRepository>(
+        () => DashboardRepositoryImpl(remoteSource: getIt()),
+  );
+
+  // Use cases
+  getIt.registerLazySingleton(
+        () => GetDashboardDataUseCase(repository: getIt()),
+  );
+
+  // Bloc
+  getIt.registerFactory(
+        () => DashboardBloc(getDashboardDataUseCase: getIt()),
+  );
 }

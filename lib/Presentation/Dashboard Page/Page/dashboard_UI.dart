@@ -11,6 +11,7 @@ import '../../../Common/Bloc/profile_bloc.dart';
 import '../../../Common/Helper/dimmed_overlay.dart';
 import '../../../Common/Widgets/bottom_navigation_bar_with_swipe.dart';
 import '../../Profile Page/Page/profile_UI.dart';
+import '../Bloc/dashboard_bloc.dart';
 import '../Widget/leave_card.dart';
 import '../Widget/meeting_card.dart';
 import '../Widget/task_card.dart';
@@ -29,6 +30,7 @@ class _DashboardState extends State<Dashboard> {
     // Dispatch the event to fetch profile data
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProfileBloc>().add(FetchProfile());
+      context.read<DashboardBloc>().add(LoadDashboardDataEvent());
     });
   }
 
@@ -196,27 +198,53 @@ class _DashboardState extends State<Dashboard> {
                               child: Center(child: OverlayLoader()));
                         },
                       ),
-                      Container(
-                        padding: EdgeInsets.all(12),
-                        color: AppColors.containerBackgroundGrey300,
-                        child: Column(
-                          children: [
-                            MyWorkSummary(
-                                screenWidth: screenWidth,
-                                screenHeight: screenHeight),
-                            /* SizedBox(
+                      BlocListener<DashboardBloc, DashboardState>(
+                        listener: (context, state) {
+                          if (state is DashboardErrorState) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(state.message)),
+                            );
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(12),
+                          color: AppColors.containerBackgroundGrey300,
+                          child: Column(
+                            children: [
+                              MyWorkSummary(
+                                  screenWidth: screenWidth,
+                                  screenHeight: screenHeight),
+                              /* SizedBox(
                         height: 10,
                       ),
                       MeetingSection(),*/
-                            SizedBox(
-                              height: 10,
-                            ),
-                            ActivitySection(),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            LeaveSection(),
-                          ],
+                              SizedBox(
+                                height: 10,
+                              ),
+                              BlocBuilder<DashboardBloc, DashboardState>(
+                                builder: (context, state) {
+                                  if (state is DashboardLoadingState) {
+                                    return Center(
+                                        child: OverlayLoader());
+                                  } else if (state is DashboardLoadedState) {
+                                    return Column(
+                                      children: [
+                                        ActivitySection(),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        LeaveSection(),
+                                      ],
+                                    );
+                                  } else if (state is DashboardErrorState) {
+                                    return Center(
+                                        child: Text('Error: ${state.message}'));
+                                  }
+                                  return const Center(child: Text('No Data'));
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       )
                     ],

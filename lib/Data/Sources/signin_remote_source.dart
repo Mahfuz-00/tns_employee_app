@@ -34,8 +34,9 @@ class AuthenticationRemoteDataSource {
   Future<String> authenticate(String email, String password) async {
     // Simulate network delay
     await Future.delayed(const Duration(seconds: 2));
-
+    print('Authenticating...');
     try {
+      print('Authenticating...');
       final response = await http.post(
         Uri.parse('${AppURLS().Basepath}/api/login'),
         headers: {'Content-Type': 'application/json'},

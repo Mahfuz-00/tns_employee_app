@@ -78,7 +78,7 @@ class VoucherStatusTemplate extends StatelessWidget {
           Text(
             'TK. $number',
             style: TextStyle(
-              fontSize: 16.0,
+              fontSize: 10.0,
               fontWeight: FontWeight.w400,
               color: AppColors.textBlack,
               fontFamily: 'Roboto',

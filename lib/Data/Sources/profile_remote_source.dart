@@ -29,6 +29,8 @@ class ProfileRemoteSourceImpl implements ProfileRemoteSource {
       print('Token is not available.');
     }
 
+    print('Fetching profile');
+
     final response = await client.get(
       Uri.parse('${AppURLS().Basepath}/api/user/profile/'),
       headers: {

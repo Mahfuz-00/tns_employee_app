@@ -22,6 +22,7 @@ import 'Presentation/Activity Dashboard Page/Bloc/activity_bloc.dart';
 import 'Presentation/Activity Dashboard Page/Bloc/activity_event.dart';
 import 'Presentation/Attendance Dashboard Page/Bloc/attendance_bloc.dart';
 import 'Presentation/Attendance Dashboard Page/Bloc/attendance_form_bloc.dart';
+import 'Presentation/Dashboard Page/Bloc/dashboard_bloc.dart';
 import 'Presentation/Dashboard Page/Page/dashboard_UI.dart';
 import 'package:touch_and_solve_inventory_app/Core/Config/Dependency Injection/injection.dart'
     as di;
@@ -149,6 +150,9 @@ class MyApp extends StatelessWidget {
               ),
               BlocProvider(
                 create: (_) => getIt<VoucherBloc>()..add(FetchVouchersEvent()),
+              ),
+              BlocProvider(
+                create: (_) => getIt<DashboardBloc>()..add(LoadDashboardDataEvent()),
               ),
             ],
             child: snapshot.data!,

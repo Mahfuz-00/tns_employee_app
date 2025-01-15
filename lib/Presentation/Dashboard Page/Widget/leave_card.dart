@@ -179,7 +179,7 @@ class _LeaveCardState extends State<LeaveCard> {
                           style: TextStyle(
                             color: AppColors.textBlack,
                             fontWeight: FontWeight.w500,
-                            fontSize: 12,
+                            fontSize: 10,
                             fontFamily: 'Roboto',
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -215,7 +215,7 @@ class _LeaveCardState extends State<LeaveCard> {
                               style: TextStyle(
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                                fontSize: 10,
                                 fontFamily: 'Roboto',
                               ),
                             ),
@@ -227,7 +227,7 @@ class _LeaveCardState extends State<LeaveCard> {
                           style: TextStyle(
                             color: AppColors.textBlack,
                             fontWeight: FontWeight.w500,
-                            fontSize: 12,
+                            fontSize: 10,
                             fontFamily: 'Roboto',
                           ),
                           overflow: TextOverflow.ellipsis,
