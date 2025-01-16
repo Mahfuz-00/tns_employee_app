@@ -21,6 +21,7 @@ class LeaveBodyEntity {
   final String endDate;
   final int totalDay;
   final int? responsiblePersonId;
+  final String? responsiblePersonName;
   final String reason;
   final int? approverId;
   final String status;
@@ -37,6 +38,7 @@ class LeaveBodyEntity {
     required this.endDate,
     required this.totalDay,
     this.responsiblePersonId,
+    this.responsiblePersonName,
     required this.reason,
     this.approverId,
     required this.status,

@@ -60,6 +60,7 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
 
   String? startdate;
   String? enddate;
+  String? submittedDate;
   String? visibleName;
   int? tappedIndex;
   String? showName;
@@ -81,6 +82,7 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
 
     startdate = _formatDate(leave.startDate);
     enddate = _formatDate(leave.endDate);
+    submittedDate = _formatDate(leave.createdAt);
 
     String leaveTypeName = convertLeaveTypeToName(leave.leaveType);
 
@@ -143,10 +145,10 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
                 textSize14Lighter('${leave.reason ?? 'N/A'}'),
                 SizedBox(height: 10),
                 textSize16Darker('Responsible person while in leave'),
-                textSize14Lighter('${leave.responsiblePersonId ?? 'N/A'}'),
+                textSize14Lighter('${leave.responsiblePersonName ?? 'N/A'}'),
                 SizedBox(height: 10),
                 textSize16Darker('leave Submitted Date'),
-                textSize14Lighter('${leave.createdAt ?? 'N/A'}'),
+                textSize14Lighter('${submittedDate ?? 'N/A'}'),
                 SizedBox(height: 10),
                 textSize16Darker('Status'),
                 textSize14Lighter('${Status ?? 'N/A'}'),
@@ -262,7 +264,7 @@ class _LeaveDetailPageState extends State<LeaveDetailPage> {
             Expanded(
               child: BottomNavBar(
                 containerHeight: screenHeight * 0.08,
-                currentPage: 'Activity',
+                currentPage: '',
               ),
             ),
           ],

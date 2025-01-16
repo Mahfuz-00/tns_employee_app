@@ -158,7 +158,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 ),
                 SizedBox(height: 20),
                 textSize16Darker('Project'),
-                textSize14Lighter('${task.project ?? 'N/A'}'),
+                textSize14Lighter('${task.projectName ?? 'N/A'}'),
                 SizedBox(height: 10),
                 textSize16Darker('Start Date'),
                 textSize14Lighter('${startdate ?? 'N/A'}'),
@@ -328,7 +328,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             Expanded(
               child: BottomNavBar(
                 containerHeight: screenHeight * 0.08,
-                currentPage: 'Activity',
+                currentPage: '',
               ),
             ),
           ],

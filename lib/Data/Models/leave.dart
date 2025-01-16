@@ -5,9 +5,9 @@ class LeaveModel extends LeaveEntity {
     required String remainingDays,
     required List<LeaveRecordModel> leaveRecords,
   }) : super(
-    remainingDays: remainingDays,
-    leaveRecords: leaveRecords.map((e) => e.toEntity()).toList(),
-  );
+          remainingDays: remainingDays,
+          leaveRecords: leaveRecords.map((e) => e.toEntity()).toList(),
+        );
 
   // Factory constructor to create a LeaveModel from JSON
   factory LeaveModel.fromJson(Map<String, dynamic> json) {
@@ -28,7 +28,6 @@ class LeaveModel extends LeaveEntity {
   }
 }
 
-
 class LeaveRecordModel extends LeaveBodyEntity {
   LeaveRecordModel({
     required int id,
@@ -38,6 +37,7 @@ class LeaveRecordModel extends LeaveBodyEntity {
     required String endDate,
     required int totalDay,
     int? responsiblePersonId,
+    required String? responsiblePersonName,
     required String reason,
     int? approverId,
     required String status,
@@ -46,21 +46,22 @@ class LeaveRecordModel extends LeaveBodyEntity {
     String? name,
     String? approverPhoto,
   }) : super(
-    id: id,
-    userId: userId,
-    leaveType: leaveType,
-    startDate: startDate,
-    endDate: endDate,
-    totalDay: totalDay,
-    responsiblePersonId: responsiblePersonId,
-    reason: reason,
-    approverId: approverId,
-    status: status,
-    createdAt: createdAt,
-    updatedAt: updatedAt,
-    name: name,
-    approverPhoto: approverPhoto,
-  );
+          id: id,
+          userId: userId,
+          leaveType: leaveType,
+          startDate: startDate,
+          endDate: endDate,
+          totalDay: totalDay,
+          responsiblePersonId: responsiblePersonId,
+          responsiblePersonName: responsiblePersonName,
+          reason: reason,
+          approverId: approverId,
+          status: status,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
+          name: name,
+          approverPhoto: approverPhoto,
+        );
 
   factory LeaveRecordModel.fromJson(Map<String, dynamic> json) {
     return LeaveRecordModel(
@@ -71,12 +72,13 @@ class LeaveRecordModel extends LeaveBodyEntity {
       endDate: json['end_date'],
       totalDay: json['total_day'],
       responsiblePersonId: json['responsible_person_id'],
+      responsiblePersonName: json['responsible person name'],
       reason: json['reason'],
       approverId: json['approver_id'],
       status: json['status'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
-      name: json['name'],
+      name: json['approver name'],
       approverPhoto: json['approver_photo'],
     );
   }
@@ -90,6 +92,7 @@ class LeaveRecordModel extends LeaveBodyEntity {
       'end_date': endDate,
       'total_day': totalDay,
       'responsible_person_id': responsiblePersonId,
+      'responsible_person_name': responsiblePersonName,
       'reason': reason,
       'approver_id': approverId,
       'status': status,
@@ -110,6 +113,7 @@ class LeaveRecordModel extends LeaveBodyEntity {
       endDate: endDate,
       totalDay: totalDay,
       responsiblePersonId: responsiblePersonId,
+      responsiblePersonName: responsiblePersonName,
       reason: reason,
       approverId: approverId,
       status: status,
@@ -120,4 +124,3 @@ class LeaveRecordModel extends LeaveBodyEntity {
     );
   }
 }
-

@@ -2,7 +2,8 @@ class AttendanceRequest {
   final int id;
   final int userId;
   final String inTime;
-  final String costCenterId;
+  final String projectId;
+  final String projectName;
   final String description;
   final int supervisorUserId;
   final String status;
@@ -14,7 +15,8 @@ class AttendanceRequest {
     required this.id,
     required this.userId,
     required this.inTime,
-    required this.costCenterId,
+    required this.projectId,
+    required this.projectName,
     required this.description,
     required this.supervisorUserId,
     required this.status,

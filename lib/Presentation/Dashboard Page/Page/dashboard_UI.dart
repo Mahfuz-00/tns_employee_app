@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/bottom_navigation_bar.dart';
 import 'package:touch_and_solve_inventory_app/Common/Widgets/internet_connection_check.dart';
 import 'package:touch_and_solve_inventory_app/Core/Config/Assets/app_images.dart';
@@ -10,11 +11,14 @@ import 'package:touch_and_solve_inventory_app/Presentation/Dashboard%20Page/Widg
 import '../../../Common/Bloc/profile_bloc.dart';
 import '../../../Common/Helper/dimmed_overlay.dart';
 import '../../../Common/Widgets/bottom_navigation_bar_with_swipe.dart';
+import '../../Attendance Dashboard Page/Widget/attendance_container.dart';
 import '../../Profile Page/Page/profile_UI.dart';
 import '../Bloc/dashboard_bloc.dart';
+import '../Widget/attendance_card.dart';
 import '../Widget/leave_card.dart';
 import '../Widget/meeting_card.dart';
 import '../Widget/task_card.dart';
+import '../Widget/voucher_card.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -224,16 +228,68 @@ class _DashboardState extends State<Dashboard> {
                               BlocBuilder<DashboardBloc, DashboardState>(
                                 builder: (context, state) {
                                   if (state is DashboardLoadingState) {
-                                    return Center(
-                                        child: OverlayLoader());
+                                    return Center(child: OverlayLoader());
                                   } else if (state is DashboardLoadedState) {
                                     return Column(
                                       children: [
-                                        ActivitySection(),
+                                        ActivitySection(
+                                          title:
+                                              state.dashboardData?.title ?? '',
+                                          progress:
+                                              state.dashboardData?.status ?? '',
+                                          date: state.dashboardData?.endDate ??
+                                              '',
+                                        ),
                                         SizedBox(
                                           height: 10,
                                         ),
-                                        LeaveSection(),
+                                        LeaveSection(
+                                          availableLeave: state.dashboardData
+                                                  ?.availableLeave ??
+                                              '',
+                                          usedLeave:
+                                              state.dashboardData?.usedLeave ??
+                                                  '',
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        AttendanceSection(
+                                          inTime:
+                                              state.dashboardData?.inTime ?? '',
+                                          outTime:
+                                              state.dashboardData?.outTime ??
+                                                  '',
+                                          projectName: state.dashboardData
+                                                  ?.attendanceProject ??
+                                              '',
+                                          inDate: state.dashboardData
+                                                  ?.attendanceCreatedAt ??
+                                              '',
+                                          approvedBy:
+                                              state.dashboardData?.userName ??
+                                                  '',
+                                          approvedImage: state.dashboardData
+                                                  ?.userProfilePhotoUrl ??
+                                              '',
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        VoucherSection(
+                                          submittedDate: state.dashboardData
+                                                  ?.voucherCreatedAt ??
+                                              '',
+                                          expense: state.dashboardData
+                                                  ?.totalAmount ??
+                                              '',
+                                          approvedBy: state.dashboardData
+                                                  ?.voucherApproverName ??
+                                              '',
+                                          approvedDate: state.dashboardData
+                                                  ?.voucherUpdatedAt??
+                                              '',
+                                        )
                                       ],
                                     );
                                   } else if (state is DashboardErrorState) {
@@ -296,41 +352,122 @@ class _DashboardState extends State<Dashboard> {
   }
 }
 
-class LeaveSection extends StatelessWidget {
-  const LeaveSection({
+class AttendanceSection extends StatelessWidget {
+  final String inTime;
+  final String outTime;
+  final String projectName;
+  final String inDate;
+  final String approvedBy;
+  final String approvedImage;
+
+  const AttendanceSection({
     super.key,
+    required this.inTime,
+    required this.outTime,
+    required this.projectName,
+    required this.inDate,
+    required this.approvedBy,
+    required this.approvedImage,
   });
 
   @override
   Widget build(BuildContext context) {
     return CardsWidget(
+      header: 'Recent Attendance',
+      attendanceCard: AttendenceCard(
+        projectName: projectName,
+        location: 'Mirpur - 12',
+        duration: '00:00 Hours',
+        clockIn: inTime,
+        clockOut: outTime,
+        approvedby: approvedBy,
+        approvedDate: inDate,
+        approverImage: approvedImage, // or from data if dynamic
+      ),
+    );
+  }
+}
+
+class VoucherSection extends StatelessWidget {
+  final String submittedDate;
+  /*final String ProjectName;*/
+  final String expense;
+  final String approvedBy;
+  final String approvedDate;
+
+  const VoucherSection({
+    super.key,
+    required this.submittedDate,
+/*    required this.ProjectName,*/
+    required this.expense,
+    required this.approvedBy,
+    required this.approvedDate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CardsWidget(
+      header: 'Recent Voucher',
+      voucherCard: VoucherCard(
+        submitDate: submittedDate,
+        approvedBy: approvedBy,
+        approvalDate: approvedDate,
+      /*  project: ProjectName,*/
+        expense: expense,
+      ),
+    );
+  }
+}
+
+class LeaveSection extends StatelessWidget {
+  final String availableLeave;
+  final String usedLeave;
+
+  const LeaveSection({
+    super.key,
+    required this.availableLeave,
+    required this.usedLeave,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    print('Available Leave: ${availableLeave.toString()}');
+    print('Used Leave: ${usedLeave.toString()}');
+
+    return CardsWidget(
       header: 'Leave Balance',
-      subtitle: 'Period 1 Jan 2024 - 30 Dec 2024',
-      totalCount: 5,
+      totalCount: availableLeave,
       leaveCard: LeaveCard(
         leaveHeader: 'Emergency Sick Leave',
         Date: '2 Dec',
         Status: 'Review',
-        UsedLeave: '5',
-        AvailableLeave: '9',
+        UsedLeave: usedLeave,
+        AvailableLeave: availableLeave,
       ),
     );
   }
 }
 
 class ActivitySection extends StatelessWidget {
+  final String title;
+  final String progress;
+  final String date;
+
   const ActivitySection({
     super.key,
+    required this.title,
+    required this.progress,
+    required this.date,
   });
 
   @override
   Widget build(BuildContext context) {
     return CardsWidget(
-      header: 'Today\'s Task',
-      subtitle: 'The Tasks assigned to you for today',
-      totalCount: 5,
+      header: 'Recent Task',
+      subtitle: 'The Tasks assigned to you recently',
+      totalCount: '5',
       taskCard: TaskCard(
-        taskHeader: 'BCC 5 Apps Projects',
+        taskHeader: title,
         images: [
           AppImages.MeetingPerson1,
           AppImages.MeetingPerson2,
@@ -357,7 +494,7 @@ class MeetingSection extends StatelessWidget {
     return CardsWidget(
       header: 'Today\'s Meeting',
       subtitle: 'Your schedule for the day',
-      totalCount: 4,
+      totalCount: '4',
       meetingCard: MeetingCard(
         meetingHeader: 'General Meeting',
         subtitle2: '03:30 PM - 05:00 PM',

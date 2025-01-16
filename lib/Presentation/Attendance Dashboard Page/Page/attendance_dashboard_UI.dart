@@ -144,7 +144,7 @@ class _AttendanceDashboardState extends State<AttendanceDashboard> {
                 children: [
                   AttendenceContainers(
                     date: inDate,
-                    projectName: attendance.costCenterId,
+                    projectName: attendance.projectName,
                     location: 'Mirpur - 12',
                     duration: '00:00 Hours',
                     clockIn: inTime,

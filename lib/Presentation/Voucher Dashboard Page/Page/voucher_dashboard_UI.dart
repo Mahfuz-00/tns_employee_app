@@ -309,9 +309,9 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                 },
                 child: VoucherContainers(
                   submitDate: createdDate,
-                  approvedBy: voucher.approverId ?? 'N/A',
+                  approvedBy: voucher.approverName ?? 'N/A',
                   approvalDate: approvedDate,
-                  project: voucher.costCenterId ?? 'Unknown',
+                  project: voucher.ProjectName ?? 'Unknown',
                   expense: voucher.totalAmount ?? 'N/A',
                 ),
               ),

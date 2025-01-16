@@ -1,7 +1,8 @@
 class ActivityEntity {
   final int? id;
   final String? title;
-  final String? project;
+  final String? projectId;
+  final String? projectName;
   final String? startDate;
   final String? endDate;
   final String? estimateHours;
@@ -16,7 +17,8 @@ class ActivityEntity {
   ActivityEntity({
     this.id,
     this.title,
-    this.project,
+    this.projectId,
+    this.projectName,
     this.startDate,
     this.endDate,
     this.estimateHours,
@@ -33,7 +35,8 @@ class ActivityEntity {
     return ActivityEntity(
       id: json['id'] ?? 0,
       title: json['title'] ?? '',
-      project: json['project'] ?? '',
+      projectId: json['project'] ?? '',
+      projectName: json['project_name'] ?? '',
       startDate: json['start_date'] ?? '',
       endDate: json['end_date'] ?? '',
       estimateHours: json['estimate_hours'] ?? '',
@@ -53,7 +56,8 @@ class ActivityEntity {
     return {
       'id': id,
       'title': title,
-      'project': project,
+      'project': projectId,
+      'project_name': projectName,
       'start_date': startDate,
       'end_date': endDate,
       'estimate_hours': estimateHours,

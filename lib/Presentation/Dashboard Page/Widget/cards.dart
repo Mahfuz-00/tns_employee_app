@@ -9,23 +9,27 @@ import '../../../Core/Config/Assets/app_images.dart';
 // Class to hold the images, headers, and subtitles and pass them as input
 class CardsWidget extends StatelessWidget {
   final String header; // First header
-  final String subtitle; // First subtitle
-  final int totalCount;
+  final String? subtitle; // First subtitle
+  final String? totalCount;
 
   //final List<Map<String, dynamic>> secondCardData;
   final MeetingCard? meetingCard; // Nullable Meeting Card widget
   final TaskCard? taskCard; // Nullable Task Card widget
   final Widget? leaveCard; // Nullable Leave Card widget
+  final Widget? attendanceCard;
+  final Widget? voucherCard;
 
   // Constructor to accept images, headers, and subtitles as input
   CardsWidget({
     required this.header,
-    required this.subtitle,
+    this.subtitle,
     //required this.secondCardData,
-    required this.totalCount,
+    this.totalCount,
     this.meetingCard,
     this.taskCard,
     this.leaveCard,
+    this.attendanceCard,
+    this.voucherCard,
   });
 
   @override
@@ -60,37 +64,41 @@ class CardsWidget extends StatelessWidget {
                   SizedBox(
                     width: 8,
                   ),
-                  Container(
-                    height: 26,
-                    width: 26,
-                    decoration: BoxDecoration(
-                      color: AppColors.backgroundDarkGrey,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: Text(
-                        totalCount.toString(),
-                        // Replace with dynamic meeting count
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primary,
+                  if(totalCount != null) ...[
+                    Container(
+                      height: 26,
+                      width: 26,
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundDarkGrey,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                        child: Text(
+                          totalCount.toString(),
+                          // Replace with dynamic meeting count
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ],
               ),
               SizedBox(height: 4),
-              Text(
-                subtitle, // First Subtitle
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.textGrey,
-                    fontFamily: 'Roboto'),
-              ),
-              SizedBox(height: 5),
+              if(subtitle != null) ...[
+                Text(
+                  subtitle!, // First Subtitle
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.textGrey,
+                      fontFamily: 'Roboto'),
+                ),
+                SizedBox(height: 5),
+              ],
 
               // Conditionally render the relevant card
               if (meetingCard != null) meetingCard!,
@@ -99,6 +107,10 @@ class CardsWidget extends StatelessWidget {
               // Render Task Card if provided
               if (leaveCard != null) leaveCard!,
               // Render Leave Card if provided
+              if (attendanceCard!= null) attendanceCard!,
+              // Render Attendance Card if provided
+              if (voucherCard!= null) voucherCard!,
+              // Render Voucher Card if provided
             ],
           ),
         ),

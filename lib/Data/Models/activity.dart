@@ -5,7 +5,8 @@ class ActivityModel extends ActivityEntity {
   ActivityModel({
     int? id,
     String? title,
-    String? project,
+    String? projectId,
+    String? projectName,
     String? startDate,
     String? endDate,
     String? estimateHours,
@@ -20,7 +21,8 @@ class ActivityModel extends ActivityEntity {
   }) : super(
     id: id,
     title: title,
-    project: project,
+    projectId: projectId,
+    projectName: projectName,
     startDate: startDate,
     endDate: endDate,
     estimateHours: estimateHours,
@@ -37,7 +39,8 @@ class ActivityModel extends ActivityEntity {
     return ActivityModel(
       id: entity.id,
       title: entity.title,
-      project: entity.project,
+      projectId: entity.projectId,
+      projectName: entity.projectName,
       startDate: entity.startDate,
       endDate: entity.endDate,
       estimateHours: entity.estimateHours,
@@ -58,7 +61,8 @@ class ActivityModel extends ActivityEntity {
     return ActivityModel(
       id: json['id'] ?? 0,
       title: json['title'] ?? '',
-      project: json['project'] ?? '',
+      projectId: json['project'] ?? '',
+      projectName: json['project_name'] ?? '',
       startDate: json['start_date'] ?? '',
       endDate: json['end_date'] ?? '',
       estimateHours: json['estimate_hours'] ?? '',
@@ -78,7 +82,8 @@ class ActivityModel extends ActivityEntity {
     return {
       'id': id,
       'title': title,
-      'project': project,
+      'project': projectId,
+      'project_name': projectName,
       'start_date': startDate,
       'end_date': endDate,
       'estimate_hours': estimateHours,
@@ -96,7 +101,8 @@ class ActivityModel extends ActivityEntity {
     return ActivityEntity(
       id: id,
       title: title,
-      project: project,
+      projectId: projectId,
+      projectName: projectName,
       startDate: startDate,
       endDate: endDate,
       estimateHours: estimateHours,

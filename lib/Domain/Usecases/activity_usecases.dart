@@ -38,7 +38,7 @@ class ActivityUseCase {
         return ActivityEntity(
           id: task.id,
           title: task.title ?? 'Untitled Task',  // Replace null title with a default string
-          project: task.project,
+          projectId: task.projectId,
           startDate: task.startDate,
           endDate: task.endDate,
           estimateHours: task.estimateHours,

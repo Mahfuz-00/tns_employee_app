@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../../Core/Config/Constants/app_urls.dart';
+import '../../Domain/Entities/dashboard_entities.dart';
 import '../Models/dashboard.dart';
 
 abstract class DashboardRemoteSource {
-  Future<DashboardModel> fetchDashboardData();
+  Future<DashboardEntity> fetchDashboardData();
 }
 
 class DashboardRemoteSourceImpl implements DashboardRemoteSource {
@@ -15,7 +16,7 @@ class DashboardRemoteSourceImpl implements DashboardRemoteSource {
   DashboardRemoteSourceImpl({required this.client});
 
   @override
-  Future<DashboardModel> fetchDashboardData() async {
+  Future<DashboardEntity> fetchDashboardData() async {
     AppURLS appURLs = AppURLS();
 
     // Fetch the token using the AppURLS class
@@ -43,8 +44,67 @@ class DashboardRemoteSourceImpl implements DashboardRemoteSource {
 
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
-      return DashboardModel.fromJson(data);
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+
+      // Print each section of the response separately
+      // Print 'message' and its type
+      print('Message: ${responseBody['message']}');
+      print('Message Type: ${responseBody['message'].runtimeType}'); // Type of 'message'
+
+      // Iterate over 'activities' and print each data item with its type
+      final activities = responseBody['data']['activities'];
+      print('Activities:');
+      if (activities is Map<String, dynamic>) {
+        activities.forEach((key, value) {
+          print('$key: $value');
+          print('$key Type: ${value.runtimeType}');
+        });
+      } else {
+        print('Activities is not a Map, type: ${activities.runtimeType}');
+      }
+
+      // Iterate over 'AvailableLeave' and print each data item with its type
+      final availableLeave = responseBody['data']['AvailableLeave'];
+      print('Available Leave: ${availableLeave}');
+      print('Available Leave Type: ${availableLeave.runtimeType}');
+
+      // Iterate over 'UsedLeave' and print each data item with its type
+      final usedLeave = responseBody['data']['UsedLeave'];
+      print('Used Leave: ${usedLeave}');
+      print('Used Leave Type: ${usedLeave.runtimeType}');
+
+      // Iterate over 'attendance' and print each data item with its type
+      final attendance = responseBody['data']['attendance'];
+      print('Attendance:');
+      if (attendance is Map<String, dynamic>) {
+        attendance.forEach((key, value) {
+          print('$key: $value');
+          print('$key Type: ${value.runtimeType}');
+        });
+      } else {
+        print('Attendances is not a Map, type: ${attendance.runtimeType}');
+      }
+
+      // Iterate over 'voucher' and print each data item with its type
+      final voucher = responseBody['data']['voucher'];
+      print('Voucher:');
+      if (voucher is Map<String, dynamic>) {
+        voucher.forEach((key, value) {
+          print('$key: $value');
+          print('$key Type: ${value.runtimeType}');
+        });
+      } else {
+        print('Vouchers is not a Map, type: ${voucher.runtimeType}');
+      }
+
+      // Extracting the 'data' field
+      final Map<String, dynamic> data = responseBody['data'];
+
+      // Pass 'data' to DashboardModel fromJson
+      DashboardModel model = DashboardModel.fromJson(data);
+
+      // Return the model as DashboardEntity
+      return model.toEntity(); // Since DashboardModel is a subclass of DashboardEntity
     } else {
       throw Exception('Failed to load dashboard data');
     }

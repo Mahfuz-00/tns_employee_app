@@ -2,7 +2,8 @@ class VoucherEntity {
   final int id;
   final int userId;
   final dynamic date;
-  final dynamic costCenterId;
+  final dynamic ProjectId;
+  final dynamic ProjectName;
   final dynamic payeeType;
   final dynamic payeeOthersName;
   final dynamic customerId;
@@ -14,6 +15,7 @@ class VoucherEntity {
   final dynamic attachment;
   final dynamic saleId;
   final dynamic approverId;
+  final dynamic approverName;
   final dynamic status;
   final dynamic createdAt;
   final dynamic updatedAt;
@@ -22,7 +24,8 @@ class VoucherEntity {
     required this.id,
     required this.userId,
     required this.date,
-    required this.costCenterId,
+    required this.ProjectId,
+    required this.ProjectName,
     required this.payeeType,
     required this.payeeOthersName,
     this.customerId,
@@ -34,6 +37,7 @@ class VoucherEntity {
     this.attachment,
     this.saleId,
     this.approverId,
+    required this.approverName,
     required this.status,
     required this.createdAt,
     required this.updatedAt,
@@ -41,6 +45,6 @@ class VoucherEntity {
 
   @override
   String toString() {
-    return 'VoucherEntity(id: $id, userId: $userId, date: $date, costCenterId: $costCenterId, payeeType: $payeeType, payeeOthersName: $payeeOthersName, customerId: $customerId, supplierId: $supplierId, paidById: $paidById, description: $description, totalAmount: $totalAmount, purchaseId: $purchaseId, attachment: $attachment, saleId: $saleId, approverId: $approverId, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'VoucherEntity(id: $id, userId: $userId, date: $date, costCenterId: $ProjectId, payeeType: $payeeType, payeeOthersName: $payeeOthersName, customerId: $customerId, supplierId: $supplierId, paidById: $paidById, description: $description, totalAmount: $totalAmount, purchaseId: $purchaseId, attachment: $attachment, saleId: $saleId, approverId: $approverId, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }

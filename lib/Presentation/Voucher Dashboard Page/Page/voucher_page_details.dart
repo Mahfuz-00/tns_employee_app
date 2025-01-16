@@ -90,7 +90,7 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
                 textSize14Lighter('${formattedDate ?? 'N/A'}'),
                 SizedBox(height: 10),
                 textSize16Darker('Project'),
-                textSize14Lighter('${voucher.costCenterId ?? 'N/A'}'),
+                textSize14Lighter('${voucher.ProjectName ?? 'N/A'}'),
                 SizedBox(height: 10),
                 textSize16Darker('Payee Type'),
                 textSize14Lighter('${voucher.payeeType ?? 'N/A'}'),
@@ -123,7 +123,7 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
                 textSize14Lighter('${voucher.attachment ?? 'N/A'}'),
                 SizedBox(height: 10),
                 textSize16Darker('Approver'),
-                textSize14Lighter('${voucher.approverId ?? 'N/A'}'),
+                textSize14Lighter('${voucher.approverName ?? 'N/A'}'),
                 SizedBox(height: 10),
                 textSize16Darker('Status'),
                 textSize14Lighter(displayStatus),
@@ -223,7 +223,7 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
             Expanded(
               child: BottomNavBar(
                 containerHeight: screenHeight * 0.08,
-                currentPage: 'Activity',
+                currentPage: '',
               ),
             ),
           ],

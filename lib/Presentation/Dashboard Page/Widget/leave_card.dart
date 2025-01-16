@@ -106,7 +106,8 @@ class _LeaveCardState extends State<LeaveCard> {
               ),
               SizedBox(height: 8),
 
-              Row( // First row with Section 1 and Section 2
+              Row(
+                // First row with Section 1 and Section 2
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -159,11 +160,13 @@ class _LeaveCardState extends State<LeaveCard> {
                           height: 16,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.grey[300], // Background color of the circle
+                            color: Colors
+                                .grey[300], // Background color of the circle
                           ),
                           child: Center(
                             child: Text(
-                              widget.UsedLeave, // Replace with dynamic value
+                              widget.UsedLeave.toString(),
+                              // Replace with dynamic value
                               style: TextStyle(
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.bold,
@@ -207,11 +210,13 @@ class _LeaveCardState extends State<LeaveCard> {
                           height: 16,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.grey[300], // Background color of the circle
+                            color: Colors
+                                .grey[300], // Background color of the circle
                           ),
                           child: Center(
                             child: Text(
-                              widget.AvailableLeave, // Replace with dynamic value
+                              widget.AvailableLeave.toString(),
+                              // Replace with dynamic value
                               style: TextStyle(
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.bold,
@@ -238,11 +243,6 @@ class _LeaveCardState extends State<LeaveCard> {
                   )
                 ],
               ),
-
-
-
-
-
             ],
           ),
         ),
