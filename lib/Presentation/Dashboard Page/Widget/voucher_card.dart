@@ -6,8 +6,7 @@ import '../../../Core/Config/Theme/app_colors.dart';
 
 class VoucherCard extends StatelessWidget {
   final dynamic submitDate;
-
-/*  final dynamic project;*/
+  final dynamic project;
   final dynamic expense;
   final dynamic approvedBy;
   final dynamic approvalDate;
@@ -16,7 +15,7 @@ class VoucherCard extends StatelessWidget {
 
   const VoucherCard({
     required this.submitDate,
-    /*  required this.project,*/
+    required this.project,
     required this.expense,
     required this.approvedBy,
     required this.approvalDate,
@@ -102,7 +101,7 @@ class VoucherCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 4),
-                    /* Text(
+                     Text(
                       project.toString(),
                       style: TextStyle(
                         fontFamily: 'Roboto',
@@ -110,7 +109,7 @@ class VoucherCard extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                         color: AppColors.textBlack,
                       ),
-                    ),*/
+                    ),
                   ],
                 ),
                 Column(

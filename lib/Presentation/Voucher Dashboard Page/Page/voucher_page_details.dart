@@ -7,8 +7,6 @@ import '../../../Core/Config/Assets/app_images.dart';
 import '../../../Core/Config/Theme/app_colors.dart';
 import '../../../Domain/Entities/voucher_entites.dart';
 
-
-
 class VoucherDetailPage extends StatefulWidget {
   List<VoucherEntity> vouchers;
   int initialIndex;
@@ -44,6 +42,18 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
     }
   }
 
+  String getDisplayType(String type) {
+    switch (type.toLowerCase()) {
+      case 'other':
+        return 'Others';
+      case 'customer':
+        return 'Customer';
+      case 'supplier':
+        return 'Supplier';
+      default:
+        return 'Unknown Status';
+    }
+  }
 
   @override
   void initState() {
@@ -64,6 +74,7 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
     String? createdAt = _formatDate(voucher.createdAt);
     String? updatedAt = _formatDate(voucher.updatedAt);
     String displayStatus = getDisplayStatus(voucher.status);
+    String displayType = getDisplayStatus(voucher.payeeType);
 
     return Scaffold(
       appBar: AppBarModel(
@@ -96,16 +107,16 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
                 textSize14Lighter('${voucher.payeeType ?? 'N/A'}'),
                 SizedBox(height: 10),
                 textSize16Darker('Payee Other Name'),
-                textSize14Lighter('${voucher.payeeOthersName ?? 'N/A'}'),
+                textSize14Lighter(displayType),
                 SizedBox(height: 10),
-                textSize16Darker('Customer ID'),
-                textSize14Lighter('${voucher.customerId ?? 'N/A'}'),
+                textSize16Darker('Customer Name'),
+                textSize14Lighter('${voucher.customerName ?? 'N/A'}'),
                 SizedBox(height: 10),
-                textSize16Darker('Supplier ID'),
-                textSize14Lighter('${voucher.supplierId ?? 'N/A'}'),
+                textSize16Darker('Supplier Name'),
+                textSize14Lighter('${voucher.supplierName ?? 'N/A'}'),
                 SizedBox(height: 10),
-                textSize16Darker('Paid By ID'),
-                textSize14Lighter('${voucher.paidById ?? 'N/A'}'),
+                textSize16Darker('Paid By Name'),
+                textSize14Lighter('${voucher.paidByName ?? 'N/A'}'),
                 SizedBox(height: 10),
                 textSize16Darker('Description'),
                 textSize14Lighter('${voucher.description ?? 'N/A'}'),
@@ -113,14 +124,15 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
                 textSize16Darker('Total Amount'),
                 textSize14Lighter('${voucher.totalAmount ?? 'N/A'} TK'),
                 SizedBox(height: 10),
-                textSize16Darker('Purchase ID'),
+                textSize16Darker('Purchase Id'),
                 textSize14Lighter('${voucher.purchaseId ?? 'N/A'}'),
                 SizedBox(height: 10),
-                textSize16Darker('Sale ID'),
+                textSize16Darker('Sale Name'),
                 textSize14Lighter('${voucher.saleId ?? 'N/A'}'),
                 SizedBox(height: 10),
                 textSize16Darker('Attachment'),
-                textSize14Lighter('${voucher.attachment ?? 'N/A'}'),
+                textSize14Lighter(
+                    '${voucher.attachment != null ? 'Yes' : 'No'}'),
                 SizedBox(height: 10),
                 textSize16Darker('Approver'),
                 textSize14Lighter('${voucher.approverName ?? 'N/A'}'),
@@ -158,10 +170,10 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
                     ElevatedButton(
                       onPressed: currentIndex > 0
                           ? () {
-                        setState(() {
-                          currentIndex--;
-                        });
-                      }
+                              setState(() {
+                                currentIndex--;
+                              });
+                            }
                           : null, // Disable the button if at the first task
                       style: ElevatedButton.styleFrom(
                         backgroundColor: currentIndex > 0
@@ -189,15 +201,16 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
                     ElevatedButton(
                       onPressed: currentIndex < widget.vouchers.length - 1
                           ? () {
-                        setState(() {
-                          currentIndex++;
-                        });
-                      }
+                              setState(() {
+                                currentIndex++;
+                              });
+                            }
                           : null, // Disable the button if at the last task
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: currentIndex < widget.vouchers.length - 1
-                            ? AppColors.primary
-                            : AppColors.textGrey,
+                        backgroundColor:
+                            currentIndex < widget.vouchers.length - 1
+                                ? AppColors.primary
+                                : AppColors.textGrey,
                         // Grey out the button if no next task
                         padding: const EdgeInsets.symmetric(
                             horizontal: 24, vertical: 12),

@@ -10,8 +10,6 @@ import 'package:touch_and_solve_inventory_app/Presentation/Dashboard%20Page/Widg
 
 import '../../../Common/Bloc/profile_bloc.dart';
 import '../../../Common/Helper/dimmed_overlay.dart';
-import '../../../Common/Widgets/bottom_navigation_bar_with_swipe.dart';
-import '../../Attendance Dashboard Page/Widget/attendance_container.dart';
 import '../../Profile Page/Page/profile_UI.dart';
 import '../Bloc/dashboard_bloc.dart';
 import '../Widget/attendance_card.dart';
@@ -43,164 +41,171 @@ class _DashboardState extends State<Dashboard> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return InternetConnectionChecker(
-      child: BlocBuilder<ProfileBloc, ProfileState>(
+      child: BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, state) {
-          if (state is ProfileLoading) {
+          if (state is DashboardLoadingState) {
             Center(child: OverlayLoader());
-          } else if (state is ProfileLoaded) {
+          } else if (state is DashboardLoadedState) {
             return Scaffold(
               body: SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      BlocBuilder<ProfileBloc, ProfileState>(
-                        builder: (context, state) {
-                          if (state is ProfileLoading) {
-                            return Center(child: OverlayLoader());
-                          } else if (state is ProfileLoaded) {
-                            final profile = state.profile;
-                            return Container(
-                              color: AppColors.backgroundWhite,
-                              padding: EdgeInsets.all(5),
-                              height: screenHeight * 0.1,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // Avatar in the first container
-                                  GestureDetector(
-                                    onTap: () {
-                                      // Navigate to user profile page
-                                      // Replace 'ProfilePage' with your actual page
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Profile(),
-                                        ),
-                                      );
-                                    },
-                                    child: SizedBox(
-                                      width: screenWidth * 0.18,
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          child: profile.photoUrl != null
-                                              ? CachedNetworkImage(
-                                                  imageUrl: profile.photoUrl!,
-                                                  fit: BoxFit.cover,
-                                                  placeholder: (context, url) =>
-                                                      Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            16.0),
-                                                    child: OverlayLoader(),
-                                                  ),
-                                                  errorWidget: (context, url,
-                                                          error) =>
-                                                      Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors
-                                                                .grey.shade300,
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child: Icon(
-                                                            Icons.error,
-                                                            color: Colors.red,
-                                                          )),
-                                                )
-                                              : Image.asset(
-                                                  AppImages.ProfileImage,
-                                                  fit: BoxFit.cover,
-                                                ),
+                      Container(
+                        color: AppColors.backgroundWhite,
+                        padding: EdgeInsets.all(5),
+                        height: screenHeight * 0.1,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // BlocBuilder for Profile Details
+                            BlocBuilder<ProfileBloc, ProfileState>(
+                              builder: (context, state) {
+                                if (state is ProfileLoading) {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                } else if (state is ProfileLoaded) {
+                                  final profile = state.profile;
+                                  return Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      // Avatar
+                                      GestureDetector(
+                                        onTap: () {
+                                          // Navigate to user profile page
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Profile(),
+                                            ),
+                                          );
+                                        },
+                                        child: SizedBox(
+                                          width: screenWidth * 0.18,
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              child: profile.photoUrl != null
+                                                  ? CachedNetworkImage(
+                                                      imageUrl:
+                                                          profile.photoUrl!,
+                                                      fit: BoxFit.cover,
+                                                      placeholder:
+                                                          (context, url) =>
+                                                              Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(16.0),
+                                                        child: OverlayLoader(),
+                                                      ),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: Icon(
+                                                          Icons.error,
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Image.asset(
+                                                      AppImages.ProfileImage,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  // Name, verified mark, and designation in the second container
-                                  SizedBox(
-                                    width: screenWidth * 0.55,
-                                    // Set width relative to screen width
-                                    child: Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 8.0),
-                                      // Added padding for better spacing
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          // Row for name and verified badge
-                                          Row(
+                                      // Name and Designation
+                                      SizedBox(
+                                        width: screenWidth * 0.55,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-                                              Expanded(
-                                                flex: 6,
-                                                child: Text(
-                                                  profile.name,
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    // Adjust font size based on screen width
-                                                    fontWeight: FontWeight.w600,
-                                                    fontFamily: 'Roboto',
+                                              // Name and Verified Icon
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    flex: 6,
+                                                    child: Text(
+                                                      profile.name,
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontFamily: 'Roboto',
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                    ),
                                                   ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 1,
-                                                ),
+                                                  SizedBox(width: 8.0),
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: Icon(
+                                                      Icons.verified,
+                                                      color: AppColors.primary,
+                                                      size: screenWidth * 0.05,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              SizedBox(width: 8.0),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Icon(
-                                                  Icons.verified,
+                                              SizedBox(height: 5),
+                                              // Designation
+                                              Text(
+                                                profile.designation,
+                                                style: TextStyle(
+                                                  fontSize: 14,
                                                   color: AppColors.primary,
-                                                  size: screenWidth *
-                                                      0.05, // Adjust icon size based on screen width
+                                                  fontFamily: 'Roboto',
+                                                  fontWeight: FontWeight.w400,
                                                 ),
                                               ),
                                             ],
                                           ),
-                                          SizedBox(height: 5),
-                                          // Adjust height relative to screen height
-                                          // Designation text
-                                          Text(
-                                            profile.designation,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              // Adjust font size based on screen width
-                                              color: AppColors.primary,
-                                              fontFamily: 'Roboto',
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  ActionIcons(
-                                      screenWidth, AppImages.CommentIcon),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  ActionIcons(
-                                      screenWidth, AppImages.NotificationIcon),
-                                ],
-                              ),
-                            );
-                          } else if (state is ProfileError) {
-                            return Center(
-                                child: Text('Error: ${state.message}'));
-                          }
-                          return Container(
-                              color: AppColors.backgroundWhite,
-                              child: Center(child: OverlayLoader()));
-                        },
+                                    ],
+                                  );
+                                } else if (state is ProfileError) {
+                                  return Center(
+                                    child: Text('Error: ${state.message}'),
+                                  );
+                                }
+                                return Container(
+                                  color: AppColors.backgroundWhite,
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
+                                );
+                              },
+                            ),
+
+                            // Action Icons (outside BlocBuilder)
+                            ActionIcons(screenWidth, AppImages.CommentIcon),
+                            SizedBox(width: 8),
+                            ActionIcons(
+                                screenWidth, AppImages.NotificationIcon),
+                          ],
+                        ),
                       ),
                       BlocListener<DashboardBloc, DashboardState>(
                         listener: (context, state) {
@@ -235,10 +240,31 @@ class _DashboardState extends State<Dashboard> {
                                         ActivitySection(
                                           title:
                                               state.dashboardData?.title ?? '',
-                                          progress:
-                                              state.dashboardData?.status ?? '',
-                                          date: state.dashboardData?.endDate ??
+                                          progress: state.dashboardData
+                                                  ?.activityStatus ??
                                               '',
+                                          date: state.dashboardData
+                                                  ?.activityStartDate ??
+                                              '',
+                                          priority: state.dashboardData
+                                                  ?.activityPriority ??
+                                              '',
+                                          status: state.dashboardData
+                                                  ?.activityStatus ??
+                                              '',
+                                          pendingCount: state.dashboardData
+                                                  ?.activityPendingCount ??
+                                              0,
+                                          images: state.dashboardData
+                                                      ?.assignedUsers !=
+                                                  null
+                                              ? state
+                                                  .dashboardData!.assignedUsers!
+                                                  .map((user) =>
+                                                      user.profilePhotoPath ??
+                                                      'Unknown')
+                                                  .toList()
+                                              : <String>[],
                                         ),
                                         SizedBox(
                                           height: 10,
@@ -250,6 +276,15 @@ class _DashboardState extends State<Dashboard> {
                                           usedLeave:
                                               state.dashboardData?.usedLeave ??
                                                   '',
+                                          leaveType:
+                                              state.dashboardData?.leaveType ??
+                                                  '',
+                                          leaveStatus: state
+                                                  .dashboardData?.leaveStatus ??
+                                              '',
+                                          leaveDate: state.dashboardData
+                                                  ?.leaveStartDate ??
+                                              '',
                                         ),
                                         SizedBox(
                                           height: 10,
@@ -269,9 +304,9 @@ class _DashboardState extends State<Dashboard> {
                                           approvedBy:
                                               state.dashboardData?.userName ??
                                                   '',
-                                          approvedImage: state.dashboardData
+                                          /*    approvedImage: state.dashboardData
                                                   ?.userProfilePhotoUrl ??
-                                              '',
+                                              '',*/
                                         ),
                                         SizedBox(
                                           height: 10,
@@ -280,21 +315,31 @@ class _DashboardState extends State<Dashboard> {
                                           submittedDate: state.dashboardData
                                                   ?.voucherCreatedAt ??
                                               '',
-                                          expense: state.dashboardData
-                                                  ?.totalAmount ??
+                                          expense: state
+                                                  .dashboardData?.totalAmount ??
                                               '',
                                           approvedBy: state.dashboardData
                                                   ?.voucherApproverName ??
                                               '',
                                           approvedDate: state.dashboardData
-                                                  ?.voucherUpdatedAt??
+                                                  ?.voucherUpdatedAt ??
+                                              '',
+                                          ProjectName: state.dashboardData
+                                                  ?.voucherProject ??
                                               '',
                                         )
                                       ],
                                     );
                                   } else if (state is DashboardErrorState) {
-                                    return Center(
-                                        child: Text('Error: ${state.message}'));
+                                    print(
+                                        'Nested dashboard error: ${state.message}');
+                                    return Container(
+                                      color:
+                                          AppColors.containerBackgroundGrey300,
+                                      child: Center(
+                                          child:
+                                              Text('Error: ${state.message}')),
+                                    );
                                   }
                                   return const Center(child: Text('No Data'));
                                 },
@@ -315,7 +360,8 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             );
-          } else if (state is ProfileError) {
+          } else if (state is DashboardErrorState) {
+            print('Dashboard Error: ${state.message}');
             return Center(child: Text('Error: ${state.message}'));
           }
           return Container(
@@ -358,7 +404,8 @@ class AttendanceSection extends StatelessWidget {
   final String projectName;
   final String inDate;
   final String approvedBy;
-  final String approvedImage;
+
+/*  final String approvedImage;*/
 
   const AttendanceSection({
     super.key,
@@ -367,7 +414,7 @@ class AttendanceSection extends StatelessWidget {
     required this.projectName,
     required this.inDate,
     required this.approvedBy,
-    required this.approvedImage,
+/*    required this.approvedImage,*/
   });
 
   @override
@@ -382,7 +429,7 @@ class AttendanceSection extends StatelessWidget {
         clockOut: outTime,
         approvedby: approvedBy,
         approvedDate: inDate,
-        approverImage: approvedImage, // or from data if dynamic
+/*        approverImage: approvedImage, // or from data if dynamic*/
       ),
     );
   }
@@ -390,7 +437,7 @@ class AttendanceSection extends StatelessWidget {
 
 class VoucherSection extends StatelessWidget {
   final String submittedDate;
-  /*final String ProjectName;*/
+  final String ProjectName;
   final String expense;
   final String approvedBy;
   final String approvedDate;
@@ -398,7 +445,7 @@ class VoucherSection extends StatelessWidget {
   const VoucherSection({
     super.key,
     required this.submittedDate,
-/*    required this.ProjectName,*/
+    required this.ProjectName,
     required this.expense,
     required this.approvedBy,
     required this.approvedDate,
@@ -412,7 +459,7 @@ class VoucherSection extends StatelessWidget {
         submitDate: submittedDate,
         approvedBy: approvedBy,
         approvalDate: approvedDate,
-      /*  project: ProjectName,*/
+        project: ProjectName,
         expense: expense,
       ),
     );
@@ -422,11 +469,17 @@ class VoucherSection extends StatelessWidget {
 class LeaveSection extends StatelessWidget {
   final String availableLeave;
   final String usedLeave;
+  final String leaveType;
+  final String leaveStatus;
+  final String leaveDate;
 
   const LeaveSection({
     super.key,
     required this.availableLeave,
     required this.usedLeave,
+    required this.leaveType,
+    required this.leaveStatus,
+    required this.leaveDate,
   });
 
   @override
@@ -438,9 +491,9 @@ class LeaveSection extends StatelessWidget {
       header: 'Leave Balance',
       totalCount: availableLeave,
       leaveCard: LeaveCard(
-        leaveHeader: 'Emergency Sick Leave',
-        Date: '2 Dec',
-        Status: 'Review',
+        leaveHeader: leaveType,
+        Date: leaveDate,
+        Status: leaveStatus,
         UsedLeave: usedLeave,
         AvailableLeave: availableLeave,
       ),
@@ -452,12 +505,20 @@ class ActivitySection extends StatelessWidget {
   final String title;
   final String progress;
   final String date;
+  final String priority;
+  final String status;
+  final int pendingCount;
+  final List<String> images;
 
   const ActivitySection({
     super.key,
     required this.title,
     required this.progress,
     required this.date,
+    required this.priority,
+    required this.status,
+    required this.pendingCount,
+    required this.images,
   });
 
   @override
@@ -465,19 +526,14 @@ class ActivitySection extends StatelessWidget {
     return CardsWidget(
       header: 'Recent Task',
       subtitle: 'The Tasks assigned to you recently',
-      totalCount: '5',
+      totalCount: pendingCount.toString(),
       taskCard: TaskCard(
         taskHeader: title,
-        images: [
-          AppImages.MeetingPerson1,
-          AppImages.MeetingPerson2,
-          AppImages.MeetingPerson3,
-          AppImages.MeetingPerson1
-        ],
+        images: images,
         /*   progression: 1.0,*/
-        priority: 'High',
-        progress: 'In Progress',
-        date: '7 Dec',
+        priority: priority,
+        progress: status,
+        date: date,
         commentCount: 10,
       ),
     );

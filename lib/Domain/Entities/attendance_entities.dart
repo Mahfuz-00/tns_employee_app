@@ -1,14 +1,14 @@
 class AttendanceRequest {
-  final int id;
-  final int userId;
-  final String inTime;
-  final String projectId;
-  final String projectName;
-  final String description;
-  final int supervisorUserId;
-  final String status;
-  final String createdAt;
-  final String updatedAt;
+  final int? id;
+  final int? userId;
+  final String? inTime;
+  final String? projectId;
+  final String? projectName;
+  final String? description;
+  final int? supervisorUserId;
+  final String? status;
+  final String? createdAt;
+  final String? updatedAt;
   final User? user;
 
   AttendanceRequest({
@@ -27,24 +27,24 @@ class AttendanceRequest {
 }
 
 class User {
-  final int id;
-  final String name;
-  final String email;
-  final String phone;
-  final String department;
-  final String designation;
-  final String employeeId;
-  final double balance;
-  final double openingBalance;
-  final String openingBalanceDate;
+  final int? id;
+  final String? name;
+  final String? email;
+  final String? phone;
+  final String? department;
+  final String? designation;
+  final String? employeeId;
+  final double? balance;
+  final double? openingBalance;
+  final String? openingBalanceDate;
   final String? emailVerifiedAt;
   final String? twoFactorConfirmedAt;
-  final int currentTeamId;
+  final int? currentTeamId;
   final String? profilePhotoPath;
-  final String status;
-  final String createdAt;
-  final String updatedAt;
-  final String profilePhotoUrl;
+  final String? status;
+  final String? createdAt;
+  final String? updatedAt;
+  final String? profilePhotoUrl;
 
   User({
     required this.id,

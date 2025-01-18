@@ -27,7 +27,7 @@ class EmployeeRemoteDataSourceImpl implements EmployeeRemoteDataSource {
     }
 
     final response = await client.get(
-      Uri.parse('${AppURLS().Basepath}/api/Responsible/Employee'),
+      Uri.parse('${AppURLS().Basepath}/api/responsible/employee'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $authToken',

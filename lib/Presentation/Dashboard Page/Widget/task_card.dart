@@ -9,7 +9,8 @@ class TaskCard extends StatefulWidget {
   final String taskHeader;
   final String progress;
   final String priority;
- /* final double progression;*/
+
+  /* final double progression;*/
   final String date;
   final int commentCount;
   final List<String> images;
@@ -17,7 +18,7 @@ class TaskCard extends StatefulWidget {
   const TaskCard({
     super.key,
     required this.taskHeader,
- /*   required this.progression,*/
+    /*   required this.progression,*/
     required this.images,
     required this.priority,
     required this.progress,
@@ -35,7 +36,7 @@ class _TaskCardState extends State<TaskCard> {
   @override
   void initState() {
     super.initState();
- /*   _progress =
+    /*   _progress =
         widget.progression; // Use widget.progression to access the value*/
   }
 
@@ -49,9 +50,9 @@ class _TaskCardState extends State<TaskCard> {
         print(date);
 
         // First try parsing the date as ISO 8601 (yyyy-MM-dd)
-        DateTime parsedDate = DateTime.parse(date); // yyyy-MM-dd or yyyy-MM-ddTHH:mm:ss format
+        DateTime parsedDate =
+            DateTime.parse(date); // yyyy-MM-dd or yyyy-MM-ddTHH:mm:ss format
         return DateFormat('MMM dd').format(parsedDate); // Format to "MMM dd"
-
       } catch (e) {
         // If that fails, try parsing the date with custom format (MM-dd-yyyy)
         try {
@@ -66,6 +67,15 @@ class _TaskCardState extends State<TaskCard> {
 
     print('Images :: ${widget.images}');
 
+    String Status = 'N/A';
+
+    if (widget.progress == 'pending' || widget.progress == 'To Do') {
+      Status = 'To Do';
+    } else if (widget.progress == 'in_progress' || widget.progress == 'In Progress') {
+      Status = 'In Progress';
+    } else if (widget.progress == 'complete' || widget.progress == 'Finished') {
+      Status = 'Finished';
+    }
 
     return Container(
       margin: EdgeInsets.zero,
@@ -120,20 +130,20 @@ class _TaskCardState extends State<TaskCard> {
                       children: [
                         widget.progress == 'Finished'
                             ? Icon(
-                          Icons.check, // Checkmark icon
-                          size: 16,
-                          color: AppColors.primary, // Primary color
-                        )
+                                Icons.check, // Checkmark icon
+                                size: 16,
+                                color: AppColors.primary, // Primary color
+                              )
                             : Icon(
-                          Icons.timer, // Timer icon
-                          size: 16,
-                          color: Colors.grey[600],
-                        ),
+                                Icons.timer, // Timer icon
+                                size: 16,
+                                color: Colors.grey[600],
+                              ),
                         SizedBox(
                           width: 5,
                         ),
                         Text(
-                          widget.progress,
+                          Status,
                           style: TextStyle(
                               color: AppColors.textBlack,
                               fontWeight: FontWeight.w500,
@@ -181,11 +191,13 @@ class _TaskCardState extends State<TaskCard> {
                       ],
                     ),
                   ),
-                  SizedBox(width: screenWidth*0.2,)
+                  SizedBox(
+                    width: screenWidth * 0.2,
+                  )
                 ],
               ),
               SizedBox(height: 8),
-             /* InteractiveProgressBar(
+              /* InteractiveProgressBar(
                 initialProgress: _progress,
                 onProgressChanged: (newProgress) {
                   setState(() {
@@ -209,23 +221,29 @@ class _TaskCardState extends State<TaskCard> {
                           children: [
                             // Show up to 3 images, and the rest will show a "+" sign
                             ...List.generate(
-                              widget.images.length > 3 ? 3 : widget.images.length,
+                              widget.images.length > 3
+                                  ? 3
+                                  : widget.images.length,
                               (index) {
                                 return Positioned(
                                   left: index * 20.0,
                                   // Adjust the overlap by modifying the multiplier
                                   child: CircleAvatar(
                                     radius: 15,
-                                    backgroundImage: widget.images[index].isEmpty
-                                        ? Image.asset(AppImages.HRImage).image // Show default image if the URL is empty
+                                    backgroundImage: widget
+                                            .images[index].isEmpty
+                                        ? Image.asset(AppImages.HRImage)
+                                            .image // Show default image if the URL is empty
                                         : Image.network(
-                                      widget.images[index],
-                                      errorBuilder: (context, error, stackTrace) {
-                                        print('Error loading image');
-                                        // Return default image if the URL fails to load
-                                        return Image.asset(AppImages.HRImage);
-                                      },
-                                    ).image,
+                                            widget.images[index],
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              print('Error loading image');
+                                              // Return default image if the URL fails to load
+                                              return Image.asset(
+                                                  AppImages.HRImage);
+                                            },
+                                          ).image,
                                   ),
                                 );
                               },
@@ -259,7 +277,8 @@ class _TaskCardState extends State<TaskCard> {
                     Expanded(
                       flex: 3,
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                         decoration: BoxDecoration(
                           color: AppColors.textWhite,
                           borderRadius: BorderRadius.circular(4),
@@ -295,7 +314,8 @@ class _TaskCardState extends State<TaskCard> {
                     Expanded(
                       flex: 2,
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                         decoration: BoxDecoration(
                           color: AppColors.textWhite,
                           borderRadius: BorderRadius.circular(2),

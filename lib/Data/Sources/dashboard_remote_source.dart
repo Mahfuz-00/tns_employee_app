@@ -53,7 +53,7 @@ class DashboardRemoteSourceImpl implements DashboardRemoteSource {
 
       // Iterate over 'activities' and print each data item with its type
       final activities = responseBody['data']['activities'];
-      print('Activities:');
+      print('Activities: $activities');
       if (activities is Map<String, dynamic>) {
         activities.forEach((key, value) {
           print('$key: $value');
@@ -62,6 +62,11 @@ class DashboardRemoteSourceImpl implements DashboardRemoteSource {
       } else {
         print('Activities is not a Map, type: ${activities.runtimeType}');
       }
+
+      // Iterate over 'UsedLeave' and print each data item with its type
+      final ActivitiesPending = responseBody['data']['ActivitiesPanding'];
+      print('Activities Pending: ${ActivitiesPending}');
+      print('Activities Pending Type: ${ActivitiesPending.runtimeType}');
 
       // Iterate over 'AvailableLeave' and print each data item with its type
       final availableLeave = responseBody['data']['AvailableLeave'];
@@ -75,7 +80,7 @@ class DashboardRemoteSourceImpl implements DashboardRemoteSource {
 
       // Iterate over 'attendance' and print each data item with its type
       final attendance = responseBody['data']['attendance'];
-      print('Attendance:');
+      print('Attendance: $attendance');
       if (attendance is Map<String, dynamic>) {
         attendance.forEach((key, value) {
           print('$key: $value');
@@ -87,7 +92,7 @@ class DashboardRemoteSourceImpl implements DashboardRemoteSource {
 
       // Iterate over 'voucher' and print each data item with its type
       final voucher = responseBody['data']['voucher'];
-      print('Voucher:');
+      print('Voucher: $voucher');
       if (voucher is Map<String, dynamic>) {
         voucher.forEach((key, value) {
           print('$key: $value');
@@ -97,11 +102,36 @@ class DashboardRemoteSourceImpl implements DashboardRemoteSource {
         print('Vouchers is not a Map, type: ${voucher.runtimeType}');
       }
 
+      final leave = responseBody['data']['leave'];
+      print('Leave: $leave');
+      if (leave is Map<String, dynamic>) {
+        leave.forEach((key, value) {
+          print('$key: $value');
+          print('$key Type: ${value.runtimeType}');
+        });
+      } else {
+        print('Vouchers is not a Map, type: ${leave.runtimeType}');
+      }
+
       // Extracting the 'data' field
       final Map<String, dynamic> data = responseBody['data'];
 
+      print('Data: $data');
+      try {
+        DashboardModel model = DashboardModel.fromJson(data);
+        print('Model $model');
+        return model.toEntity();
+      } catch (e, stackTrace) {
+        print('Error deserializing DashboardModel: $e');
+        print('StackTrace: $stackTrace');
+        // Optionally, print the data to see what went wrong
+        print('Response data: $data');
+      }
+
       // Pass 'data' to DashboardModel fromJson
       DashboardModel model = DashboardModel.fromJson(data);
+
+      print('Model $model');
 
       // Return the model as DashboardEntity
       return model.toEntity(); // Since DashboardModel is a subclass of DashboardEntity

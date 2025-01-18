@@ -12,7 +12,8 @@ class AttendenceCard extends StatelessWidget {
   final String clockOut;
   final String approvedDate;
   final String approvedby;
-  final String approverImage;
+
+/*  final String approverImage;*/
 
   const AttendenceCard({
     required this.projectName,
@@ -22,7 +23,7 @@ class AttendenceCard extends StatelessWidget {
     required this.clockOut,
     required this.approvedby,
     required this.approvedDate,
-    required this.approverImage,
+/*    required this.approverImage,*/
     Key? key,
   }) : super(key: key);
 
@@ -44,8 +45,9 @@ class AttendenceCard extends StatelessWidget {
     String outTime =
         DateFormat('hh:mm a').format(parsedDateOutTime); // "10:00 AM"
 
-    String ApprovedDate = DateFormat('dd MMMM yyyy')
-        .format(parsedApprovedDate);
+    String ApprovedDate = DateFormat('dd MMMM yyyy').format(parsedApprovedDate);
+
+    print('Project Name of Attendance: $projectName');
 
     final screenWidth = MediaQuery.of(context).size.width;
     return Container(
@@ -122,7 +124,7 @@ class AttendenceCard extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          projectName,
+                          projectName.toString() == '' ? 'Head Office' : projectName,
                           style: TextStyle(
                             fontFamily: 'Roboto',
                             fontSize: 14.0,
@@ -208,7 +210,7 @@ class AttendenceCard extends StatelessWidget {
           // Approval Section moved to be part of the outer container
           Row(
             children: [
-      /*        Row(
+              /*        Row(
                 children: [
                   Icon(
                     Icons.check_circle,
@@ -230,7 +232,7 @@ class AttendenceCard extends StatelessWidget {
                 ],
               ),
               Spacer(),*/
-              if(approvedDate != null) ...[
+              if (approvedDate != null) ...[
                 Icon(
                   Icons.check_circle,
                   color: AppColors.primary,
@@ -260,7 +262,7 @@ class AttendenceCard extends StatelessWidget {
                 ),
               ],
               SizedBox(width: 8),
-            /*  CircleAvatar(
+              /*  CircleAvatar(
                 radius: 12,
                 backgroundImage: AssetImage(approverImage),
               ),

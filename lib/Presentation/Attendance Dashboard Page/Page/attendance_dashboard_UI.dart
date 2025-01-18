@@ -130,7 +130,7 @@ class _AttendanceDashboardState extends State<AttendanceDashboard> {
             itemBuilder: (context, index) {
               final attendance = attendanceList[index];
 
-              DateTime parsedDateTime = DateTime.parse(attendance.inTime);
+              DateTime parsedDateTime = DateTime.parse(attendance.inTime!);
 
               String inDate = DateFormat('dd MMMM yyyy')
                   .format(parsedDateTime); // "10 January 2025"
@@ -144,7 +144,7 @@ class _AttendanceDashboardState extends State<AttendanceDashboard> {
                 children: [
                   AttendenceContainers(
                     date: inDate,
-                    projectName: attendance.projectName,
+                    projectName: attendance.projectName == '' ? 'Head Office': attendance.projectName!,
                     location: 'Mirpur - 12',
                     duration: '00:00 Hours',
                     clockIn: inTime,
@@ -297,7 +297,7 @@ class _AttendanceDashboardState extends State<AttendanceDashboard> {
 
                             // Parse 'inTime' to DateTime
                             DateTime parsedDateTime =
-                                DateTime.parse(attendance.inTime);
+                                DateTime.parse(attendance.inTime!);
 
                             // Format the date and time
                             String inDate = DateFormat('dd MMMM yyyy').format(

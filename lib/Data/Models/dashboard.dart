@@ -4,25 +4,34 @@ import '../../Domain/Entities/dashboard_entities.dart';
 /// activity details, project details, user information, and voucher details.
 class DashboardModel {
   final int? activityId;
-  final String? endDate;
+  final int? activityPendingCount;
+  final String? activityPriority;
+  final String? activityStartDate;
+  final String? AcitvityEndDate;
   final String? estimateHours;
-  final String? status;
+  final String? activityStatus;
   final String? title;
   final String? project;
   final String? createdAt;
   final String? assignorName;
   final String? assignorImage;
-
-  final int? projectId;
   final String? projectName;
-  final String? projectSlug;
-  final String? projectDescription;
-  final String? projectStatus;
-  final String? projectCreatedAt;
-  final String? projectUpdatedAt;
+  List<AssignedUserModel>? assignedUsers;
 
   final String? availableLeave;
   final String? usedLeave;
+  final int? leaveId;
+  final int? leaveUserid;
+  final String? leaveType;
+  final String? leaveStartDate;
+  final String? leaveEndDate;
+  final String? leaveStatus;
+  final String? leaveCreatedAt;
+  final String? leaveUpdatedAt;
+  final int? leaveDays;
+  final String? leaveReason;
+  final int? leaveResponsiblePersonId;
+  final int? leaveApproverId;
 
   final int? attendanceId;
   final int? userId;
@@ -32,21 +41,12 @@ class DashboardModel {
   final String? attendanceProject;
   final String? attendanceCreatedAt;
   final String? attendanceUpdatedAt;
-
   final String? userName;
-  final String? userEmail;
-  final String? userPhone;
-  final String? userDepartment;
-  final String? userDesignation;
-  final String? userEmployeeId;
-  final int? userBalance;
-  final int? userOpeningBalance;
-  final String? userOpeningBalanceDate;
-  final String? userProfilePhotoUrl;
 
   final int? voucherId;
   final int? voucherUserId;
   final String? voucherDate;
+  final String? voucherProject;
   final int? costCenterId;
   final String? payeeType;
   final String? payeeOthersName;
@@ -68,26 +68,36 @@ class DashboardModel {
   final String? voucherStatus;
 
   /// Constructor with all fields made nullable
-  const DashboardModel({
+  DashboardModel({
     this.activityId,
-    this.endDate,
+    this.activityPendingCount,
+    this.activityPriority,
+    this.activityStartDate,
+    this.AcitvityEndDate,
     this.estimateHours,
-    this.status,
+    this.activityStatus,
     this.title,
     this.project,
     this.createdAt,
     this.assignorName,
     this.assignorImage,
-    this.projectId,
     this.projectName,
-    this.projectSlug,
-    this.projectDescription,
-    this.projectStatus,
-    this.projectCreatedAt,
-    this.projectUpdatedAt,
+    this.assignedUsers,
     this.availableLeave,
     this.usedLeave,
     this.attendanceId,
+    this.leaveId,
+    this.leaveUserid,
+    this.leaveType,
+    this.leaveStartDate,
+    this.leaveEndDate,
+    this.leaveStatus,
+    this.leaveCreatedAt,
+    this.leaveUpdatedAt,
+    this.leaveDays,
+    this.leaveReason,
+    this.leaveResponsiblePersonId,
+    this.leaveApproverId,
     this.userId,
     this.inTime,
     this.outTime,
@@ -96,18 +106,10 @@ class DashboardModel {
     this.attendanceCreatedAt,
     this.attendanceUpdatedAt,
     this.userName,
-    this.userEmail,
-    this.userPhone,
-    this.userDepartment,
-    this.userDesignation,
-    this.userEmployeeId,
-    this.userBalance,
-    this.userOpeningBalance,
-    this.userOpeningBalanceDate,
-    this.userProfilePhotoUrl,
     this.voucherId,
     this.voucherUserId,
     this.voucherDate,
+    this.voucherProject,
     this.costCenterId,
     this.payeeType,
     this.payeeOthersName,
@@ -133,27 +135,36 @@ class DashboardModel {
   factory DashboardModel.fromJson(Map<String, dynamic> json) {
     return DashboardModel(
       activityId: json['activities']['id'] as int?,
-      endDate: json['activities']['end_date'] as String?,
+      activityPendingCount: json['ActivitiesPanding'] as int?,
+      activityPriority: json['activities']['priority'] as String?,
+      activityStartDate: json['activities']['start_date'] as String?,
+      AcitvityEndDate: json['activities']['end_date'] as String?,
       estimateHours: json['activities']['estimate_hours'] as String?,
-      status: json['activities']['status'] as String?,
+      activityStatus: json['activities']['status'] as String?,
       title: json['activities']['title'] as String?,
       project: json['activities']['project'] as String?,
       createdAt: json['activities']['created_at'] as String?,
       assignorName: json['activities']['assignor_name'] as String?,
       assignorImage: json['activities']['assignor_image'] as String?,
-      projectId: json['activities']['project_profile']['id'] as int?,
-      projectName: json['activities']['project_profile']['name'] as String?,
-      projectSlug: json['activities']['project_profile']['slug'] as String?,
-      projectDescription:
-          json['activities']['project_profile']['description'] as String?,
-      projectStatus: json['activities']['project_profile']['status'] as String?,
-      projectCreatedAt:
-          json['activities']['project_profile']['created_at'] as String?,
-      projectUpdatedAt:
-          json['activities']['project_profile']['updated_at'] as String?,
+      projectName: json['activities']['project_name'] as String?,
+      assignedUsers: (json['assigned_users'] as List?)
+          ?.map((user) => AssignedUserModel.fromJson(user))
+          .toList(),
       availableLeave: json['AvailableLeave'] as String?,
       usedLeave: json['UsedLeave'] as String?,
       attendanceId: json['attendance']['id'] as int?,
+      leaveId: json['leave']['id'] as int?,
+      leaveUserid: json['leave']['user_id'] as int?,
+      leaveType: json['leave']['leave_type'] as String?,
+      leaveStartDate: json['leave']['start_date'] as String?,
+      leaveEndDate: json['leave']['end_date'] as String?,
+      leaveStatus: json['leave']['status'] as String?,
+      leaveCreatedAt: json['leave']['created_at'] as String?,
+      leaveUpdatedAt: json['leave']['updated_at'] as String?,
+      leaveDays: json['leave']['total_day'] as int?,
+      leaveReason: json['leave']['reason'] as String?,
+      leaveResponsiblePersonId: json['leave']['responsible_person_id'] as int?,
+      leaveApproverId: json['leave']['approver_id'] as int?,
       userId: json['attendance']['user_id'] as int?,
       inTime: json['attendance']['in_time'] as String?,
       outTime: json['attendance']['out_time'] as String?,
@@ -161,21 +172,11 @@ class DashboardModel {
       attendanceProject: json['attendance']['project'] as String?,
       attendanceCreatedAt: json['attendance']['created_at'] as String?,
       attendanceUpdatedAt: json['attendance']['updated_at'] as String?,
-      userName: json['attendance']['user']['name'] as String?,
-      userEmail: json['attendance']['user']['email'] as String?,
-      userPhone: json['attendance']['user']['phone'] as String?,
-      userDepartment: json['attendance']['user']['department'] as String?,
-      userDesignation: json['attendance']['user']['designation'] as String?,
-      userEmployeeId: json['attendance']['user']['employee_id'] as String?,
-      userBalance: json['attendance']['user']['balance'] as int?,
-      userOpeningBalance: json['attendance']['user']['opening_balance'] as int?,
-      userOpeningBalanceDate:
-          json['attendance']['user']['opening_balance_date'] as String?,
-      userProfilePhotoUrl:
-          json['attendance']['user']['profile_photo_url'] as String?,
+      userName: json['attendance']['user_name'] as String?,
       voucherId: json['voucher']['id'] as int?,
       voucherUserId: json['voucher']['user_id'] as int?,
       voucherDate: json['voucher']['date'] as String?,
+      voucherProject: json['voucher']['cost_center_name'] as String?,
       costCenterId: json['voucher']['cost_center_id'] as int?,
       payeeType: json['voucher']['payee_type'] as String?,
       payeeOthersName: json['voucher']['payee_others_name'] as String?,
@@ -202,21 +203,15 @@ class DashboardModel {
   Map<String, dynamic> toJson() {
     return {
       'activity_id': activityId,
-      'end_date': endDate,
+      'end_date': AcitvityEndDate,
       'estimate_hours': estimateHours,
-      'status': status,
+      'status': activityStatus,
       'title': title,
       'project': project,
       'created_at': createdAt,
       'assignor_name': assignorName,
       'assignor_image': assignorImage,
-      'project_id': projectId,
       'project_name': projectName,
-      'project_slug': projectSlug,
-      'project_description': projectDescription,
-      'project_status': projectStatus,
-      'project_created_at': projectCreatedAt,
-      'project_updated_at': projectUpdatedAt,
       'available_leave': availableLeave,
       'used_leave': usedLeave,
       'attendance_id': attendanceId,
@@ -228,15 +223,6 @@ class DashboardModel {
       'attendance_created_at': attendanceCreatedAt,
       'attendance_updated_at': attendanceUpdatedAt,
       'user_name': userName,
-      'user_email': userEmail,
-      'user_phone': userPhone,
-      'user_department': userDepartment,
-      'user_designation': userDesignation,
-      'user_employee_id': userEmployeeId,
-      'user_balance': userBalance,
-      'user_opening_balance': userOpeningBalance,
-      'user_opening_balance_date': userOpeningBalanceDate,
-      'user_profile_photo_url': userProfilePhotoUrl,
       'voucher_id': voucherId,
       'voucher_date': voucherDate,
       'cost_center_id': costCenterId,
@@ -253,23 +239,36 @@ class DashboardModel {
   factory DashboardModel.fromEntities(DashboardEntity entity) {
     return DashboardModel(
       activityId: entity.activityId,
-      endDate: entity.endDate,
+      activityPendingCount: entity.activityPendingCount,
+      activityPriority: entity.activityPriority,
+      activityStartDate: entity.activityStartDate,
+      AcitvityEndDate: entity.activityEndDate,
       estimateHours: entity.estimateHours,
-      status: entity.status,
+      activityStatus: entity.activityStatus,
       title: entity.title,
       project: entity.project,
       createdAt: entity.createdAt,
       assignorName: entity.assignorName,
       assignorImage: entity.assignorImage,
-      projectId: entity.projectId,
       projectName: entity.projectName,
-      projectSlug: entity.projectSlug,
-      projectDescription: entity.projectDescription,
-      projectStatus: entity.projectStatus,
-      projectCreatedAt: entity.projectCreatedAt,
-      projectUpdatedAt: entity.projectUpdatedAt,
+      assignedUsers: entity.assignedUsers
+          ?.map((assignedUserEntity) =>
+              AssignedUserModel.fromEntity(assignedUserEntity))
+          .toList(),
       availableLeave: entity.availableLeave,
       usedLeave: entity.usedLeave,
+      leaveId: entity.leaveId,
+      leaveUserid: entity.leaveUserid,
+      leaveType: entity.leaveType,
+      leaveStartDate: entity.leaveStartDate,
+      leaveEndDate: entity.leaveEndDate,
+      leaveStatus: entity.leaveStatus,
+      leaveCreatedAt: entity.leaveCreatedAt,
+      leaveUpdatedAt: entity.leaveUpdatedAt,
+      leaveDays: entity.leaveDays,
+      leaveReason: entity.leaveReason,
+      leaveResponsiblePersonId: entity.leaveResponsiblePersonId,
+      leaveApproverId: entity.leaveApproverId,
       attendanceId: entity.attendanceId,
       userId: entity.userId,
       inTime: entity.inTime,
@@ -279,17 +278,9 @@ class DashboardModel {
       attendanceCreatedAt: entity.attendanceCreatedAt,
       attendanceUpdatedAt: entity.attendanceUpdatedAt,
       userName: entity.userName,
-      userEmail: entity.userEmail,
-      userPhone: entity.userPhone,
-      userDepartment: entity.userDepartment,
-      userDesignation: entity.userDesignation,
-      userEmployeeId: entity.userEmployeeId,
-      userBalance: entity.userBalance,
-      userOpeningBalance: entity.userOpeningBalance,
-      userOpeningBalanceDate: entity.userOpeningBalanceDate,
-      userProfilePhotoUrl: entity.userProfilePhotoUrl,
       voucherId: entity.voucherId,
       voucherDate: entity.voucherDate,
+      voucherProject: entity.voucherProject,
       costCenterId: entity.costCenterId,
       payeeType: entity.payeeType,
       payeeOthersName: entity.payeeOthersName,
@@ -305,24 +296,36 @@ class DashboardModel {
   DashboardEntity toEntity() {
     return DashboardEntity(
       activityId: activityId,
-      endDate: endDate,
+      activityPendingCount: activityPendingCount,
+      activityPriority: activityPriority,
+      activityStartDate: activityStartDate,
+      activityEndDate: AcitvityEndDate,
       estimateHours: estimateHours,
-      status: status,
+      activityStatus: activityStatus,
       title: title,
       project: project,
       createdAt: createdAt,
       assignorName: assignorName,
       assignorImage: assignorImage,
-      projectId: projectId,
       projectName: projectName,
-      projectSlug: projectSlug,
-      projectDescription: projectDescription,
-      projectStatus: projectStatus,
-      projectCreatedAt: projectCreatedAt,
-      projectUpdatedAt: projectUpdatedAt,
+      assignedUsers: assignedUsers
+          ?.map((assignedUser) => assignedUser.toEntity())
+          .toList(),
       availableLeave: availableLeave,
       usedLeave: usedLeave,
       attendanceId: attendanceId,
+      leaveId: leaveId,
+      leaveUserid: leaveUserid,
+      leaveType: leaveType,
+      leaveStartDate: leaveStartDate,
+      leaveEndDate: leaveEndDate,
+      leaveStatus: leaveStatus,
+      leaveCreatedAt: leaveCreatedAt,
+      leaveUpdatedAt: leaveUpdatedAt,
+      leaveDays: leaveDays,
+      leaveReason: leaveReason,
+      leaveResponsiblePersonId: leaveResponsiblePersonId,
+      leaveApproverId: leaveApproverId,
       userId: userId,
       inTime: inTime,
       outTime: outTime,
@@ -331,18 +334,10 @@ class DashboardModel {
       attendanceCreatedAt: attendanceCreatedAt,
       attendanceUpdatedAt: attendanceUpdatedAt,
       userName: userName,
-      userEmail: userEmail,
-      userPhone: userPhone,
-      userDepartment: userDepartment,
-      userDesignation: userDesignation,
-      userEmployeeId: userEmployeeId,
-      userBalance: userBalance,
-      userOpeningBalance: userOpeningBalance,
-      userOpeningBalanceDate: userOpeningBalanceDate,
-      userProfilePhotoUrl: userProfilePhotoUrl,
       voucherId: voucherId,
       voucherUserId: voucherUserId,
       voucherDate: voucherDate,
+      voucherProject: voucherProject,
       costCenterId: costCenterId,
       payeeType: payeeType,
       payeeOthersName: payeeOthersName,
@@ -362,6 +357,54 @@ class DashboardModel {
       voucherPaidByName: voucherPaidByName,
       voucherApproverName: voucherApproverName,
       voucherStatus: voucherStatus,
+    );
+  }
+}
+
+class AssignedUserModel extends AssignedUserEntity {
+  const AssignedUserModel({
+    required int id,
+    required String name,
+    String? profilePhotoPath,
+  }) : super(
+          id: id,
+          name: name,
+          profilePhotoPath: profilePhotoPath,
+        );
+
+  // Convert Model to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'profile_photo_path': profilePhotoPath,
+    };
+  }
+
+  // Create Model from JSON
+  factory AssignedUserModel.fromJson(Map<String, dynamic> json) {
+    return AssignedUserModel(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      profilePhotoPath: json['profile_photo_path'] as String?,
+    );
+  }
+
+  // Convert Model to Entity
+  AssignedUserEntity toEntity() {
+    return AssignedUserEntity(
+      id: id,
+      name: name,
+      profilePhotoPath: profilePhotoPath,
+    );
+  }
+
+  // Create Model from Entity
+  factory AssignedUserModel.fromEntity(AssignedUserEntity entity) {
+    return AssignedUserModel(
+      id: entity.id,
+      name: entity.name,
+      profilePhotoPath: entity.profilePhotoPath,
     );
   }
 }

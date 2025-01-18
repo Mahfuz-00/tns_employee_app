@@ -7,8 +7,11 @@ class VoucherEntity {
   final dynamic payeeType;
   final dynamic payeeOthersName;
   final dynamic customerId;
+  final dynamic customerName;
   final dynamic supplierId;
+  final dynamic supplierName;
   final dynamic paidById;
+  final dynamic paidByName;
   final dynamic description;
   final dynamic totalAmount;
   final dynamic purchaseId;
@@ -41,6 +44,9 @@ class VoucherEntity {
     required this.status,
     required this.createdAt,
     required this.updatedAt,
+    required this.customerName,
+    required this.supplierName,
+    required this.paidByName,
   });
 
   @override

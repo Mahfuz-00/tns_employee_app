@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:touch_and_solve_inventory_app/Presentation/Dashboard%20Page/Widget/progression_indicator.dart';
-
+import 'package:intl/intl.dart';
 import '../../../Core/Config/Assets/app_images.dart';
 import '../../../Core/Config/Theme/app_colors.dart';
 
@@ -36,6 +35,36 @@ class _LeaveCardState extends State<LeaveCard> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+
+    String _formatDate(String date) {
+      try {
+        print(date);
+
+        // First try parsing the date as ISO 8601 (yyyy-MM-dd)
+        DateTime parsedDate =
+        DateTime.parse(date); // yyyy-MM-dd or yyyy-MM-ddTHH:mm:ss format
+        return DateFormat('MMM dd').format(parsedDate); // Format to "MMM dd"
+      } catch (e) {
+        // If that fails, try parsing the date with custom format (MM-dd-yyyy)
+        try {
+          DateTime parsedDate = DateFormat('dd-MM-yyyy').parse(date);
+          return DateFormat('MMM dd').format(parsedDate); // Format to "MMM dd"
+        } catch (e) {
+          // If both parsing attempts fail, return the original string
+          return date;
+        }
+      }
+    }
+
+    String Status = 'N/A';
+
+    if (widget.Status == 'pending') {
+      Status = 'Pending';
+    } else if (widget.Status == 'approved') {
+      Status = 'Approved';
+    } else if (widget.Status == 'not_approve') {
+      Status = 'Rejected';
+    }
 
     return Container(
       margin: EdgeInsets.zero,
@@ -92,7 +121,7 @@ class _LeaveCardState extends State<LeaveCard> {
                         SizedBox(width: 5), // Spacing between icon and text
                         Text(
                           /*widget.date*/
-                          widget.Date, // Replace with your date
+                          _formatDate(widget.Date), // Replace with your date
                           style: TextStyle(
                               color: AppColors.textBlack,
                               fontWeight: FontWeight.w500,
@@ -124,14 +153,28 @@ class _LeaveCardState extends State<LeaveCard> {
                       mainAxisSize: MainAxisSize.min,
                       //mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.timer, // Timer icon
-                          size: 16,
-                          color: Colors.grey[600],
-                        ),
+                        if(Status == 'Pending')...[
+                          Icon(
+                            Icons.timer, // Timer icon
+                            size: 16,
+                            color: Colors.grey[600],
+                          ),
+                        ] else if (Status == 'Approved') ...[
+                          Icon(
+                            Icons.check, // Timer icon
+                            size: 16,
+                            color: Colors.grey[600],
+                          ),
+                        ] else if (Status == 'Rejected') ...[
+                          Icon(
+                            Icons.not_interested_outlined, // Timer icon
+                            size: 16,
+                            color: Colors.grey[600],
+                          ),
+                        ],
                         SizedBox(width: 5),
                         Text(
-                          widget.Status,
+                          Status,
                           style: TextStyle(
                             color: AppColors.textBlack,
                             fontWeight: FontWeight.w500,

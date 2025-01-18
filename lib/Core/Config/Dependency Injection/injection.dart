@@ -301,24 +301,23 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => GetVouchers(repository: getIt()));
   getIt.registerFactory(() => VoucherBloc(getVouchers: getIt()));
 
-
   //Dashboard
   getIt.registerLazySingleton<DashboardRemoteSource>(
-        () => DashboardRemoteSourceImpl(client: getIt()),
+    () => DashboardRemoteSourceImpl(client: getIt()),
   );
 
   // Repositories
   getIt.registerLazySingleton<DashboardRepository>(
-        () => DashboardRepositoryImpl(remoteSource: getIt()),
+    () => DashboardRepositoryImpl(remoteSource: getIt()),
   );
 
   // Use cases
   getIt.registerLazySingleton(
-        () => GetDashboardDataUseCase(repository: getIt()),
+    () => GetDashboardDataUseCase(repository: getIt()),
   );
 
   // Bloc
   getIt.registerFactory(
-        () => DashboardBloc(getDashboardDataUseCase: getIt()),
+    () => DashboardBloc(getDashboardDataUseCase: getIt()),
   );
 }

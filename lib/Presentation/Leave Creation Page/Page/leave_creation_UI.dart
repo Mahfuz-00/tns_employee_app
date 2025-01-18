@@ -523,7 +523,7 @@ class _LeaveCreationState extends State<LeaveCreation> {
                         ),
                       ),
                       child: const Text(
-                        'Create Task',
+                        'Submit Leave',
                         style: TextStyle(
                           fontFamily: 'Roboto',
                           fontSize: 14.0,

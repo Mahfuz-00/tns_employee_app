@@ -1,23 +1,33 @@
 class DashboardEntity {
   final int? activityId;
-  final String? endDate;
+  final int? activityPendingCount;
+  final String? activityPriority;
+  final String? activityStartDate;
+  final String? activityEndDate;
   final String? estimateHours;
-  final String? status;
+  final String? activityStatus;
   final String? title;
   final String? project;
   final String? createdAt;
   final String? assignorName;
   final String? assignorImage;
-  final int? projectId;
   final String? projectName;
-  final String? projectSlug;
-  final String? projectDescription;
-  final String? projectStatus;
-  final String? projectCreatedAt;
-  final String? projectUpdatedAt;
+  final List<AssignedUserEntity>? assignedUsers;
   final String? availableLeave;
   final String? usedLeave;
   final int? attendanceId;
+  final int? leaveId;
+  final int? leaveUserid;
+  final String? leaveType;
+  final String? leaveStartDate;
+  final String? leaveEndDate;
+  final String? leaveStatus;
+  final String? leaveCreatedAt;
+  final String? leaveUpdatedAt;
+  final int? leaveDays;
+  final String? leaveReason;
+  final int? leaveResponsiblePersonId;
+  final int? leaveApproverId;
   final int? userId;
   final String? inTime;
   final String? outTime;
@@ -26,18 +36,10 @@ class DashboardEntity {
   final String? attendanceCreatedAt;
   final String? attendanceUpdatedAt;
   final String? userName;
-  final String? userEmail;
-  final String? userPhone;
-  final String? userDepartment;
-  final String? userDesignation;
-  final String? userEmployeeId;
-  final int? userBalance;
-  final int? userOpeningBalance;
-  final String? userOpeningBalanceDate;
-  final String? userProfilePhotoUrl;
   final int? voucherId;
-  final  int? voucherUserId;
+  final int? voucherUserId;
   final String? voucherDate;
+  final String? voucherProject;
   final int? costCenterId;
   final String? payeeType;
   final String? payeeOthersName;
@@ -60,23 +62,33 @@ class DashboardEntity {
 
   DashboardEntity({
     required this.activityId,
-    required this.endDate,
+    required this.activityPendingCount,
+    required this.activityPriority,
+    required this.activityStartDate,
+    required this.activityEndDate,
     required this.estimateHours,
-    required this.status,
+    required this.activityStatus,
     required this.title,
     required this.project,
     required this.createdAt,
     this.assignorName,
     this.assignorImage,
-    required this.projectId,
     required this.projectName,
-    required this.projectSlug,
-    this.projectDescription,
-    required this.projectStatus,
-    required this.projectCreatedAt,
-    required this.projectUpdatedAt,
+    required this.assignedUsers,
     required this.availableLeave,
     required this.usedLeave,
+    required this.leaveId,
+    required this.leaveUserid,
+    required this.leaveType,
+    required this.leaveStartDate,
+    required this.leaveEndDate,
+    required this.leaveStatus,
+    required this.leaveCreatedAt,
+    required this.leaveUpdatedAt,
+    required this.leaveDays,
+    required this.leaveReason,
+    required this.leaveResponsiblePersonId,
+    required this.leaveApproverId,
     required this.attendanceId,
     required this.userId,
     required this.inTime,
@@ -86,18 +98,10 @@ class DashboardEntity {
     required this.attendanceCreatedAt,
     required this.attendanceUpdatedAt,
     required this.userName,
-    required this.userEmail,
-    required this.userPhone,
-    required this.userDepartment,
-    required this.userDesignation,
-    required this.userEmployeeId,
-    required this.userBalance,
-    required this.userOpeningBalance,
-    required this.userOpeningBalanceDate,
-    this.userProfilePhotoUrl,
     required this.voucherId,
     required this.voucherUserId,
     required this.voucherDate,
+    required this.voucherProject,
     required this.costCenterId,
     required this.payeeType,
     required this.payeeOthersName,
@@ -123,24 +127,34 @@ class DashboardEntity {
   DashboardEntity toEntity() {
     return DashboardEntity(
       activityId: activityId,
-      endDate: endDate,
+      activityPendingCount: activityPendingCount,
+      activityPriority: activityPriority,
+      activityStartDate: activityStartDate,
+      activityEndDate: activityEndDate,
       estimateHours: estimateHours,
-      status: status,
+      activityStatus: activityStatus,
       title: title,
       project: project,
       createdAt: createdAt,
       assignorName: assignorName,
       assignorImage: assignorImage,
-      projectId: projectId,
       projectName: projectName,
-      projectSlug: projectSlug,
-      projectDescription: projectDescription,
-      projectStatus: projectStatus,
-      projectCreatedAt: projectCreatedAt,
-      projectUpdatedAt: projectUpdatedAt,
+      assignedUsers: assignedUsers?.map((user) => AssignedUserEntity(id: 0, name: '')).toList(),
       availableLeave: availableLeave,
       usedLeave: usedLeave,
       attendanceId: attendanceId,
+      leaveId: leaveId,
+      leaveUserid: leaveUserid,
+      leaveType: leaveType,
+      leaveStartDate: leaveStartDate,
+      leaveEndDate: leaveEndDate,
+      leaveStatus: leaveStatus,
+      leaveCreatedAt: leaveCreatedAt,
+      leaveUpdatedAt: leaveUpdatedAt,
+      leaveDays: leaveDays,
+      leaveReason: leaveReason,
+      leaveResponsiblePersonId: leaveResponsiblePersonId,
+      leaveApproverId: leaveApproverId,
       userId: userId,
       inTime: inTime,
       outTime: outTime,
@@ -149,15 +163,6 @@ class DashboardEntity {
       attendanceCreatedAt: attendanceCreatedAt,
       attendanceUpdatedAt: attendanceUpdatedAt,
       userName: userName,
-      userEmail: userEmail,
-      userPhone: userPhone,
-      userDepartment: userDepartment,
-      userDesignation: userDesignation,
-      userEmployeeId: userEmployeeId,
-      userBalance: userBalance,
-      userOpeningBalance: userOpeningBalance,
-      userOpeningBalanceDate: userOpeningBalanceDate,
-      userProfilePhotoUrl: userProfilePhotoUrl,
       voucherId: voucherId,
       voucherUserId: voucherUserId,
       voucherPurchaseId: voucherPurchaseId,
@@ -166,6 +171,7 @@ class DashboardEntity {
       voucherCreatedAt: voucherCreatedAt,
       voucherUpdatedAt: voucherUpdatedAt,
       voucherDate: voucherDate,
+      voucherProject: voucherProject,
       costCenterId: costCenterId,
       voucherCustomerId: voucherCustomerId,
       voucherSupplierId: voucherSupplierId,
@@ -183,4 +189,16 @@ class DashboardEntity {
   String toString() {
     return 'DashboardEntity(Available Leave: $availableLeave, Used Leave: $usedLeave)';
   }
+}
+
+class AssignedUserEntity {
+  final int id;
+  final String name;
+  final String? profilePhotoPath;
+
+  const AssignedUserEntity({
+    required this.id,
+    required this.name,
+    this.profilePhotoPath,
+  });
 }

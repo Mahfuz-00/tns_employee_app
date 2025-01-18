@@ -34,8 +34,10 @@ class ActivityRemoteDataSource {
         'Authorization': 'Bearer $authToken', // Include the token in the header
       },
     );
+
     print('response StatusCode: ${response.statusCode}');
     print('Body: ${response.body}');
+
     if (response.statusCode == 200) {
       // Decode the response body as a map
       final Map<String, dynamic> decodedResponse = json.decode(response.body);
