@@ -143,8 +143,7 @@ class _DashboardState extends State<Dashboard> {
                                               // Name and Verified Icon
                                               Row(
                                                 children: [
-                                                  Expanded(
-                                                    flex: 6,
+                                                  Flexible(
                                                     child: Text(
                                                       profile.name,
                                                       style: TextStyle(
@@ -159,13 +158,10 @@ class _DashboardState extends State<Dashboard> {
                                                     ),
                                                   ),
                                                   SizedBox(width: 8.0),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Icon(
-                                                      Icons.verified,
-                                                      color: AppColors.primary,
-                                                      size: screenWidth * 0.05,
-                                                    ),
+                                                  Icon(
+                                                    Icons.verified,
+                                                    color: AppColors.primary,
+                                                    size: screenWidth * 0.05,
                                                   ),
                                                 ],
                                               ),
@@ -235,99 +231,238 @@ class _DashboardState extends State<Dashboard> {
                                   if (state is DashboardLoadingState) {
                                     return Center(child: OverlayLoader());
                                   } else if (state is DashboardLoadedState) {
+                                    print(
+                                        'Activity from State: ${state.dashboardData?.activities}');
+                                    print(
+                                        'Leave from State: ${state.dashboardData?.leaves}');
+                                    print(
+                                        'Attendance from State: ${state.dashboardData?.attendances}');
+                                    print(
+                                        'Voucher from State: ${state.dashboardData?.vouchers}');
+
                                     return Column(
                                       children: [
-                                        ActivitySection(
-                                          title:
-                                              state.dashboardData?.title ?? '',
-                                          progress: state.dashboardData
-                                                  ?.activityStatus ??
-                                              '',
-                                          date: state.dashboardData
-                                                  ?.activityStartDate ??
-                                              '',
-                                          priority: state.dashboardData
-                                                  ?.activityPriority ??
-                                              '',
-                                          status: state.dashboardData
-                                                  ?.activityStatus ??
-                                              '',
-                                          pendingCount: state.dashboardData
-                                                  ?.activityPendingCount ??
-                                              0,
-                                          images: state.dashboardData
-                                                      ?.assignedUsers !=
-                                                  null
-                                              ? state
-                                                  .dashboardData!.assignedUsers!
-                                                  .map((user) =>
-                                                      user.profilePhotoPath ??
-                                                      'Unknown')
-                                                  .toList()
-                                              : <String>[],
-                                        ),
+                                        if (state.dashboardData?.activities
+                                                ?.isEmpty ??
+                                            true) ...[
+                                          Text(
+                                            'No Recent Activities',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.primary,
+                                              fontFamily: 'Roboto',
+                                            ),
+                                          ),
+                                        ] else ...[
+                                          ActivitySection(
+                                            title: state
+                                                        .dashboardData
+                                                        ?.activities
+                                                        ?.isNotEmpty ==
+                                                    true
+                                                ? state
+                                                        .dashboardData
+                                                        ?.activities
+                                                        ?.first
+                                                        .title ??
+                                                    ''
+                                                : '',
+                                            progress: state
+                                                    .dashboardData
+                                                    ?.activities
+                                                    ?.first
+                                                    .activityStatus ??
+                                                '',
+                                            date: state
+                                                    .dashboardData
+                                                    ?.activities
+                                                    ?.first
+                                                    .activityStartDate ??
+                                                '',
+                                            priority: state
+                                                    .dashboardData
+                                                    ?.activities
+                                                    ?.first
+                                                    .activityPriority ??
+                                                '',
+                                            status: state
+                                                    .dashboardData
+                                                    ?.activities
+                                                    ?.first
+                                                    .activityStatus ??
+                                                '',
+                                            pendingCount: state
+                                                    .dashboardData
+                                                    ?.activities
+                                                    ?.first
+                                                    .activityPendingCount ??
+                                                0,
+                                            images: state
+                                                        .dashboardData
+                                                        ?.activities
+                                                        ?.first
+                                                        .assignedUsers !=
+                                                    null
+                                                ? state
+                                                    .dashboardData!
+                                                    .activities!
+                                                    .first
+                                                    .assignedUsers!
+                                                    .map((user) =>
+                                                        user.profilePhotoPath ??
+                                                        '')
+                                                    .toList()
+                                                : <String>[],
+                                          ),
+                                        ],
                                         SizedBox(
                                           height: 10,
                                         ),
-                                        LeaveSection(
-                                          availableLeave: state.dashboardData
-                                                  ?.availableLeave ??
-                                              '',
-                                          usedLeave:
-                                              state.dashboardData?.usedLeave ??
-                                                  '',
-                                          leaveType:
-                                              state.dashboardData?.leaveType ??
-                                                  '',
-                                          leaveStatus: state
-                                                  .dashboardData?.leaveStatus ??
-                                              '',
-                                          leaveDate: state.dashboardData
-                                                  ?.leaveStartDate ??
-                                              '',
-                                        ),
+                                        if (state.dashboardData?.leaves
+                                                ?.isEmpty ??
+                                            true) ...[
+                                          LeaveSection(
+                                            availableLeave: state.dashboardData
+                                                    ?.availableLeave
+                                                    .toString() ??
+                                                '',
+                                            usedLeave: state
+                                                    .dashboardData?.usedLeave
+                                                    .toString() ??
+                                                '',
+                                            leaveType: '',
+                                            leaveStatus: '',
+                                            leaveDate: '',
+                                          ),
+                                        ] else ...[
+                                          LeaveSection(
+                                            availableLeave: state.dashboardData
+                                                    ?.availableLeave
+                                                    .toString() ??
+                                                '',
+                                            usedLeave: state
+                                                    .dashboardData?.usedLeave
+                                                    .toString() ??
+                                                '',
+                                            leaveType: state.dashboardData
+                                                    ?.leaves?.first.leaveType ??
+                                                '',
+                                            leaveStatus: state
+                                                    .dashboardData
+                                                    ?.leaves
+                                                    ?.first
+                                                    .leaveStatus ??
+                                                '',
+                                            leaveDate: state
+                                                    .dashboardData
+                                                    ?.leaves
+                                                    ?.first
+                                                    .leaveStartDate ??
+                                                '',
+                                          ),
+                                        ],
                                         SizedBox(
                                           height: 10,
                                         ),
-                                        AttendanceSection(
-                                          inTime:
-                                              state.dashboardData?.inTime ?? '',
-                                          outTime:
-                                              state.dashboardData?.outTime ??
-                                                  '',
-                                          projectName: state.dashboardData
-                                                  ?.attendanceProject ??
-                                              '',
-                                          inDate: state.dashboardData
-                                                  ?.attendanceCreatedAt ??
-                                              '',
-                                          approvedBy:
-                                              state.dashboardData?.userName ??
-                                                  '',
-                                          /*    approvedImage: state.dashboardData
+                                        if (state.dashboardData?.attendances
+                                                ?.isEmpty ??
+                                            true) ...[
+                                          Text(
+                                            'No Recent Attendance',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.primary,
+                                              fontFamily: 'Roboto',
+                                            ),
+                                          ),
+                                        ] else ...[
+                                          AttendanceSection(
+                                            inTime: state
+                                                    .dashboardData
+                                                    ?.attendances
+                                                    ?.first
+                                                    .inTime ??
+                                                '',
+                                            outTime: state
+                                                    .dashboardData
+                                                    ?.attendances
+                                                    ?.first
+                                                    .outTime ??
+                                                '',
+                                            projectName: state
+                                                    .dashboardData
+                                                    ?.attendances
+                                                    ?.first
+                                                    .attendanceProject ??
+                                                '',
+                                            inDate: state
+                                                    .dashboardData
+                                                    ?.attendances
+                                                    ?.first
+                                                    .attendanceCreatedAt ??
+                                                '',
+                                            approvedBy: state
+                                                    .dashboardData
+                                                    ?.attendances
+                                                    ?.first
+                                                    .attendanceUserName ??
+                                                '',
+                                            /*    approvedImage: state.dashboardData
                                                   ?.userProfilePhotoUrl ??
                                               '',*/
-                                        ),
+                                          ),
+                                        ],
                                         SizedBox(
                                           height: 10,
                                         ),
-                                        VoucherSection(
-                                          submittedDate: state.dashboardData
-                                                  ?.voucherCreatedAt ??
-                                              '',
-                                          expense: state
-                                                  .dashboardData?.totalAmount ??
-                                              '',
-                                          approvedBy: state.dashboardData
-                                                  ?.voucherApproverName ??
-                                              '',
-                                          approvedDate: state.dashboardData
-                                                  ?.voucherUpdatedAt ??
-                                              '',
-                                          ProjectName: state.dashboardData
-                                                  ?.voucherProject ??
-                                              '',
-                                        )
+                                        if (state.dashboardData?.vouchers
+                                                ?.isEmpty ??
+                                            true) ...[
+                                          Text(
+                                            'No Recent Attendance',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.primary,
+                                              fontFamily: 'Roboto',
+                                            ),
+                                          ),
+                                        ] else ...[
+                                          VoucherSection(
+                                            submittedDate: state
+                                                    .dashboardData
+                                                    ?.vouchers
+                                                    ?.first
+                                                    .voucherCreatedAt ??
+                                                '',
+                                            expense: state
+                                                    .dashboardData
+                                                    ?.vouchers
+                                                    ?.first
+                                                    .totalAmount ??
+                                                '',
+                                            approvedBy: state
+                                                    .dashboardData
+                                                    ?.vouchers
+                                                    ?.first
+                                                    .voucherApproverName ??
+                                                '',
+                                            approvedDate: state
+                                                    .dashboardData
+                                                    ?.vouchers
+                                                    ?.first
+                                                    .voucherUpdatedAt ??
+                                                '',
+                                            ProjectName: state
+                                                    .dashboardData
+                                                    ?.vouchers
+                                                    ?.first
+                                                    .voucherProject ??
+                                                '',
+                                          )
+                                        ],
                                       ],
                                     );
                                   } else if (state is DashboardErrorState) {

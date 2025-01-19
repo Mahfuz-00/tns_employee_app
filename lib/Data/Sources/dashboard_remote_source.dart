@@ -110,7 +110,7 @@ class DashboardRemoteSourceImpl implements DashboardRemoteSource {
           print('$key Type: ${value.runtimeType}');
         });
       } else {
-        print('Vouchers is not a Map, type: ${leave.runtimeType}');
+        print('Leave is not a Map, type: ${leave.runtimeType}');
       }
 
       // Extracting the 'data' field

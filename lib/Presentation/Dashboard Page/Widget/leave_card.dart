@@ -42,7 +42,7 @@ class _LeaveCardState extends State<LeaveCard> {
 
         // First try parsing the date as ISO 8601 (yyyy-MM-dd)
         DateTime parsedDate =
-        DateTime.parse(date); // yyyy-MM-dd or yyyy-MM-ddTHH:mm:ss format
+            DateTime.parse(date); // yyyy-MM-dd or yyyy-MM-ddTHH:mm:ss format
         return DateFormat('MMM dd').format(parsedDate); // Format to "MMM dd"
       } catch (e) {
         // If that fails, try parsing the date with custom format (MM-dd-yyyy)
@@ -80,112 +80,130 @@ class _LeaveCardState extends State<LeaveCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Row with circular logo, header, and time spreader
-              Row(
-                children: [
-                  // Circular Logo
-                  CircleAvatar(
-                    radius: 16,
-                    child: Image.asset(AppImages.LeaveIcon2),
+              if (widget.leaveHeader == '') ...[
+                Center(
+                  child: Text(
+                    'No Recent Leave',
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.textGrey,
+                        fontFamily: 'Roboto'),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      widget.leaveHeader, // Second Header
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.textDarkBlack,
-                          fontFamily: 'Roboto'),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
+                ),
+                SizedBox(height: 8),
+              ],
+              if (widget.leaveHeader.isNotEmpty) ...[
+                // Row with circular logo, header, and time spreader
+                Row(
+                  children: [
+                    // Circular Logo
+                    CircleAvatar(
+                      radius: 16,
+                      child: Image.asset(AppImages.LeaveIcon2),
                     ),
-                  ),
-                  SizedBox(width: 8), // Spacing between elements
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                    decoration: BoxDecoration(
-                      //color: AppColors.textWhite,
-                      borderRadius: BorderRadius.circular(4),
-                      /*border: Border.all(color: AppColors.textWhite), */ // Adjust border color as needed
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        widget.leaveHeader, // Second Header
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.textDarkBlack,
+                            fontFamily: 'Roboto'),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset(
-                          AppImages.CalenderIcon,
-                          color: Colors.grey,
-                          width: 16,
-                          height: 16,
-                        ),
-                        SizedBox(width: 5), // Spacing between icon and text
-                        Text(
-                          /*widget.date*/
-                          _formatDate(widget.Date), // Replace with your date
-                          style: TextStyle(
-                              color: AppColors.textBlack,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              fontFamily: 'Roboto'),
-                        ),
-                      ],
+                    SizedBox(width: 8), // Spacing between elements
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                      decoration: BoxDecoration(
+                        //color: AppColors.textWhite,
+                        borderRadius: BorderRadius.circular(4),
+                        /*border: Border.all(color: AppColors.textWhite), */ // Adjust border color as needed
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            AppImages.CalenderIcon,
+                            color: Colors.grey,
+                            width: 16,
+                            height: 16,
+                          ),
+                          SizedBox(width: 5), // Spacing between icon and text
+                          Text(
+                            /*widget.date*/
+                            _formatDate(widget.Date), // Replace with your date
+                            style: TextStyle(
+                                color: AppColors.textBlack,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                fontFamily: 'Roboto'),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-
+                  ],
+                ),
+                SizedBox(height: 8),
+              ],
               Row(
                 // First row with Section 1 and Section 2
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Section 1 (Timer Status)
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                    //width: screenWidth * 0.20,
-                    //height: screenHeight * 0.035,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: AppColors.containerBackgroundGrey300,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      //mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if(Status == 'Pending')...[
-                          Icon(
-                            Icons.timer, // Timer icon
-                            size: 16,
-                            color: Colors.grey[600],
-                          ),
-                        ] else if (Status == 'Approved') ...[
-                          Icon(
-                            Icons.check, // Timer icon
-                            size: 16,
-                            color: Colors.grey[600],
-                          ),
-                        ] else if (Status == 'Rejected') ...[
-                          Icon(
-                            Icons.not_interested_outlined, // Timer icon
-                            size: 16,
-                            color: Colors.grey[600],
+                  if (widget.leaveHeader.isNotEmpty) ...[
+                    // Section 1 (Timer Status)
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                      //width: screenWidth * 0.20,
+                      //height: screenHeight * 0.035,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: AppColors.containerBackgroundGrey300,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        //mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (Status == 'Pending') ...[
+                            Icon(
+                              Icons.timer, // Timer icon
+                              size: 16,
+                              color: Colors.grey[600],
+                            ),
+                          ] else if (Status == 'Approved') ...[
+                            Icon(
+                              Icons.check, // Timer icon
+                              size: 16,
+                              color: Colors.grey[600],
+                            ),
+                          ] else if (Status == 'Rejected') ...[
+                            Icon(
+                              Icons.not_interested_outlined, // Timer icon
+                              size: 16,
+                              color: Colors.grey[600],
+                            ),
+                          ],
+                          SizedBox(width: 5),
+                          Text(
+                            Status,
+                            style: TextStyle(
+                              color: AppColors.textBlack,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                              fontFamily: 'Roboto',
+                            ),
                           ),
                         ],
-                        SizedBox(width: 5),
-                        Text(
-                          Status,
-                          style: TextStyle(
-                            color: AppColors.textBlack,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                            fontFamily: 'Roboto',
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 5),
+                    SizedBox(width: 5),
+                  ],
 
                   // Section 2 (Leave Used)
                   Container(

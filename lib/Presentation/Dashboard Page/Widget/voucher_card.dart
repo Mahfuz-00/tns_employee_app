@@ -102,7 +102,7 @@ class VoucherCard extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                      Text(
-                      project.toString(),
+                      project.toString() == ''? 'N/A' : project.toString(),
                       style: TextStyle(
                         fontFamily: 'Roboto',
                         fontSize: 14.0,
@@ -203,7 +203,7 @@ class VoucherCard extends StatelessWidget {
               ),*/
               SizedBox(width: 8),
               Text(
-                approvedBy.toString(),
+                approvedBy.toString() == '' ? 'N/A' : approvedBy.toString(),
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   fontSize: 12.0,

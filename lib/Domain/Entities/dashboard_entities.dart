@@ -1,4 +1,22 @@
 class DashboardEntity {
+  final List<ActivityEntity>? activities;
+  final dynamic availableLeave;
+  final dynamic usedLeave;
+  final List<LeaveEntity>? leaves;
+  final List<AttendanceEntity>? attendances;
+  final List<VoucherEntity>? vouchers;
+
+  DashboardEntity({
+    required this.activities,
+    required this.availableLeave,
+    required this.usedLeave,
+    required this.leaves,
+    required this.attendances,
+    required this.vouchers,
+  });
+}
+
+class ActivityEntity {
   final int? activityId;
   final int? activityPendingCount;
   final String? activityPriority;
@@ -12,10 +30,66 @@ class DashboardEntity {
   final String? assignorName;
   final String? assignorImage;
   final String? projectName;
-  final List<AssignedUserEntity>? assignedUsers;
-  final String? availableLeave;
-  final String? usedLeave;
-  final int? attendanceId;
+  List<AssignedUserEntity>? assignedUsers;
+
+  ActivityEntity({
+    this.activityId,
+    this.activityPendingCount,
+    this.activityPriority,
+    this.activityStartDate,
+    this.activityEndDate,
+    this.estimateHours,
+    this.activityStatus,
+    this.title,
+    this.project,
+    this.createdAt,
+    this.assignorName,
+    this.assignorImage,
+    this.projectName,
+    this.assignedUsers,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'activityId': activityId,
+      'activityPendingCount': activityPendingCount,
+      'activityPriority': activityPriority,
+      'activityStartDate': activityStartDate,
+      'activityEndDate': activityEndDate,
+      'estimateHours': estimateHours,
+      'activityStatus': activityStatus,
+      'title': title,
+      'project': project,
+      'createdAt': createdAt,
+      'assignorName': assignorName,
+      'assignorImage': assignorImage,
+      'projectName': projectName,
+      'assigned_users': assignedUsers?.map((e) => e.toJson()).toList(),
+    };
+  }
+
+  // Convert ActivityModel to ActivityEntity
+  ActivityEntity toEntity() {
+    return ActivityEntity(
+      activityId: activityId,
+      activityPendingCount: activityPendingCount,
+      activityPriority: activityPriority,
+      activityStartDate: activityStartDate,
+      activityEndDate: activityEndDate,
+      estimateHours: estimateHours,
+      activityStatus: activityStatus,
+      title: title,
+      project: project,
+      createdAt: createdAt,
+      assignorName: assignorName,
+      assignorImage: assignorImage,
+      projectName: projectName,
+      assignedUsers: assignedUsers?.map((e) => e.toEntity()).toList(),
+    );
+  }
+}
+
+class LeaveEntity {
   final int? leaveId;
   final int? leaveUserid;
   final String? leaveType;
@@ -28,14 +102,121 @@ class DashboardEntity {
   final String? leaveReason;
   final int? leaveResponsiblePersonId;
   final int? leaveApproverId;
-  final int? userId;
+  final String? leaveApproverName;
+  final String? leaveApproverImage;
+
+  LeaveEntity({
+    this.leaveId,
+    this.leaveUserid,
+    this.leaveType,
+    this.leaveStartDate,
+    this.leaveEndDate,
+    this.leaveStatus,
+    this.leaveCreatedAt,
+    this.leaveUpdatedAt,
+    this.leaveDays,
+    this.leaveReason,
+    this.leaveResponsiblePersonId,
+    this.leaveApproverId,
+    this.leaveApproverName,
+    this.leaveApproverImage,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'leaveId': leaveId,
+      'leaveUserid': leaveUserid,
+      'leaveType': leaveType,
+      'leaveStartDate': leaveStartDate,
+      'leaveEndDate': leaveEndDate,
+      'leaveStatus': leaveStatus,
+      'leaveCreatedAt': leaveCreatedAt,
+      'leaveUpdatedAt': leaveUpdatedAt,
+      'leaveDays': leaveDays,
+      'leaveReason': leaveReason,
+      'leaveResponsiblePersonId': leaveResponsiblePersonId,
+      'leaveApproverId': leaveApproverId,
+      'leaveApproverName': leaveApproverName,
+      'leaveApproverImage': leaveApproverImage,
+    };
+  }
+
+  // Convert Model to Entity
+  LeaveEntity toEntity() {
+    return LeaveEntity(
+      leaveId: leaveId,
+      leaveUserid: leaveUserid,
+      leaveType: leaveType,
+      leaveStartDate: leaveStartDate,
+      leaveEndDate: leaveEndDate,
+      leaveStatus: leaveStatus,
+      leaveCreatedAt: leaveCreatedAt,
+      leaveUpdatedAt: leaveUpdatedAt,
+      leaveDays: leaveDays,
+      leaveReason: leaveReason,
+      leaveResponsiblePersonId: leaveResponsiblePersonId,
+      leaveApproverId: leaveApproverId,
+      leaveApproverName: leaveApproverName,
+      leaveApproverImage: leaveApproverImage,
+    );
+  }
+}
+
+class AttendanceEntity {
+  final int? attendanceId;
+  final int? attendanceUserId;
   final String? inTime;
   final String? outTime;
   final String? deviceIp;
   final String? attendanceProject;
   final String? attendanceCreatedAt;
   final String? attendanceUpdatedAt;
-  final String? userName;
+  final String? attendanceUserName;
+
+  AttendanceEntity({
+    this.attendanceId,
+    this.attendanceUserId,
+    this.inTime,
+    this.outTime,
+    this.deviceIp,
+    this.attendanceProject,
+    this.attendanceCreatedAt,
+    this.attendanceUpdatedAt,
+    this.attendanceUserName,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'attendanceId': attendanceId,
+      'userId': attendanceUserId,
+      'inTime': inTime,
+      'outTime': outTime,
+      'deviceIp': deviceIp,
+      'attendanceProject': attendanceProject,
+      'attendanceCreatedAt': attendanceCreatedAt,
+      'attendanceUpdatedAt': attendanceUpdatedAt,
+      'userName': attendanceUserName,
+    };
+  }
+
+  // Convert Model to Entity
+  AttendanceEntity toEntity() {
+    return AttendanceEntity(
+      attendanceId: attendanceId,
+      attendanceUserId: attendanceUserId,
+      inTime: inTime,
+      outTime: outTime,
+      deviceIp: deviceIp,
+      attendanceProject: attendanceProject,
+      attendanceCreatedAt: attendanceCreatedAt,
+      attendanceUpdatedAt: attendanceUpdatedAt,
+      attendanceUserName: attendanceUserName,
+    );
+  }
+
+}
+
+class VoucherEntity {
   final int? voucherId;
   final int? voucherUserId;
   final String? voucherDate;
@@ -60,136 +241,90 @@ class DashboardEntity {
   final String? voucherApproverName;
   final String? voucherStatus;
 
-  DashboardEntity({
-    required this.activityId,
-    required this.activityPendingCount,
-    required this.activityPriority,
-    required this.activityStartDate,
-    required this.activityEndDate,
-    required this.estimateHours,
-    required this.activityStatus,
-    required this.title,
-    required this.project,
-    required this.createdAt,
-    this.assignorName,
-    this.assignorImage,
-    required this.projectName,
-    required this.assignedUsers,
-    required this.availableLeave,
-    required this.usedLeave,
-    required this.leaveId,
-    required this.leaveUserid,
-    required this.leaveType,
-    required this.leaveStartDate,
-    required this.leaveEndDate,
-    required this.leaveStatus,
-    required this.leaveCreatedAt,
-    required this.leaveUpdatedAt,
-    required this.leaveDays,
-    required this.leaveReason,
-    required this.leaveResponsiblePersonId,
-    required this.leaveApproverId,
-    required this.attendanceId,
-    required this.userId,
-    required this.inTime,
-    required this.outTime,
-    required this.deviceIp,
-    this.attendanceProject,
-    required this.attendanceCreatedAt,
-    required this.attendanceUpdatedAt,
-    required this.userName,
-    required this.voucherId,
-    required this.voucherUserId,
-    required this.voucherDate,
-    required this.voucherProject,
-    required this.costCenterId,
-    required this.payeeType,
-    required this.payeeOthersName,
-    required this.voucherCustomerId,
-    required this.voucherSupplierId,
-    required this.voucherPaidbyId,
+  VoucherEntity({
+    this.voucherId,
+    this.voucherUserId,
+    this.voucherDate,
+    this.voucherProject,
+    this.costCenterId,
+    this.payeeType,
+    this.payeeOthersName,
+    this.voucherCustomerId,
+    this.voucherSupplierId,
+    this.voucherPaidbyId,
     this.voucherDescription,
-    required this.totalAmount,
-    required this.voucherPurchaseId,
-    required this.voucherSaleId,
-    required this.voucherApproverId,
-    required this.voucherCreatedAt,
-    required this.voucherUpdatedAt,
+    this.totalAmount,
+    this.voucherPurchaseId,
+    this.voucherSaleId,
+    this.voucherApproverId,
+    this.voucherCreatedAt,
+    this.voucherUpdatedAt,
     this.costCenterName,
     this.voucherCustomerName,
     this.voucherSupplierName,
     this.voucherPaidByName,
     this.voucherApproverName,
-    required this.voucherStatus,
+    this.voucherStatus,
   });
 
-  /// Converts `DashboardModel` to domain entities
-  DashboardEntity toEntity() {
-    return DashboardEntity(
-      activityId: activityId,
-      activityPendingCount: activityPendingCount,
-      activityPriority: activityPriority,
-      activityStartDate: activityStartDate,
-      activityEndDate: activityEndDate,
-      estimateHours: estimateHours,
-      activityStatus: activityStatus,
-      title: title,
-      project: project,
-      createdAt: createdAt,
-      assignorName: assignorName,
-      assignorImage: assignorImage,
-      projectName: projectName,
-      assignedUsers: assignedUsers?.map((user) => AssignedUserEntity(id: 0, name: '')).toList(),
-      availableLeave: availableLeave,
-      usedLeave: usedLeave,
-      attendanceId: attendanceId,
-      leaveId: leaveId,
-      leaveUserid: leaveUserid,
-      leaveType: leaveType,
-      leaveStartDate: leaveStartDate,
-      leaveEndDate: leaveEndDate,
-      leaveStatus: leaveStatus,
-      leaveCreatedAt: leaveCreatedAt,
-      leaveUpdatedAt: leaveUpdatedAt,
-      leaveDays: leaveDays,
-      leaveReason: leaveReason,
-      leaveResponsiblePersonId: leaveResponsiblePersonId,
-      leaveApproverId: leaveApproverId,
-      userId: userId,
-      inTime: inTime,
-      outTime: outTime,
-      deviceIp: deviceIp,
-      attendanceProject: attendanceProject,
-      attendanceCreatedAt: attendanceCreatedAt,
-      attendanceUpdatedAt: attendanceUpdatedAt,
-      userName: userName,
+  Map<String, dynamic> toJson() {
+    return {
+      'voucherId': voucherId,
+      'voucherUserId': voucherUserId,
+      'voucherDate': voucherDate,
+      'voucherProject': voucherProject,
+      'costCenterId': costCenterId,
+      'payeeType': payeeType,
+      'payeeOthersName': payeeOthersName,
+      'voucherCustomerId': voucherCustomerId,
+      'voucherSupplierId': voucherSupplierId,
+      'voucherPaidbyId': voucherPaidbyId,
+      'voucherDescription': voucherDescription,
+      'totalAmount': totalAmount,
+      'voucherPurchaseId': voucherPurchaseId,
+      'voucherSaleId': voucherSaleId,
+      'voucherApproverId': voucherApproverId,
+      'voucherCreatedAt': voucherCreatedAt,
+      'voucherUpdatedAt': voucherUpdatedAt,
+      'costCenterName': costCenterName,
+      'voucherCustomerName': voucherCustomerName,
+      'voucherSupplierName': voucherSupplierName,
+      'voucherPaidByName': voucherPaidByName,
+      'voucherApproverName': voucherApproverName,
+      'voucherStatus': voucherStatus,
+    };
+  }
+
+  // Convert Model to Entity
+  VoucherEntity toEntity() {
+    return VoucherEntity(
       voucherId: voucherId,
       voucherUserId: voucherUserId,
+      voucherDate: voucherDate,
+      voucherProject: voucherProject,
+      costCenterId: costCenterId,
+      payeeType: payeeType,
+      payeeOthersName: payeeOthersName,
+      voucherCustomerId: voucherCustomerId,
+      voucherSupplierId: voucherSupplierId,
+      voucherPaidbyId: voucherPaidbyId,
+      voucherDescription: voucherDescription,
+      totalAmount: totalAmount,
       voucherPurchaseId: voucherPurchaseId,
       voucherSaleId: voucherSaleId,
       voucherApproverId: voucherApproverId,
       voucherCreatedAt: voucherCreatedAt,
       voucherUpdatedAt: voucherUpdatedAt,
-      voucherDate: voucherDate,
-      voucherProject: voucherProject,
-      costCenterId: costCenterId,
-      voucherCustomerId: voucherCustomerId,
-      voucherSupplierId: voucherSupplierId,
-      voucherPaidbyId: voucherPaidbyId,
-      payeeType: payeeType,
-      payeeOthersName: payeeOthersName,
-      voucherDescription: voucherDescription,
-      totalAmount: totalAmount,
       costCenterName: costCenterName,
+      voucherCustomerName: voucherCustomerName,
+      voucherSupplierName: voucherSupplierName,
+      voucherPaidByName: voucherPaidByName,
+      voucherApproverName: voucherApproverName,
       voucherStatus: voucherStatus,
     );
   }
-
-  @override
-  String toString() {
-    return 'DashboardEntity(Available Leave: $availableLeave, Used Leave: $usedLeave)';
-  }
 }
+
 
 class AssignedUserEntity {
   final int id;
@@ -201,4 +336,22 @@ class AssignedUserEntity {
     required this.name,
     this.profilePhotoPath,
   });
+
+  // Convert Model to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'profile_photo_path': profilePhotoPath,
+    };
+  }
+
+  // Convert Model to Entity
+  AssignedUserEntity toEntity() {
+    return AssignedUserEntity(
+      id: id,
+      name: name,
+      profilePhotoPath: profilePhotoPath,
+    );
+  }
 }

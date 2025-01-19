@@ -381,7 +381,7 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
               /*   progression: task.progression,*/
               images: task.assignedUsers != null
                   ? task.assignedUsers!
-                      .map((user) => user.profilePhotoPath ?? 'Unknown')
+                      .map((user) => user.profilePhotoPath ?? '')
                       .toList()
                   : [],
               commentCount: commentCount,
