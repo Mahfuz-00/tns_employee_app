@@ -145,7 +145,7 @@ class _DashboardState extends State<Dashboard> {
                                                 children: [
                                                   Flexible(
                                                     child: Text(
-                                                      profile.name,
+                                                      profile.name ?? 'N/A',
                                                       style: TextStyle(
                                                         fontSize: 16,
                                                         fontWeight:
@@ -168,7 +168,7 @@ class _DashboardState extends State<Dashboard> {
                                               SizedBox(height: 5),
                                               // Designation
                                               Text(
-                                                profile.designation,
+                                                profile.designation ?? 'N/A',
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   color: AppColors.primary,
@@ -245,13 +245,25 @@ class _DashboardState extends State<Dashboard> {
                                         if (state.dashboardData?.activities
                                                 ?.isEmpty ??
                                             true) ...[
-                                          Text(
-                                            'No Recent Activities',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.primary,
-                                              fontFamily: 'Roboto',
+                                          Container(
+                                            width: screenWidth,
+                                            margin: EdgeInsets.symmetric(horizontal: 4),
+                                            padding: EdgeInsets.all(16),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.backgroundWhite,
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                'No Recent Activities',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.primary,
+                                                  fontFamily: 'Roboto',
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ] else ...[
@@ -368,13 +380,25 @@ class _DashboardState extends State<Dashboard> {
                                         if (state.dashboardData?.attendances
                                                 ?.isEmpty ??
                                             true) ...[
-                                          Text(
-                                            'No Recent Attendance',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.primary,
-                                              fontFamily: 'Roboto',
+                                          Container(
+                                            width: screenWidth,
+                                            margin: EdgeInsets.symmetric(horizontal: 4),
+                                            padding: EdgeInsets.all(16),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.backgroundWhite,
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                'No Recent Attendance',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.primary,
+                                                  fontFamily: 'Roboto',
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ] else ...[
@@ -420,13 +444,25 @@ class _DashboardState extends State<Dashboard> {
                                         if (state.dashboardData?.vouchers
                                                 ?.isEmpty ??
                                             true) ...[
-                                          Text(
-                                            'No Recent Attendance',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.primary,
-                                              fontFamily: 'Roboto',
+                                          Container(
+                                            width: screenWidth,
+                                            margin: EdgeInsets.symmetric(horizontal: 4),
+                                            padding: EdgeInsets.all(16),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.backgroundWhite,
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                'No Recent Vouchers',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.primary,
+                                                  fontFamily: 'Roboto',
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ] else ...[

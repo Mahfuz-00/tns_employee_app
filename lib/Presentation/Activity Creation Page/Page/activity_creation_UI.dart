@@ -80,7 +80,7 @@ class _ActivityCreationState extends State<ActivityCreation> {
     });
   }
 
-  late final totalHours;
+  late int totalHours = 0;
 
   void calculateEstimatedHours(String startDate, String endDate) {
     try {
@@ -94,13 +94,14 @@ class _ActivityCreationState extends State<ActivityCreation> {
       }
 
       // Calculate the number of days between the dates (inclusive)
-      final differenceInDays = end.difference(start).inDays + 1;
+      int differenceInDays = end.difference(start).inDays + 1;
 
       // Calculate the total estimated hours
       totalHours = differenceInDays * 7;
-
-      // Store the result in the external variable
-      _estimatedHourController.text = '${totalHours.toString()} Hours';
+      setState(() {
+        // Store the result in the external variable
+        _estimatedHourController.text = '${totalHours.toString()} Hours';
+      });
       print("Estimated hours: ${_estimatedHourController.text}");
     } catch (e) {
       print("Error calculating estimated hours: $e");

@@ -110,8 +110,10 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
                                           child: Text(
                                             'No activity available',
                                             style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold),
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.textGrey,
+                                                fontFamily: 'Roboto'),
                                           ),
                                         ),
                                       )
@@ -232,11 +234,11 @@ class _ActivityDashboardState extends State<ActivityDashboard> {
               // Default state (TaskInitialState), when no data has been loaded yet
               return Center(
                   child: Text(
-                'No tasks available.',
+                'No activities available.',
                 style: TextStyle(
                     fontSize: 16.0,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.textBlack,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textGrey,
                     fontFamily: 'Roboto'),
               ));
             }

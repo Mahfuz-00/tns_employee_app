@@ -32,10 +32,10 @@ class AttendanceRemoteDataSourceImpl implements AttendanceRemoteDataSource {
     try {
       // Make HTTP GET request
       final response = await client.get(
-        Uri.parse('${AppURLS().Basepath}/api/attendance/request/list'),
+        Uri.parse('${AppURLS().Basepath}/api/attendance/list'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $authToken', // Include token in header
+          'Authorization': 'Bearer $authToken',
         },
       );
 

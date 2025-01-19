@@ -37,8 +37,14 @@ class _RangeDatePickerState extends State<RangeDatePicker> {
       setState(() {
         startDate = picked.start;
         endDate = picked.end;
-        widget.controller.text =
-        '${DateFormat('dd MMM').format(startDate!)} - ${DateFormat('dd MMM').format(endDate!)}'; // Format range as "20 Nov - 22 Nov"
+        if (startDate == endDate) {
+          // Same day selected for both start and end
+          widget.controller.text = DateFormat('dd MMM').format(startDate!); // Format as "20 Nov"
+        } else {
+          // Different start and end dates
+          widget.controller.text =
+          '${DateFormat('dd MMM').format(startDate!)} - ${DateFormat('dd MMM').format(endDate!)}'; // Format as "20 Nov - 22 Nov"
+        }
       });
       widget.onDateSelected(startDate!, endDate!); // Notify the parent widget with the selected date range
     }
