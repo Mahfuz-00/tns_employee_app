@@ -31,12 +31,12 @@ This project is a starting point for a Flutter application.
 #### Project Structure
 **The project follows a feature-based structure**:
 
-lib/
-├── Common/          # Common utilities, helpers, and BLoC files
-├── Core/            # Core configuration and theme files
-├── Data/            # Data sources and repositories
-├── Domain/          # Use cases and domain models
-└── Presentation/    # UI pages and their corresponding BLoC files
+- **lib/**  
+  - **Common/**: Common utilities, helpers, and BLoC files  
+  - **Core/**: Core configuration and theme files  
+  - **Data/**: Data sources and repositories  
+  - **Domain/**: Use cases and domain models  
+  - **Presentation/**: UI pages and their corresponding BLoC files
 
 ##### Features
 
