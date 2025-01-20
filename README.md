@@ -16,17 +16,17 @@ This project is a starting point for a Flutter application.
 1. **Clone the repository**:
    ```sh
    git clone https://github.com/Mahfuz-00/tns_employee_app.git
-   cd tns_employee_app```
+   cd tns_employee_app
 
 2. **Install dependencies**:
 
    ```sh
-flutter pub get```
+   flutter pub get
 
 3. **Run the app**:
 
    ```sh
-flutter run```
+   flutter run
 
 #### Project Structure
 **The project follows a feature-based structure**:
