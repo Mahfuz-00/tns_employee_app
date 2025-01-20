@@ -19,13 +19,14 @@ This project is a starting point for a Flutter application.
    cd tns_employee_app
 Install dependencies:
 
-sh
+   ```sh
 flutter pub get
 Run the app:
 
-sh
+   ```sh
 flutter run
-Project Structure
+
+#### Project Structure
 The project follows a feature-based structure:
 
 lib/
@@ -34,36 +35,29 @@ Core/: Core configuration and theme files.
 Data/: Data sources and repositories.
 Domain/: Use cases and domain models.
 Presentation/: UI pages and their corresponding BLoC files.
-Features
+
+##### Features
 Onboarding Page
 Dashboard
 Activity Creation and Management
 Attendance Dashboard
 Leave Management
 Voucher Management
-State Management
+
+###### State Management
 This project uses the BLoC (Business Logic Component) pattern for state management.
 
-Dependencies
+###### Dependencies
 Flutter
 flutter_bloc
 Other dependencies as specified in pubspec.yaml
-Contributing
-Contributions are welcome. Please follow these steps:
-
-Fork the repository.
-Create a new branch (git checkout -b feature/your-feature).
-Commit your changes (git commit -am 'Add your feature').
-Push to the branch (git push origin feature/your-feature).
-Create a new Pull Request.
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 #### Acknowledgements
 
 Flutter
 BLoC Library
 Other libraries as listed in pubspec.yaml
+
 ##### Contact
 
 For any inquiries, please contact Mahfuz-00.
