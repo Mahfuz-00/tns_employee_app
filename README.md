@@ -2,12 +2,12 @@
 
 This Inventory App is for Touch and Solve Internal Use.
 
-### Prerequisites
+## Prerequisites
 
 - Flutter SDK: [Install Flutter](https://flutter.dev/docs/get-started/install)
 - Dart SDK: [Install Dart](https://dart.dev/get-dart)
 
-### Installation
+## Installation
 
 1. **Clone the repository**:
    ```sh
@@ -24,7 +24,7 @@ This Inventory App is for Touch and Solve Internal Use.
    ```sh
    flutter run
 
-#### Project Structure
+## Project Structure
 **The project follows a feature-based structure**:
 
 - **lib/**  
@@ -34,7 +34,7 @@ This Inventory App is for Touch and Solve Internal Use.
   - **Domain/**: Use cases and domain models  
   - **Presentation/**: UI pages and their corresponding BLoC files
 
-##### Features
+## Features
 
 - **Onboarding Page**
 - **Dashboard**
@@ -43,22 +43,22 @@ This Inventory App is for Touch and Solve Internal Use.
 - **Leave Creation and Dashboard**
 - **Voucher Creation and Dashboard**
 
-###### State Management
+## State Management
 
 This project uses the **BLoC (Business Logic Component)** pattern for state management
 
-###### Dependencies
+## Dependencies
 
 - **Flutter**
 - **flutter_bloc**
 - Other dependencies as specified in `pubspec.yaml`.
 
-#### Acknowledgements
+## Acknowledgements
 
 - **Flutter**
 - **BLoC Library**
 - Other libraries as listed in `pubspec.yaml`.
 
-##### Contact
+## Contact
 
 For any inquiries, please contact **[Mahfuz-00](https://github.com/Mahfuz-00)**.
