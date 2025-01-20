@@ -2,10 +2,6 @@
 
 This Inventory App is for Touch and Solve Internal Use.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
 ### Prerequisites
 
 - Flutter SDK: [Install Flutter](https://flutter.dev/docs/get-started/install)
