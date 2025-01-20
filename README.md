@@ -38,10 +38,10 @@ This Inventory App is for Touch and Solve Internal Use.
 
 - **Onboarding Page**
 - **Dashboard**
-- **Activity Creation and Management**
-- **Attendance Dashboard**
-- **Leave Management**
-- **Voucher Management**
+- **Activity Creation and Dashboard**
+- **Attendance Creation and Dashboard**
+- **Leave Creation and Dashboard**
+- **Voucher Creation and Dashboard**
 
 ###### State Management
 
