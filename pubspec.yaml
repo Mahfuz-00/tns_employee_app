@@ -61,6 +61,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mockito:
+  mocktail:
+  build_runner:
+
 
 flutter_launcher_icons:
   android: "launcher_icon"

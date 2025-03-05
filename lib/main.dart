@@ -47,6 +47,8 @@ class MyApp extends StatelessWidget {
 
   // Initialize the database and other dependencies
   Future<Widget> _initializeApp() async {
+
+    print('Initializing');
     // Initialize the database
     final database = await DatabaseHelper.initializeDatabase();
 

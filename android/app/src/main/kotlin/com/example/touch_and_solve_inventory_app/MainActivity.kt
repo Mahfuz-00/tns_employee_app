@@ -1,6 +1,7 @@
 package com.tns.touch_and_solve_inventory_app
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 
-class MainActivity: FlutterActivity() {
+class MainActivity: FlutterFragmentActivity() {
+    // Your existing code
 }

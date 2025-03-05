@@ -50,8 +50,10 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
   @override
   void initState() {
     super.initState();
-
-    BlocProvider.of<VoucherBloc>(context).add(FetchVouchersEvent());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<VoucherBloc>(context).add(FetchVouchersEvent());
+    });
+    // BlocProvider.of<VoucherBloc>(context).add(FetchVouchersEvent());
   }
 
   @override
