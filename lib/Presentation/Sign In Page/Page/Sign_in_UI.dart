@@ -283,54 +283,56 @@ class _SignInPageState extends State<SignInPage> {
               // Show loading spinner when the state is loading
               return Center(child: OverlayLoader());
             }
-            return Container(
-              padding: EdgeInsets.only(
-                top: screenWidth * 0.2,
-                left: screenWidth * 0.1,
-                right: screenWidth * 0.1,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildSignInText(),
-                  SizedBox(
-                    height: screenHeight * 0.1,
-                  ),
-                  LabeledTextWithoutAsterisk(text: 'Email'),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  IDTextEditor(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  LabeledTextWithoutAsterisk(text: 'Password'),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  PasswordTextEditor(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  RememberMeAndForgotPassword(),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  SignInandFingerScanButtons(context),
-                  SizedBox(
-                    height: screenHeight * 0.1,
-                  ),
-                  ORDivider(),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  IDSwitchButton(context),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  FooterButton()
-                ],
+            return SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                  top: screenWidth * 0.2,
+                  left: screenWidth * 0.1,
+                  right: screenWidth * 0.1,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildSignInText(),
+                    SizedBox(
+                      height: screenHeight * 0.1,
+                    ),
+                    LabeledTextWithoutAsterisk(text: 'Email'),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    IDTextEditor(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    LabeledTextWithoutAsterisk(text: 'Password'),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    PasswordTextEditor(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    RememberMeAndForgotPassword(),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    SignInandFingerScanButtons(context),
+                    SizedBox(
+                      height: screenHeight * 0.1,
+                    ),
+                    ORDivider(),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    IDSwitchButton(context),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    FooterButton()
+                  ],
+                ),
               ),
             );
           },
@@ -398,7 +400,7 @@ class _SignInPageState extends State<SignInPage> {
         const Text(
           "Don't have an account? ",
           style: TextStyle(
-            fontSize: 16.0,
+            fontSize: 14.0,
             fontWeight: FontWeight.w400,
             color: AppColors.textGrey,
           ),
@@ -408,7 +410,7 @@ class _SignInPageState extends State<SignInPage> {
           child: Text(
             'Contact with HR',
             style: TextStyle(
-              fontSize: 16.0,
+              fontSize: 14.0,
               fontWeight: FontWeight.w400,
               color: AppColors.primary,
             ),

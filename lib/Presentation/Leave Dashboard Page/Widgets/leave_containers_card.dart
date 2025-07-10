@@ -148,12 +148,13 @@ class LeaveContainers extends StatelessWidget {
                   ),
                   SizedBox(width: 4,),
                   Text(
-                    'Approved at $approvalDate',
+                    '$approvalDate',
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 12.0,
                       fontWeight: FontWeight.w500,
                       color: AppColors.primary,
+                      overflow:  TextOverflow.ellipsis,
                     ),
                   ),
                 ],

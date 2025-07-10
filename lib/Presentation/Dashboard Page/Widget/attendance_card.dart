@@ -31,23 +31,48 @@ class AttendenceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     print('Clocked in : $clockIn');
     print('Clocked Out : $clockOut');
+    print('Attendance Date: $approvedDate');
     // Format the date and time strings to a more readable format
-    DateTime parsedDateInTime = DateTime.parse(clockIn);
-    DateTime parsedDateOutTime = DateTime.parse(clockOut);
-    DateTime parsedApprovedDate = DateTime.parse(approvedDate);
+    DateTime? parsedDateInTime =
+    clockIn.trim().isNotEmpty ? DateTime.tryParse(clockIn) : null;
+    DateTime? parsedDateOutTime =
+    clockOut.trim().isNotEmpty ? DateTime.tryParse(clockOut) : null;
+    DateTime? parsedApprovedDate =
+    approvedDate.trim().isNotEmpty ? DateTime.tryParse(approvedDate) : null;
 
-    String inDate = DateFormat('dd MMMM yyyy')
-        .format(parsedDateInTime); // "10 January 2025"
-    String inTime =
-        DateFormat('hh:mm a').format(parsedDateInTime); // "10:00 AM"
-    String outDate = DateFormat('dd MMMM yyyy')
-        .format(parsedDateOutTime); // "10 January 2025"
-    String outTime =
-        DateFormat('hh:mm a').format(parsedDateOutTime); // "10:00 AM"
+    String inDate = parsedDateInTime != null
+        ? DateFormat('dd MMMM yyyy').format(parsedDateInTime)
+        : '-';
+    String inTime = parsedDateInTime != null
+        ? DateFormat('hh:mm a').format(parsedDateInTime)
+        : '/';
 
-    String ApprovedDate = DateFormat('dd MMMM yyyy').format(parsedApprovedDate);
+    String outDate = parsedDateOutTime != null
+        ? DateFormat('dd MMMM yyyy').format(parsedDateOutTime)
+        : '-';
+    String outTime = parsedDateOutTime != null
+        ? DateFormat('hh:mm a').format(parsedDateOutTime)
+        : '/';
+
+    String ApprovedDate = parsedApprovedDate != null
+        ? DateFormat('dd MMMM yyyy').format(parsedApprovedDate)
+        : '-';
+    print('Attendance Date: $ApprovedDate');
 
     print('Project Name of Attendance: $projectName');
+
+
+    String totalTime = '-';
+
+    if (parsedDateInTime != null && parsedDateOutTime != null) {
+      final duration = parsedDateOutTime.difference(parsedDateInTime);
+      final hours = duration.inHours;
+      final minutes = duration.inMinutes.remainder(60);
+      totalTime = '${hours}h ${minutes}m';
+    } else if (parsedDateInTime != null && parsedDateOutTime == null) {
+      totalTime = 'Ongoing'; // or use '-'
+    }
+
 
     final screenWidth = MediaQuery.of(context).size.width;
     return Container(
@@ -144,7 +169,7 @@ class AttendenceCard extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          duration,
+                          totalTime,
                           style: TextStyle(
                             fontFamily: 'Roboto',
                             fontSize: 14.0,

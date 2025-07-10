@@ -173,19 +173,19 @@ class _LeaveCardState extends State<LeaveCard> {
                           if (Status == 'Pending') ...[
                             Icon(
                               Icons.timer, // Timer icon
-                              size: 16,
+                              size: 14,
                               color: Colors.grey[600],
                             ),
                           ] else if (Status == 'Approved') ...[
                             Icon(
                               Icons.check, // Timer icon
-                              size: 16,
+                              size: 14,
                               color: Colors.grey[600],
                             ),
                           ] else if (Status == 'Rejected') ...[
                             Icon(
                               Icons.not_interested_outlined, // Timer icon
-                              size: 16,
+                              size: 14,
                               color: Colors.grey[600],
                             ),
                           ],
@@ -195,7 +195,7 @@ class _LeaveCardState extends State<LeaveCard> {
                             style: TextStyle(
                               color: AppColors.textBlack,
                               fontWeight: FontWeight.w500,
-                              fontSize: 12,
+                              fontSize: 10,
                               fontFamily: 'Roboto',
                             ),
                           ),
