@@ -658,11 +658,19 @@ class LeaveSection extends StatelessWidget {
     print('Available Leave: ${availableLeave.toString()}');
     print('Used Leave: ${usedLeave.toString()}');
 
+    String getReadableLeaveType(String leaveType) {
+      return leaveType == 'medicale_leave'
+          ? 'Medical Leave'
+          : leaveType == 'casual_leave'
+          ? 'Casual Leave'
+          : 'Other';
+    }
+
     return CardsWidget(
       header: 'Leave Balance',
       totalCount: availableLeave,
       leaveCard: LeaveCard(
-        leaveHeader: leaveType,
+        leaveHeader: getReadableLeaveType(leaveType),
         Date: leaveDate,
         Status: leaveStatus,
         UsedLeave: usedLeave,

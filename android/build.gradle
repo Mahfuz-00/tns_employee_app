@@ -16,6 +16,15 @@ allprojects {
         google()
         mavenCentral()
     }
+    configurations.all {
+        resolutionStrategy {
+            force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.20'
+            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.20'
+            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.20'
+            force 'org.jetbrains.kotlin:kotlin-parcelize-runtime:1.9.20'
+            force 'org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.9.20'
+        }
+    }
 }
 
 rootProject.buildDir = '../build'

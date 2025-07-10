@@ -343,7 +343,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                 Text(
                   'Expense Summary',
                   style: TextStyle(
-                      fontSize: 24.0,
+                      fontSize: 22.0,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textWhite,
                       fontFamily: 'Roboto'),
@@ -352,7 +352,7 @@ class _VoucherDashboardState extends State<VoucherDashboard> {
                 Text(
                   'Claim your expense here',
                   style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: 12.0,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textWhite,
                       fontFamily: 'Roboto'),

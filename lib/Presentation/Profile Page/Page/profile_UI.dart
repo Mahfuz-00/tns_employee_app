@@ -87,7 +87,7 @@ class _ProfileState extends State<Profile> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 50.0),
+                                          horizontal: 30.0),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
